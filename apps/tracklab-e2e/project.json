@@ -1,0 +1,9 @@
+{
+  "name": "tracklab-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/tracklab-e2e/src",
+  "implicitDependencies": ["tracklab"],
+  "// targets": "to see all targets run: nx show project tracklab-e2e --web",
+  "targets": {}
+}
