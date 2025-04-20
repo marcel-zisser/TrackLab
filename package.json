@@ -15,8 +15,14 @@
     "@angular/platform-browser-dynamic": "~19.2.0",
     "@angular/router": "~19.2.0",
     "@primeng/themes": "^19.1.0",
+    "@tailwindcss/postcss": "^4.1.4",
+    "chart.js": "^4.4.9",
+    "postcss": "^8.5.3",
+    "primeicons": "^7.0.0",
     "primeng": "^19.1.0",
     "rxjs": "~7.8.0",
+    "sass-migrator": "^2.3.1",
+    "tailwindcss": "^4.1.4",
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
@@ -51,6 +57,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "jest-preset-angular": "~14.4.0",
+    "ng2-charts": "^8.0.0",
     "nx": "20.8.0",
     "prettier": "^2.6.2",
     "ts-jest": "^29.1.0",

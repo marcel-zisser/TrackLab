@@ -15,14 +15,14 @@
         "browser": "apps/tracklab/src/main.ts",
         "polyfills": ["zone.js"],
         "tsConfig": "apps/tracklab/tsconfig.app.json",
-        "inlineStyleLanguage": "scss",
+        "inlineStyleLanguage": "css",
         "assets": [
           {
             "glob": "**/*",
             "input": "apps/tracklab/public"
           }
         ],
-        "styles": ["apps/tracklab/src/styles.scss"],
+        "styles": ["apps/tracklab/src/styles.css"],
         "scripts": []
       },
       "configurations": {
