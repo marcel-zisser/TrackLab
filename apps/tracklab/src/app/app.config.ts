@@ -3,8 +3,8 @@ import { provideRouter } from '@angular/router';
 import { appRoutes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
-import Aura from '@primeng/themes/aura';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { AppTheme } from './app.theme';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,9 +13,9 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     providePrimeNG({
       theme: {
-        preset: Aura,
+        preset: AppTheme,
         options: {
-          darkModeSelector: '.p-dark'
+          darkModeSelector: '.p-dark',
         }
       }
     }),

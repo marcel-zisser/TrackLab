@@ -1,0 +1,14 @@
+<div class="flex h-full justify-center gap-8">
+  <div class="analytics-panel">test1</div>
+  <div class="standings-panel">
+    <div>
+      <h1 class="text-primary font-bold">Current Driver Standings</h1>
+      <tl-standings [items]="driverStandings()"></tl-standings>
+    </div>
+
+    <div>
+      <h1 class="text-primary font-bold">Current Constructor Standings</h1>
+      <tl-standings [items]="constructorStandings()"></tl-standings>
+    </div>
+  </div>
+</div>

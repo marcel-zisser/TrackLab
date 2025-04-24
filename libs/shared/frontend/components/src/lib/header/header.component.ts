@@ -1,15 +1,19 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Menubar } from 'primeng/menubar';
-import { InputText } from 'primeng/inputtext';
-import { Avatar } from 'primeng/avatar';
 import { MenuItem } from 'primeng/api';
+import { RouterLink } from '@angular/router';
+import { ButtonIcon } from 'primeng/button';
+import { ToggleSwitch } from 'primeng/toggleswitch';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'tl-header',
   imports: [
     Menubar,
-    InputText,
-    Avatar,
+    RouterLink,
+    ToggleSwitch,
+    ButtonIcon,
+    NgClass,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
@@ -21,19 +25,20 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     this.items = [
       {
-        label: 'Home',
-        icon: 'pi pi-home'
+        label: 'Analytics',
+        icon: 'pi pi-chart-bar',
+        routerLink: 'analytics',
       },
       {
-        label: 'Analyze',
-        icon: 'pi pi-search',
-        routerLink: 'analyze'
-      },
-      {
-        label: 'Digital Twin',
+        label: 'Pitwall Copilot',
         icon: 'pi pi-sparkles',
-        routerLink: 'digital-twin',
-      }
+        routerLink: 'pitwall-copilot',
+      },
     ];
+  }
+
+  toggleDarkMode() {
+    const element = document.querySelector('html');
+    element?.classList.toggle('p-dark');
   }
 }

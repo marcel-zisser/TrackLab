@@ -1,20 +1,22 @@
 import { Route } from '@angular/router';
-import { ConstructionComponent } from '@tracklab/components';
+import { ConstructionComponent } from '@tracklab/shared/components';
+import { DashboardComponent } from '@tracklab/dashboard';
+import { AnalyticsComponent } from '@tracklab/analytics';
 
 export const appRoutes: Route[] = [
   {
     title: 'TrackLab',
     path: '',
-    component: ConstructionComponent,
+    component: DashboardComponent,
   },
   {
-    title: 'Analyze',
-    path: 'analyze',
-    component: ConstructionComponent
+    title: 'Analytics',
+    path: 'analytics',
+    component: AnalyticsComponent
   },
   {
-    title: 'Digital Twin',
-    path: 'digital-twin',
+    title: 'Pitwall Copilot',
+    path: 'pitwall-copilot',
     component: ConstructionComponent
   }
 ];

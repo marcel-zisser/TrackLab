@@ -1,0 +1,19 @@
+<p-menubar [model]="items" [autoDisplay]="true">
+  <ng-template #start>
+    <div routerLink="" class="logo">
+      TrackLab
+    </div>
+  </ng-template>
+  <ng-template #end>
+    <div class="flex items-center gap-2">
+      <p-toggle-switch (onChange)="toggleDarkMode()"
+                       pButtonIcon="pi-home"
+                       [style]="{display: 'flex'}">
+        <ng-template #handle let-checked="checked">
+          <i [ngClass]="['!text-xs', 'pi', checked ? 'pi-moon' : 'pi-sun']"></i>
+        </ng-template>
+      </p-toggle-switch>
+
+    </div>
+  </ng-template>
+</p-menubar>

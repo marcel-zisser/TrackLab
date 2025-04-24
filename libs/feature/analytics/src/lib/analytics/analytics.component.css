@@ -1,0 +1,15 @@
+:host {
+  width: 100%;
+}
+
+.analytics-panel {
+  flex: 3;
+}
+
+.standings-panel {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 1rem;
+}

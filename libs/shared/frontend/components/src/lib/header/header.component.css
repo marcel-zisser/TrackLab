@@ -1,0 +1,8 @@
+.logo {
+  font-family: 'Audiowide', serif;
+  font-size: larger;
+  color: var(--p-primary-color);
+
+  margin-right: 1rem;
+  cursor: pointer;
+}

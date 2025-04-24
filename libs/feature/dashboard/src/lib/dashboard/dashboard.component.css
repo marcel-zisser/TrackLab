@@ -1,0 +1,25 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.gradient-area {
+  background: var(--p-primary-color);
+  padding: 2rem;
+  border-radius: 1rem;
+
+  transition: all 0.3s ease;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+
+  &:hover {
+    scale: 1.01;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.text {
+  font-family: Audiowide, sans-serif;
+  font-size: xxx-large;
+  text-align: center;
+}

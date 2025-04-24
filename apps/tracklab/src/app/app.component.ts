@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { FooterComponent, HeaderComponent } from '@tracklab/components';
+import { FooterComponent, HeaderComponent } from '@tracklab/shared/components';
 
 @Component({
   imports: [
