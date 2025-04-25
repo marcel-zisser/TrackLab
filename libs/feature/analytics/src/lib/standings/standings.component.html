@@ -1,20 +1,15 @@
-<div class="card">
-  <p-table [value]="items()" >
+  <p-table
+    [value]="standings() ?? []">
     <ng-template #header>
       <tr>
         <th></th>
-        <th>Name</th>
         <th>Points</th>
-        <th>Team</th>
       </tr>
     </ng-template>
-    <ng-template #body let-item>
+    <ng-template #body let-entry>
       <tr>
-        <td>{{ item.position }}</td>
-        <td>{{ item.name }}</td>
-        <td>{{ item.nationality }}</td>
-        <td>{{ item.points }}</td>
+        <td>{{ entry.position }}</td>
+        <td>{{ entry.points }}</td>
       </tr>
     </ng-template>
   </p-table>
-</div>

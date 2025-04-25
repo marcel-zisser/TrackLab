@@ -17,9 +17,9 @@
     "paths": {
       "@tracklab/analytics": ["libs/feature/analytics/src/index.ts"],
       "@tracklab/dashboard": ["libs/feature/dashboard/src/index.ts"],
-      "@tracklab/shared/components": [
-        "libs/shared/frontend/components/src/index.ts"
-      ]
+      "@tracklab/models": ["libs/shared/models/src/index.ts"],
+      "@tracklab/services": ["libs/shared/services/src/index.ts"],
+      "@tracklab/shared/components": ["libs/shared/components/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -3,12 +3,12 @@
   <div class="standings-panel">
     <div>
       <h1 class="text-primary font-bold">Current Driver Standings</h1>
-      <tl-standings [items]="driverStandings()"></tl-standings>
+      <tl-standings class="overflow-auto" [standings]="driverStandings()"></tl-standings>
     </div>
 
     <div>
       <h1 class="text-primary font-bold">Current Constructor Standings</h1>
-      <tl-standings [items]="constructorStandings()"></tl-standings>
+      <tl-standings class="overflow-auto" [standings]="constructorStandings()"></tl-standings>
     </div>
   </div>
 </div>

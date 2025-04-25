@@ -5,11 +5,15 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { providePrimeNG } from 'primeng/config';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { AppTheme } from './app.theme';
+import { environment } from '../environments/environment';
+import { API_URL_TOKEN } from '@tracklab/services';
+import { provideHttpClient } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(appRoutes),
+    provideHttpClient(),
     provideAnimationsAsync(),
     providePrimeNG({
       theme: {
@@ -19,6 +23,8 @@ export const appConfig: ApplicationConfig = {
         }
       }
     }),
-    provideCharts(withDefaultRegisterables())
+    provideCharts(withDefaultRegisterables()),
+    { provide: API_URL_TOKEN, useValue: environment.apiUrl },
+
   ],
 };

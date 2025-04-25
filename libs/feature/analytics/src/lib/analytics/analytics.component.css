@@ -12,4 +12,5 @@
   flex-direction: column;
   justify-content: space-around;
   gap: 1rem;
+  max-height: 100%
 }

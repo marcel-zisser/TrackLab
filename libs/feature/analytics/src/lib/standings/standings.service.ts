@@ -1,53 +1,21 @@
-import { Injectable } from '@angular/core';
+import { computed, inject, Injectable } from '@angular/core';
+import { BackendService } from '@tracklab/services';
+import { StandingsEntry, StandingsResponse } from '@tracklab/models';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StandingsService {
-  private driverStandings = [
-    {
-      position: '1',
-      name: 'PIA',
-      points: 69,
-      team: 'McLaren',
-      nationality: 'AUS',
-    },
-    {
-      position: '2',
-      name: 'NOR',
-      points: 78,
-      team: 'McLaren',
-      nationality: 'GB',
-    },
-    {
-      position: '3',
-      name: 'VER',
-      points: 34,
-      team: 'Red Bull Racing',
-      nationality: 'NED',
-    },
-  ];
+  private readonly backendService = inject(BackendService);
 
-  private constructorStandings = [
-    {
-      position: '1',
-      name: 'McLaren',
-      points: 120,
-      nationality: 'GB',
-    },
-    {
-      position: '2',
-      name: 'Red Bull Racing',
-      points: 78,
-      nationality: 'AUT',
-    },
-    {
-      position: '3',
-      name: 'Ferrari',
-      points: 34,
-      nationality: 'ITA',
-    },
-  ];
+  private standings =
+    this.backendService.doGet<StandingsResponse>('current/standings');
+  private driverStandings = computed<StandingsEntry[] | undefined>(
+    () => this.standings.value()?.driverStandings?.standingsList
+  );
+  private constructorStandings = computed<StandingsEntry[] | undefined>(
+    () => this.standings.value()?.constructorStandings?.standingsList
+  );
 
   getDriverStandings() {
     return this.driverStandings;

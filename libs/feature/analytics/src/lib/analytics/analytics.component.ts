@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
 import { StandingsComponent } from '../standings/standings.component';
 import { StandingsService } from '../standings/standings.service';
 
@@ -12,12 +12,6 @@ import { StandingsService } from '../standings/standings.service';
 export class AnalyticsComponent {
   private readonly standingsService = inject(StandingsService);
 
-  driverStandings = signal<any[]>([]);
-  constructorStandings = signal<any[]>([]);
-
-  constructor() {
-    this.driverStandings.set(this.standingsService.getDriverStandings());
-    this.constructorStandings.set(this.standingsService.getConstructorStandings());
-  }
-
+  driverStandings = this.standingsService.getDriverStandings();
+  constructorStandings = this.standingsService.getConstructorStandings();
 }
