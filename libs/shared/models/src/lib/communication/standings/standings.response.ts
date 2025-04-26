@@ -1,6 +1,6 @@
-import { Standings } from '../../analytics/standings/standings';
+import { DriverStandingsEntry, ConstructorStandingsEntry, Standings } from '../../analytics';
 
 export interface StandingsResponse {
-  driverStandings: Standings;
-  constructorStandings: Standings;
+  driverStandings: Standings<DriverStandingsEntry>;
+  constructorStandings: Standings<ConstructorStandingsEntry>;
 }

@@ -1,2 +1,3 @@
-export * from './lib/analytics/standings';
-export * from './lib/communication/standings';
+export * from './lib/analytics';
+export * from './lib/communication';
+export * from './lib/data-table';

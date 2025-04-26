@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
-import { Standings, StandingsResponse } from '@tracklab/models';
+import { ConstructorStandingsEntry, DriverStandingsEntry, Standings, StandingsResponse } from '@tracklab/models';
 
 @Injectable()
 export class CurrentService {
@@ -27,12 +27,12 @@ export class CurrentService {
         season: driverStandings.season,
         round: driverStandings.round,
         standingsList: driverStandings.DriverStandings
-      } satisfies Standings,
+      } satisfies Standings<DriverStandingsEntry>,
       constructorStandings: {
         season: constructorStandings.season,
         round: constructorStandings.round,
         standingsList: constructorStandings.ConstructorStandings
-      } satisfies Standings
+      } satisfies Standings<ConstructorStandingsEntry>
     };
   }
 }
