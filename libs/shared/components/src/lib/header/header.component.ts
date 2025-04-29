@@ -39,6 +39,6 @@ export class HeaderComponent implements OnInit {
 
   toggleDarkMode() {
     const element = document.querySelector('html');
-    element?.classList.toggle('p-dark');
+    element?.classList.toggle('dark');
   }
 }

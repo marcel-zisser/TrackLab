@@ -1,23 +1,30 @@
+
 /* You can add global styles to this file, and also import other style files */
-@import "primeicons/primeicons.css";
-@import "tailwindcss";
+@import 'primeicons/primeicons.css';
+@import 'tailwindcss';
+
+@tailwind utilities;
 @plugin "tailwindcss-primeui";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @font-face {
   font-family: 'Audiowide';
-  src: url('apps/tracklab/public/fonts/Audiowide/Audiowide-Regular.ttf') format('truetype');
+  src: url('apps/tracklab/public/fonts/Audiowide/Audiowide-Regular.ttf')
+    format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Inter';
-  src: url('apps/tracklab/public/fonts/Inter/Inter-VariableFont_opsz,wght.ttf') format('truetype');
+  src: url('apps/tracklab/public/fonts/Inter/Inter-VariableFont_opsz,wght.ttf')
+    format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
-html, body {
+html,
+body {
   font-family: 'Inter', serif;
   height: 100%;
   width: 100%;
