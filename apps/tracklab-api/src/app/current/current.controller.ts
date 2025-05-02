@@ -1,6 +1,5 @@
 import { Controller, Get, UseInterceptors } from '@nestjs/common';
 import { CurrentService } from './current.service';
-import { CacheInterceptor } from '@nestjs/cache-manager';
 import { LoggingCacheInterceptor } from '../interceptors/cache-logging.interceptor';
 
 @UseInterceptors(LoggingCacheInterceptor)
@@ -12,5 +11,10 @@ export class CurrentController {
   @Get('standings')
   getCurrentStandings() {
     return this.currentService.getCurrentStandings();
+  }
+
+  @Get('development')
+  getCurrentStandingsDevelopment() {
+    return this.currentService.getCurrentStandingsDevelopment();
   }
 }

@@ -1,13 +1,13 @@
 import { computed, inject, Injectable } from '@angular/core';
 import { BackendService } from '@tracklab/services';
-import { StandingsEntry, StandingsResponse } from '@tracklab/models';
-import { DriverStandingsEntry } from '../../../../../shared/models/src/lib/analytics/standings/driver-standings-entry';
 import {
-  ConstructorStandingsEntry
-} from '../../../../../shared/models/src/lib/analytics/standings/constructor-standings-entry';
+  ConstructorStandingsEntry,
+  DriverStandingsEntry,
+  StandingsResponse
+} from '@tracklab/models';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class StandingsService {
   private readonly backendService = inject(BackendService);

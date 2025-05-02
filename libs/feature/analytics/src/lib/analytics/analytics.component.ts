@@ -1,53 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
-import { StandingsComponent } from '../standings/standings.component';
-import { StandingsService } from '../standings/standings.service';
-import { Column } from '@tracklab/models';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'tl-analytics',
-  imports: [StandingsComponent],
+  imports: [],
   templateUrl: './analytics.component.html',
   styleUrl: './analytics.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AnalyticsComponent implements OnInit{
-  private readonly standingsService = inject(StandingsService);
+export class AnalyticsComponent {}
 
-  driverStandings = computed(() =>
-    this.standingsService.driverStandings()?.map( entry => {
-      return {
-        position: entry.position,
-        driver: entry.Driver.code,
-        constructor: entry.Constructors[0].name,
-        points: entry.points,
-      }
-    })
-  );
-  driverColumns: Column[] = [];
-
-  constructorStandings = computed(() =>
-    this.standingsService.constructorStandings()?.map( entry => {
-      return {
-        position: entry.position,
-        constructor: entry.Constructor.name,
-        points: entry.points,
-      }
-    })
-  );
-  constructorColumns: Column[] = [];
-
-  ngOnInit() {
-    this.driverColumns = [
-      { field: 'position', header: ''},
-      { field: 'driver', header: 'Driver'},
-      { field: 'constructor', header: 'Team'},
-      { field: 'points', header: 'Points'}
-    ]
-
-    this.constructorColumns = [
-      { field: 'position', header: ''},
-      { field: 'constructor', header: 'Team'},
-      { field: 'points', header: 'Points'}
-    ]
-  }
-}
