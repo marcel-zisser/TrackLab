@@ -3,11 +3,20 @@ import { provideRouter } from '@angular/router';
 import { appRoutes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
-import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { AppTheme } from './app.theme';
 import { environment } from '../environments/environment';
 import { API_URL_TOKEN } from '@tracklab/services';
 import { provideHttpClient } from '@angular/common/http';
+
+import * as echarts from 'echarts/core';
+import { provideEchartsCore } from 'ngx-echarts';
+import { BarChart, LineChart } from 'echarts/charts';
+import { GridComponent, LegendComponent, TitleComponent, ToolboxComponent, TooltipComponent } from 'echarts/components';
+import { CanvasRenderer } from 'echarts/renderers';
+import customDark from './echarts-theme.json';
+
+echarts.registerTheme('tracklab-dark', customDark);
+echarts.use([BarChart, LineChart, GridComponent, CanvasRenderer, TitleComponent, TooltipComponent, LegendComponent, ToolboxComponent]);
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,8 +32,7 @@ export const appConfig: ApplicationConfig = {
         }
       }
     }),
-    provideCharts(withDefaultRegisterables()),
     { provide: API_URL_TOKEN, useValue: environment.apiUrl },
-
+    provideEchartsCore({ echarts }),
   ],
 };

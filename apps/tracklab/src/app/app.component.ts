@@ -3,12 +3,8 @@ import { RouterModule } from '@angular/router';
 import { FooterComponent, HeaderComponent } from '@tracklab/shared/components';
 
 @Component({
-  imports: [
-    RouterModule,
-    FooterComponent,
-    HeaderComponent,
-  ],
-  selector: 'app-root',
+  imports: [RouterModule, FooterComponent, HeaderComponent],
+  selector: 'tl-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })

@@ -13,7 +13,7 @@ export class StandingsService {
   private readonly backendService = inject(BackendService);
 
   private standings =
-    this.backendService.doGet<StandingsResponse>('current/standings');
+    this.backendService.doGet<StandingsResponse>('dashboard/standings');
 
   driverStandings = computed<DriverStandingsEntry[] | undefined>(
     () => this.standings.value()?.driverStandings?.standingsList

@@ -1,18 +1,16 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import {
-  Constructor,
-  ConstructorStandingsEntry, Driver,
+  ConstructorStandingsEntry,
   DriverStandingsEntry,
   Standings,
   StandingsResponse
 } from '@tracklab/models';
+import { DevelopmentResponse } from '@tracklab/models';
 
 @Injectable()
-export class CurrentService {
-  private readonly logger = new Logger(CurrentService.name);
-
+export class DashboardService {
   constructor(private readonly httpService: HttpService) {
   }
 
@@ -45,42 +43,26 @@ export class CurrentService {
     };
   }
 
-  async getCurrentStandingsDevelopment(): Promise<DriverStandingsEntry[]> {
-
-    const driverStandingsDevelopment = [];
+  /**
+   * Retrieves the driver development for the current season
+   */
+  async getCurrentStandingsDevelopment(): Promise<DevelopmentResponse[]> {
     const driverDevelopmentMap = new Map<string, Map<string, number>>();
 
     await this.computePointsPerRace(false, driverDevelopmentMap);
     await this.computePointsPerRace(true, driverDevelopmentMap);
 
     const accumulatedPointsMap = this.accumulatePoints(driverDevelopmentMap)
+    const response: DevelopmentResponse[] = [];
 
-    return driverStandingsDevelopment.map(race =>
-      race.map(entry => (
-        {
-          points: entry.points,
-          position: entry.position,
-          wins: entry.wins,
-          Driver: {
-            driverId: entry.Driver.driverId,
-            code: entry.Driver.code,
-            givenName: entry.Driver.givenName,
-            familyName: entry.Driver.familyName,
-            dateOfBirth: entry.Driver.dateOfBirth,
-            nationality: entry.Driver.nationality,
-            permanentNumber: entry.Driver.permanentNumber
-          },
-          Constructors: entry.Constructors.map(constructor => ({
-              constructorId: constructor.constructorId,
-              name: constructor.name,
-              nationality: constructor.nationality,
-              url: constructor.url
-            } satisfies Constructor
-          ))
-        } satisfies DriverStandingsEntry
-      ))
+    accumulatedPointsMap.forEach((value, key) =>
+      response.push({
+        driverCode: key,
+        development: value
+      })
     );
 
+    return response;
   }
 
   /**

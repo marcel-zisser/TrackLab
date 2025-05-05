@@ -1,10 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { Menubar } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import { RouterLink } from '@angular/router';
 import { ButtonIcon } from 'primeng/button';
 import { ToggleSwitch } from 'primeng/toggleswitch';
 import { NgClass } from '@angular/common';
+import { DarkModeService } from '@tracklab/services';
 
 @Component({
   selector: 'tl-header',
@@ -20,6 +21,8 @@ import { NgClass } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent implements OnInit {
+  private readonly darkModeService = inject(DarkModeService);
+
   items: MenuItem[] | undefined;
 
   ngOnInit() {
@@ -38,7 +41,6 @@ export class HeaderComponent implements OnInit {
   }
 
   toggleDarkMode() {
-    const element = document.querySelector('html');
-    element?.classList.toggle('dark');
+    this.darkModeService.toggleDarkMode();
   }
 }

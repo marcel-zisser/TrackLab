@@ -1,8 +1,7 @@
-import { Component, effect, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { TableModule } from 'primeng/table';
-import { Column, StandingsEntry } from '@tracklab/models';
+import { Column } from '@tracklab/models';
 import { Skeleton } from 'primeng/skeleton';
-import { NgForOf, NgIf } from '@angular/common';
 
 @Component({
   selector: 'tl-standings',

@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2022",
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
