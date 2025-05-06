@@ -1,7 +1,6 @@
 import { Route } from '@angular/router';
 import { ConstructionComponent } from '@tracklab/shared/components';
 import { DashboardComponent } from '@tracklab/dashboard';
-import { AnalyticsComponent } from '@tracklab/analytics';
 
 export const appRoutes: Route[] = [
   {
@@ -12,7 +11,7 @@ export const appRoutes: Route[] = [
   {
     title: 'Analytics',
     path: 'analytics',
-    component: AnalyticsComponent
+    component: ConstructionComponent
   },
   {
     title: 'Pitwall Copilot',

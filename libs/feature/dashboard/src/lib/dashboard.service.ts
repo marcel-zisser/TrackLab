@@ -2,23 +2,29 @@ import { computed, inject, Injectable } from '@angular/core';
 import { BackendService } from '@tracklab/services';
 import {
   ConstructorStandingsEntry,
-  DriverStandingsEntry,
+  DriverStandingsEntry, RaceResult,
   StandingsResponse
 } from '@tracklab/models';
 
 @Injectable({
   providedIn: 'root'
 })
-export class StandingsService {
+export class DashboardService {
+
   private readonly backendService = inject(BackendService);
 
-  private standings =
+  private standingsResource =
     this.backendService.doGet<StandingsResponse>('dashboard/standings');
 
+  private developmentResource =
+    this.backendService.doGet<RaceResult[]>('dashboard/development');
+
   driverStandings = computed<DriverStandingsEntry[] | undefined>(
-    () => this.standings.value()?.driverStandings?.standingsList
+    () => this.standingsResource.value()?.driverStandings?.standingsList
   );
   constructorStandings = computed<ConstructorStandingsEntry[] | undefined>(
-    () => this.standings.value()?.constructorStandings?.standingsList
+    () => this.standingsResource.value()?.constructorStandings?.standingsList
   );
+
+  currentSeason = this.developmentResource.value.asReadonly();
 }

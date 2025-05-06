@@ -29,3 +29,8 @@ body {
   height: 100%;
   width: 100%;
 }
+
+.tl-tooltip {
+  max-height: 15rem;
+  overflow-y: auto;
+}

@@ -11,12 +11,29 @@ import { provideHttpClient } from '@angular/common/http';
 import * as echarts from 'echarts/core';
 import { provideEchartsCore } from 'ngx-echarts';
 import { BarChart, LineChart } from 'echarts/charts';
-import { GridComponent, LegendComponent, TitleComponent, ToolboxComponent, TooltipComponent } from 'echarts/components';
+import {
+  DataZoomComponent,
+  GridComponent,
+  LegendComponent,
+  TitleComponent,
+  ToolboxComponent,
+  TooltipComponent
+} from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import customDark from './echarts-theme.json';
 
 echarts.registerTheme('tracklab-dark', customDark);
-echarts.use([BarChart, LineChart, GridComponent, CanvasRenderer, TitleComponent, TooltipComponent, LegendComponent, ToolboxComponent]);
+echarts.use([
+  BarChart,
+  LineChart,
+  GridComponent,
+  CanvasRenderer,
+  TitleComponent,
+  TooltipComponent,
+  LegendComponent,
+  ToolboxComponent,
+  DataZoomComponent
+]);
 
 export const appConfig: ApplicationConfig = {
   providers: [

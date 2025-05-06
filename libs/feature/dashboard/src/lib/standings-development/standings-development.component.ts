@@ -1,7 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+} from '@angular/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
-import { BackendService, DarkModeService } from '@tracklab/services';
-import { DevelopmentResponse, StandingsResponse } from '@tracklab/models';
+import { DarkModeService, TeamColorMapper } from '@tracklab/services';
+import { RaceResult } from '@tracklab/models';
 
 @Component({
   selector: 'tl-standings-development',
@@ -12,71 +18,80 @@ import { DevelopmentResponse, StandingsResponse } from '@tracklab/models';
 })
 export class StandingsDevelopmentComponent {
   private readonly darkModeService = inject(DarkModeService);
-  private readonly backendService = inject(BackendService);
 
-  private development =
-    this.backendService.doGet<DevelopmentResponse>('dashboard/development');
+  seasonData = input<RaceResult[] | undefined>();
+  xAxisData = computed(() =>
+    this.seasonData()?.map((race) => {
+      const locality = race.circuit.location.locality;
+
+      return race.type === 'race' ? locality : `${locality} Sprint`;
+    })
+  );
+
+  seriesData = computed(() => {
+    const data = new Map<string, [number[], string]>();
+
+    this.seasonData()?.forEach((race) => {
+      race.results.forEach((result) => {
+        if (data.has(result.driver.code)) {
+          const [points,] = data.get(result.driver.code) ?? [[], ''];
+          points?.push(points[points.length - 1] + result.points);
+        } else {
+          data.set(result.driver.code, [[result.points], TeamColorMapper.mapTeamIdToColor(result.constructor.constructorId)]);
+        }
+      });
+    });
+
+    return data;
+  });
+
+  legendData = computed(() => Array.from(this.seriesData()?.keys()));
 
   protected readonly chartTheme = computed(() =>
-    this.darkModeService.chartTheme() === 'dark' ? 'tracklab-dark' : '');
+    this.darkModeService.chartTheme() === 'dark' ? 'tracklab-dark' : ''
+  );
 
-  chartOptions = {
+  chartOptions = computed(() => ({
     tooltip: {
       trigger: 'axis',
+      enterable: true,
+      order: 'valueDesc',
+      confine: false,
+      className: 'tl-tooltip'
     },
+    dataZoom: [
+      {
+        type: 'inside',
+        start: 100,
+        end: 0,
+      },
+    ],
     legend: {
-      data: ['Email', 'Ads', 'Search', 'Direct', 'Referral'],
-    },
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      containLabel: true,
+      data: this.legendData(),
+      type: 'plain',
+      orient: 'horizontal',
+      top: 0,
+      padding: 10,
+      wrap: true, // only if using latest ECharts
     },
     toolbox: {
       feature: {
-        saveAsImage: {},
+        // saveAsImage: {},
       },
     },
     xAxis: {
       type: 'category',
       boundaryGap: false,
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      data: this.xAxisData(),
     },
     yAxis: {
       type: 'value',
     },
-    series: [
-      {
-        name: 'Email',
-        type: 'line',
-        stack: 'Total',
-        data: [120, 132, 101, 134, 90, 230, 210],
-      },
-      {
-        name: 'Ads',
-        type: 'line',
-        stack: 'Total',
-        data: [220, 182, 191, 234, 290, 330, 310],
-      },
-      {
-        name: 'Search',
-        type: 'line',
-        stack: 'Total',
-        data: [150, 232, 201, 154, 190, 330, 410],
-      },
-      {
-        name: 'Direct',
-        type: 'line',
-        stack: 'Total',
-        data: [320, 332, 301, 334, 390, 330, 320],
-      },
-      {
-        name: 'Referral',
-        type: 'line',
-        stack: 'Total',
-        data: [820, 932, 901, 934, 1290, 1330, 1320],
-      },
-    ],
-  };
+    series: Array.from(this.seriesData()?.entries()).map(([key, [value, color]]) => ({
+      name: key,
+      type: 'line',
+      data: value,
+      color: color,
+    })),
+  }));
 }

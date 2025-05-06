@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import {
+  Circuit,
   ConstructorStandingsEntry,
-  DriverStandingsEntry,
+  DriverStandingsEntry, Location, RaceResult, Result,
   Standings,
   StandingsResponse
 } from '@tracklab/models';
-import { DevelopmentResponse } from '@tracklab/models';
 
 @Injectable()
 export class DashboardService {
@@ -46,31 +46,29 @@ export class DashboardService {
   /**
    * Retrieves the driver development for the current season
    */
-  async getCurrentStandingsDevelopment(): Promise<DevelopmentResponse[]> {
-    const driverDevelopmentMap = new Map<string, Map<string, number>>();
+  async getCurrentStandingsDevelopment(): Promise<RaceResult[]> {
+    const response: RaceResult[] = [];
 
-    await this.computePointsPerRace(false, driverDevelopmentMap);
-    await this.computePointsPerRace(true, driverDevelopmentMap);
+    await this.queryCurrentSeason(false, response);
+    await this.queryCurrentSeason(true, response);
 
-    const accumulatedPointsMap = this.accumulatePoints(driverDevelopmentMap)
-    const response: DevelopmentResponse[] = [];
-
-    accumulatedPointsMap.forEach((value, key) =>
-      response.push({
-        driverCode: key,
-        development: value
-      })
-    );
+    response.sort((a, b) => {
+      if (a.date === b.date) {
+        return a.type === 'sprint' ? -1 : 1;
+      } else {
+        return a.date < b.date ? -1 : 1;
+      }
+    });
 
     return response;
   }
 
   /**
-   * Accumulates the points a driver has achieved using a specified URL
+   * Queries the current season and returns the results of all races so far
    * @param sprint Fetch races or sprints
-   * @param driverDevelopmentMap map to store information in
+   * @param response Array to store the information in
    */
-  private async computePointsPerRace(sprint: boolean, driverDevelopmentMap: Map<string, Map<string, number>>): Promise<void> {
+  private async queryCurrentSeason(sprint: boolean, response: RaceResult[]): Promise<void> {
     const limit = 100;
     let offset = 0;
     let total = 0;
@@ -83,45 +81,61 @@ export class DashboardService {
       );
 
       for (const race of raceResultsResponse.data.MRData.RaceTable.Races) {
+        const circuit = {
+          circuitId: race.Circuit.circuitId,
+          circuitName: race.Circuit.circuitName,
+          location: {
+            latitude: Number.parseInt(race.Circuit.Location.lat),
+            longitude: Number.parseInt(race.Circuit.Location.long),
+            locality: race.Circuit.Location.locality,
+            country: race.Circuit.Location.country,
+          } satisfies Location
+        } satisfies Circuit;
+
+        const mappedResults: Result[] = [];
+
         const results = sprint ? race.SprintResults : race.Results
         results.forEach(result => {
-          const points = Number.parseInt(result.points);
-          const locality = race.Circuit.Location.locality;
-          const driverCode = result.Driver.code;
+          const driver = result.Driver;
+          const constructor = result.Constructor;
 
-          if (!driverDevelopmentMap.has(driverCode)) {
-            driverDevelopmentMap.set(driverCode, new Map());
-          }
+          mappedResults.push({
+            position: Number.parseInt(result.position),
+            points: Number.parseInt(result.points),
+            driver: {
+              driverId: driver.driverId,
+              permanentNumber: Number.parseInt(driver.permanentNumber),
+              code: driver.code,
+              givenName: driver.givenName,
+              familyName: driver.familyName,
+              dateOfBirth: driver.dateOfBirth,
+              nationality: driver.nationality
+            },
+            constructor: {
+              constructorId: constructor.constructorId,
+              name: constructor.name,
+              url: constructor.url,
+              nationality: constructor.nationality
+            },
+            grid: Number.parseInt(result.grid),
+            laps: Number.parseInt(result.laps),
+            status: result.status
+          })
+        });
 
-          const driverResults = driverDevelopmentMap.get(driverCode);
-
-          if (driverResults.has(locality)) {
-            const driverPoints = driverResults.get(locality);
-            driverResults.set(locality, driverPoints + points);
-          } else {
-            driverResults.set(locality, points);
-          }
+        response.push({
+          season: race.season,
+          round: Number.parseInt(race.round),
+          date: race.date,
+          time: race.time,
+          type: sprint ? 'sprint' : 'race',
+          circuit: circuit,
+          results: mappedResults
         });
       }
 
       total = raceResultsResponse.data.MRData.total;
       offset += limit;
     } while (total > offset);
-  }
-
-  private accumulatePoints(driverDevelopmentMap: Map<string, Map<string, number>>) {
-    const accumulatedPointsMap = new Map<string, number[]>();
-
-    driverDevelopmentMap.forEach((results, key) => {
-      accumulatedPointsMap.set(
-        key,
-        Array.from(results.values()).reduce((acc, val, i) => {
-          acc.push((acc[i - 1] || 0) + val);
-          return acc;
-        }, [])
-        );
-    });
-
-    return accumulatedPointsMap;
   }
 }

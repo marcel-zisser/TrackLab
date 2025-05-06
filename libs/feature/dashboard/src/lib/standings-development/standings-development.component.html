@@ -1,7 +1,8 @@
-<!-- app.component.html -->
 <div echarts
-     [options]="chartOptions"
+     [loading]="seriesData() === undefined"
+     [options]="chartOptions()"
      [theme]="chartTheme()"
      [autoResize]="true"
      class="chart"
 ></div>
+
