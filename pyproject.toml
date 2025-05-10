@@ -1,0 +1,20 @@
+[project]
+name = "nx-workspace"
+version = "1.0.0"
+dependencies = [ "fast-f1-service" ]
+
+[tool.uv.workspace]
+members = [ "apps/fast-f1-service" ]
+
+[tool.uv.sources.fast-f1-service]
+workspace = true
+
+[dependency-groups]
+dev = [
+  "autopep8>=2.3.1",
+  "ruff>=0.8.2",
+  "pytest>=8.3.4",
+  "pytest-sugar>=1.0.0",
+  "pytest-cov>=6.0.0",
+  "pytest-html>=4.1.1"
+]

@@ -8,19 +8,32 @@
     "build": {
       "executor": "nx:run-commands",
       "options": {
+        "assets": [
+          {
+            "input": "libs/proto/src",
+            "glob": "**/*.proto",
+            "output": "proto"
+          }
+        ],
         "command": "webpack-cli build",
-        "args": ["node-env=production"]
+        "args": [
+          "node-env=production"
+        ]
       },
       "configurations": {
         "development": {
-          "args": ["node-env=development"]
+          "args": [
+            "node-env=development"
+          ]
         }
       }
     },
     "serve": {
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
-      "dependsOn": ["build"],
+      "dependsOn": [
+        "build"
+      ],
       "options": {
         "buildTarget": "tracklab-api:build",
         "runBuildTargetDependencies": false
@@ -37,6 +50,12 @@
     "test": {
       "options": {
         "passWithNoTests": true
+      }
+    },
+    "tsproto": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node tools/generate-ts-proto.js"
       }
     }
   }

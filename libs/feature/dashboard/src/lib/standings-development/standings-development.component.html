@@ -1,8 +1,10 @@
 <div echarts
+     #chart
      [loading]="seriesData() === undefined"
      [options]="chartOptions()"
      [theme]="chartTheme()"
      [autoResize]="true"
-     class="chart"
+     (chartInit)="onChartInit($event)"
 ></div>
+
 

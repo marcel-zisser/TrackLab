@@ -3,11 +3,12 @@ import {
   Component,
   computed,
   inject,
-  input,
+  input
 } from '@angular/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import { DarkModeService, TeamColorMapper } from '@tracklab/services';
 import { RaceResult } from '@tracklab/models';
+import { EChartsType } from 'echarts/core';
 
 @Component({
   selector: 'tl-standings-development',
@@ -18,6 +19,8 @@ import { RaceResult } from '@tracklab/models';
 })
 export class StandingsDevelopmentComponent {
   private readonly darkModeService = inject(DarkModeService);
+
+  private chart: any | undefined;
 
   seasonData = input<RaceResult[] | undefined>();
   xAxisData = computed(() =>
@@ -92,6 +95,14 @@ export class StandingsDevelopmentComponent {
       type: 'line',
       data: value,
       color: color,
-    })),
+    }))
   }));
+
+  onChartInit(chart: EChartsType) {
+    this.chart = chart;
+
+    window.addEventListener('resize', () => {
+      this.chart?.resize();
+    });
+  }
 }
