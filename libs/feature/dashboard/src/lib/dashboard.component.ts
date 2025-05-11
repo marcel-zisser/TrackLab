@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   inject,
   OnInit,
 } from '@angular/core';
@@ -53,12 +52,6 @@ export class DashboardComponent implements OnInit {
       };
     })
   );
-
-  constructor() {
-    effect(() => {
-      console.log(this.statSpotlightData());
-    });
-  }
 
   ngOnInit() {
     this.driverColumns = [

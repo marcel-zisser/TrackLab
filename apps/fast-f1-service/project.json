@@ -74,8 +74,17 @@
         "debug": false
       }
     },
+    "generate-proto": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "uv run python -m grpc_tools.protoc -I libs/proto/src/ --python_out=apps/fast-f1-service/src/generated --grpc_python_out=apps/fast-f1-service/src/generated libs/proto/src/route-guide.proto"
+      }
+    },
     "serve": {
       "executor": "nx:run-commands",
+      "dependsOn": [
+        "fast-f1-service:generate-proto"
+      ],
       "options": {
         "command": "uv run python apps/fast-f1-service/src/main.py"
       }
