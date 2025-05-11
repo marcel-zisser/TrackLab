@@ -43,4 +43,8 @@ Thumbs.db
 
 .angular
 
-**/**/generated/
+# Ignore everything inside any 'generated' folder
+**/generated/
+
+# But do not ignore __init__.py files in those folders
+!**/generated/__init__.py

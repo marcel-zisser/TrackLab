@@ -1,6 +1,6 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { Feature, RouteGuide } from '../../generated/route_guide';
+import { Feature, RouteGuide } from '../../generated/route-guide';
 
 @Injectable()
 export class FastF1Service implements OnModuleInit {
