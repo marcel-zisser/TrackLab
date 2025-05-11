@@ -71,11 +71,12 @@ export class StandingsDevelopmentComponent {
     ],
     legend: {
       data: this.legendData(),
-      type: 'plain',
+      type: 'scroll',
       orient: 'horizontal',
       top: 0,
       padding: 10,
-      wrap: true, // only if using latest ECharts
+      wrap: true,
+      scroll: true
     },
     toolbox: {
       feature: {
@@ -95,7 +96,13 @@ export class StandingsDevelopmentComponent {
       type: 'line',
       data: value,
       color: color,
-    }))
+    })),
+    grid: {
+      left: '2%',
+      right: '2%',
+      bottom: '0%',
+      containLabel: true // ensures labels aren't cut off
+    }
   }));
 
   onChartInit(chart: EChartsType) {

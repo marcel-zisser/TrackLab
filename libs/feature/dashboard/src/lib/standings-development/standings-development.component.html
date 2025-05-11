@@ -1,10 +1,15 @@
-<div echarts
-     #chart
-     [loading]="seriesData() === undefined"
-     [options]="chartOptions()"
-     [theme]="chartTheme()"
-     [autoResize]="true"
-     (chartInit)="onChartInit($event)"
-></div>
+
+<div class="chart-container">
+  <div echarts
+       #chart
+       class="chart"
+       [loading]="seriesData() === undefined"
+       [options]="chartOptions()"
+       [theme]="chartTheme()"
+       [autoResize]="true"
+       (chartInit)="onChartInit($event)"
+  ></div>
+
+</div>
 
 
