@@ -37,10 +37,13 @@ export class StandingsDevelopmentComponent {
     this.seasonData()?.forEach((race) => {
       race.results.forEach((result) => {
         if (data.has(result.driver.code)) {
-          const [points,] = data.get(result.driver.code) ?? [[], ''];
+          const [points] = data.get(result.driver.code) ?? [[], ''];
           points?.push(points[points.length - 1] + result.points);
         } else {
-          data.set(result.driver.code, [[result.points], TeamColorMapper.mapTeamIdToColor(result.constructor.constructorId)]);
+          data.set(result.driver.code, [
+            [result.points],
+            TeamColorMapper.mapTeamIdToColor(result.constructor.constructorId),
+          ]);
         }
       });
     });
@@ -48,7 +51,11 @@ export class StandingsDevelopmentComponent {
     return data;
   });
 
-  legendData = computed(() => Array.from(this.seriesData()?.keys()));
+  legendData = computed(() =>
+   Array.from(this.seriesData()?.entries())
+      .sort(([, [, colorA]], [, [, colorB]]) => (colorA < colorB ? 1 : -1))
+      .map(([driver]) => driver)
+  );
 
   protected readonly chartTheme = computed(() =>
     this.darkModeService.chartTheme() === 'dark' ? 'tracklab-dark' : ''
@@ -60,7 +67,7 @@ export class StandingsDevelopmentComponent {
       enterable: true,
       order: 'valueDesc',
       confine: false,
-      className: 'tl-tooltip'
+      className: 'tl-tooltip',
     },
     dataZoom: [
       {
@@ -76,7 +83,7 @@ export class StandingsDevelopmentComponent {
       top: 0,
       padding: 10,
       wrap: true,
-      scroll: true
+      scroll: true,
     },
     toolbox: {
       feature: {
@@ -91,18 +98,20 @@ export class StandingsDevelopmentComponent {
     yAxis: {
       type: 'value',
     },
-    series: Array.from(this.seriesData()?.entries()).map(([key, [value, color]]) => ({
-      name: key,
-      type: 'line',
-      data: value,
-      color: color,
-    })),
+    series: Array.from(this.seriesData()?.entries()).map(
+      ([key, [value, color]]) => ({
+        name: key,
+        type: 'line',
+        data: value,
+        color: color,
+      })
+    ),
     grid: {
       left: '2%',
       right: '2%',
       bottom: '0%',
-      containLabel: true // ensures labels aren't cut off
-    }
+      containLabel: true, // ensures labels aren't cut off
+    },
   }));
 
   onChartInit(chart: EChartsType) {
