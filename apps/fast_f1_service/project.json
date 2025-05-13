@@ -86,8 +86,8 @@
         "fast-f1-service:generate-proto"
       ],
       "options": {
-        "command": "uv run python -u -m apps.fast_f1_service.src.main",
-        "cwd": ""
+        "command": "uv run python -u -m main",
+        "cwd": "apps/fast_f1_service/src"
       }
     }
   },

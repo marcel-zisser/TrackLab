@@ -3,7 +3,7 @@ import logging
 
 import grpc
 
-from apps.fast_f1_service.src.generated.route_guide_pb2_grpc import add_RouteGuideServicer_to_server, RouteGuideServicer
+from generated.route_guide_pb2_grpc import add_RouteGuideServicer_to_server, RouteGuideServicer
 
 
 def serve():

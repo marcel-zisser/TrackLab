@@ -3,7 +3,7 @@ import time
 
 
 import route_guide_resources
-from apps.fast_f1_service.src.generated import route_guide_pb2_grpc, route_guide_pb2
+from generated import route_guide_pb2_grpc, route_guide_pb2
 
 def get_feature(feature_db, point):
   """Returns Feature at given location or None."""

@@ -15,7 +15,7 @@
 
 import json
 
-from apps.fast_f1_service.src.generated import route_guide_pb2
+from generated import route_guide_pb2
 
 
 def read_route_guide_database():
