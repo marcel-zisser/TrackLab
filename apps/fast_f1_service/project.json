@@ -1,8 +1,8 @@
 {
-  "name": "fast-f1-service",
+  "name": "fast_f1_service",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
-  "sourceRoot": "fast-f1-service/src",
+  "sourceRoot": "apps/fast_f1_service/fast_f1_service",
   "targets": {
     "lock": {
       "executor": "@nxlv/python:lock",
@@ -77,7 +77,7 @@
     "generate-proto": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "uv run python -m grpc_tools.protoc -I libs/proto/src/ --python_out=apps/fast-f1-service/src/generated --grpc_python_out=apps/fast-f1-service/src/generated libs/proto/src/route-guide.proto"
+        "command": "uv run python -m grpc_tools.protoc -I libs/proto/src/ --python_out=apps/fast_f1_service/src/generated --grpc_python_out=apps/fast_f1_service/src/generated libs/proto/src/route-guide.proto"
       }
     },
     "serve": {
@@ -86,7 +86,8 @@
         "fast-f1-service:generate-proto"
       ],
       "options": {
-        "command": "uv run python apps/fast-f1-service/src/main.py"
+        "command": "uv run python -u -m apps.fast_f1_service.src.main",
+        "cwd": ""
       }
     }
   },

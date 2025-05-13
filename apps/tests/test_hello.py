@@ -5,4 +5,4 @@ from fast_f1_service.hello import hello
 
 def test_hello():
     """Test the hello function."""
-    assert hello() == "Hello fast-f1-service"
+    assert hello() == "Hello fast_f1_service"

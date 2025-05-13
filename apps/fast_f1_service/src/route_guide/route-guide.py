@@ -1,12 +1,9 @@
-from concurrent import futures
-import logging
 import math
 import time
 
-import grpc
-import route_guide_pb2
-import route_guide_pb2_grpc
+
 import route_guide_resources
+from apps.fast_f1_service.src.generated import route_guide_pb2_grpc, route_guide_pb2
 
 def get_feature(feature_db, point):
   """Returns Feature at given location or None."""
@@ -97,19 +94,3 @@ class RouteGuideServicer(route_guide_pb2_grpc.RouteGuideServicer):
         if prev_note.location == new_note.location:
           yield prev_note
       prev_notes.append(new_note)
-
-
-def serve():
-  server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-  route_guide_pb2_grpc.add_RouteGuideServicer_to_server(
-    RouteGuideServicer(), server
-  )
-  server.add_insecure_port("[::]:50051")
-  server.start()
-  print("FastF1 Grpc server started!")
-  server.wait_for_termination()
-
-
-if __name__ == "__main__":
-  logging.basicConfig()
-  serve()

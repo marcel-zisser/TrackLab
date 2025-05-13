@@ -15,7 +15,7 @@
 
 import json
 
-import route_guide_pb2
+from apps.fast_f1_service.src.generated import route_guide_pb2
 
 
 def read_route_guide_database():
@@ -26,7 +26,7 @@ def read_route_guide_database():
       route_guide_pb2.Features.
   """
   feature_list = []
-  with open("apps/fast-f1-service/src/route_guide_db.json") as route_guide_db_file:
+  with open("apps/fast_f1_service/src/route_guide/route_guide_db.json") as route_guide_db_file:
     for item in json.load(route_guide_db_file):
       feature = route_guide_pb2.Feature(
         name=item["name"],
