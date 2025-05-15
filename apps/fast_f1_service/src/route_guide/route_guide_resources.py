@@ -26,7 +26,7 @@ def read_route_guide_database():
       route_guide_pb2.Features.
   """
   feature_list = []
-  with open("apps/fast_f1_service/src/route_guide/route_guide_db.json") as route_guide_db_file:
+  with open("route_guide/route_guide_db.json") as route_guide_db_file:
     for item in json.load(route_guide_db_file):
       feature = route_guide_pb2.Feature(
         name=item["name"],

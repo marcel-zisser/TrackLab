@@ -2,8 +2,9 @@ import math
 import time
 
 
-import route_guide_resources
 from generated import route_guide_pb2_grpc, route_guide_pb2
+from route_guide import route_guide_resources
+
 
 def get_feature(feature_db, point):
   """Returns Feature at given location or None."""
@@ -44,6 +45,7 @@ class RouteGuideServicer(route_guide_pb2_grpc.RouteGuideServicer):
     self.db = route_guide_resources.read_route_guide_database()
 
   def GetFeature(self, request, context):
+    print("TEST")
     feature = get_feature(self.db, request)
     if feature is None:
       return route_guide_pb2.Feature(name="", location=request)
@@ -57,10 +59,8 @@ class RouteGuideServicer(route_guide_pb2_grpc.RouteGuideServicer):
     bottom = min(request.lo.latitude, request.hi.latitude)
     for feature in self.db:
       if (
-        feature.location.longitude >= left
-        and feature.location.longitude <= right
-        and feature.location.latitude >= bottom
-        and feature.location.latitude <= top
+        left <= feature.location.longitude <= right
+        and bottom <= feature.location.latitude <= top
       ):
         yield feature
 
