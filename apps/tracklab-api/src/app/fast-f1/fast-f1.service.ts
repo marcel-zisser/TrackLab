@@ -1,18 +1,18 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { Feature, RouteGuide } from '../../generated/route-guide';
+import { SessionResultResponse, SessionResults } from '../../generated/results';
 
 @Injectable()
 export class FastF1Service implements OnModuleInit {
-  private routeGuideService: RouteGuide;
+  private routeGuideService: SessionResults;
 
-  constructor(@Inject('ROUTE_GUIDE_PACKAGE') private client: ClientGrpc) {}
+  constructor(@Inject('TRACKLAB_PACKAGE') private client: ClientGrpc) {}
 
   onModuleInit() {
-    this.routeGuideService = this.client.getService<RouteGuide>('RouteGuide');
+    this.routeGuideService = this.client.getService<SessionResults>('SessionResults');
   }
 
-  getFeature(): Promise<Feature> {
-    return this.routeGuideService.GetFeature({ latitude: 1, longitude: 2 });
+  getSessionResults(): Promise<SessionResultResponse> {
+    return this.routeGuideService.GetSessionResults({ season: '2025' });
   }
 }

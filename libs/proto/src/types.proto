@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package at.tracklab;
+
+message Driver {
+  string driverId = 1;
+  int32 permanentNumber = 2;
+  string code = 3;
+  string url = 4;
+  string givenName = 5;
+  string familyName = 6;
+  string dateOfBirth = 7;
+  string nationality = 8;
+}
+
+message Constructor {
+  string constructorId = 1;
+  string constructorUrl = 2;
+  string constructorName = 3;
+  string nationality = 4;
+}
+
+message Circuit {
+  string message = 2;
+
+}
+
+message Location {
+  string message = 2;
+}
+
+message DriverResult {
+  string driverNumber = 1;
+  string driverId = 2;
+  string code = 3;
+  string givenName = 4;
+  string familyName = 5;
+  string headshotUrl = 6;
+  string countryCode = 7;
+
+  string teamId = 9;
+  string teamName = 10;
+  string teamColor = 11;
+
+  float position = 12;
+  string classifiedPosition = 13;
+  float gridPosition = 14;
+
+  string q1 = 15;
+  string q2 = 16;
+  string q3 = 17;
+  string raceTime = 18;
+
+  string status = 19;
+  float points = 20;
+}
+
+message SessionResult {
+  repeated DriverResult driverResults = 1;
+}
+

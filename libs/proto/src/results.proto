@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package at.tracklab;
+
+import "types.proto";
+
+service SessionResults {
+
+  // Obtains results based on the attributes defined in the request.
+  rpc GetSessionResults(SessionResultRequest) returns (SessionResultResponse) {}
+}
+
+message SessionResultRequest {
+  string season = 1;
+}
+
+message SessionResultResponse {
+  repeated SessionResult results = 1;
+}

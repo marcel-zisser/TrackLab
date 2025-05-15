@@ -8,7 +8,7 @@
     "build": {
       "executor": "nx:run-commands",
       "dependsOn": [
-        "tsproto"
+        "generate-proto"
       ],
       "options": {
         "assets": [
@@ -55,7 +55,7 @@
         "passWithNoTests": true
       }
     },
-    "tsproto": {
+    "generate-proto": {
       "executor": "nx:run-commands",
       "options": {
         "command": "node tools/generate-ts-proto.js",

@@ -64,7 +64,7 @@ export class DashboardService {
   }
 
   /**
-   * Queries the current season and returns the results of all races so far
+   * Queries the current season and returns the session_results of all races so far
    * @param sprint Fetch races or sprints
    * @param response Array to store the information in
    */

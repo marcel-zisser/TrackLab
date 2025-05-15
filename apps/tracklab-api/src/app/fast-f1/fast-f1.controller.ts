@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
-import { Feature } from '../../generated/route-guide';
 import { FastF1Service } from './fast-f1.service';
+import { SessionResultResponse } from '../../generated/results';
 
 @Controller('fast-f1')
 export class FastF1Controller {
@@ -8,7 +8,7 @@ export class FastF1Controller {
   }
 
   @Get('test')
-  getFeature(): Promise<Feature> {
-    return this.fastF1Service.getFeature();
+  getFeature(): Promise<SessionResultResponse> {
+    return this.fastF1Service.getSessionResults();
   }
 }

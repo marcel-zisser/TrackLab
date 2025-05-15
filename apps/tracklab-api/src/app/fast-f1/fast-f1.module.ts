@@ -10,12 +10,12 @@ import { join } from 'path';
   imports: [
     ClientsModule.register([
       {
-        name: 'ROUTE_GUIDE_PACKAGE',
+        name: 'TRACKLAB_PACKAGE',
         transport: Transport.GRPC,
         options: {
-          package: 'routeguide',
+          package: 'at.tracklab',
           url: 'localhost:50051',
-          protoPath: join(__dirname, '../tracklab-api/proto/route-guide.proto')
+          protoPath: join(__dirname, '../tracklab-api/proto/results.proto')
         },
       },
     ]),

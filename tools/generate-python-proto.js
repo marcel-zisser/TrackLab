@@ -9,7 +9,8 @@ const protoPath = 'libs/proto/src';
 // Ensure the directory exists
 const generateProto = [
   'uv run python -m grpc_tools.protoc',
-  '-I' + protoPath,
+  '--proto_path=' + protoPath,
+  '--pyi_out=' + outDir,
   '--python_out=' + outDir,
   '--grpc_python_out=' + outDir,
   ...protoFiles
