@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import {
-  Circuit,
   ConstructorStandingsEntry,
-  DriverStandingsEntry, Location, RaceResult, DriverResult,
+  DriverStandingsEntry,
+  RaceResult,
   Standings,
   StandingsResponse
 } from '@tracklab/models';

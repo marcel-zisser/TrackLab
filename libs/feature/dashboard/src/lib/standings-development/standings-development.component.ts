@@ -6,7 +6,7 @@ import {
   input
 } from '@angular/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
-import { DarkModeService, TeamColorMapper } from '@tracklab/services';
+import { DarkModeService } from '@tracklab/services';
 import { RaceResult } from '@tracklab/models';
 import { EChartsType } from 'echarts/core';
 
@@ -37,12 +37,16 @@ export class StandingsDevelopmentComponent {
     this.seasonData()?.forEach((race) => {
       race.results.forEach((result) => {
         if (data.has(result.driver.code)) {
-          const [points] = data.get(result.driver.code) ?? [[], ''];
+          const [points, color] = data.get(result.driver.code) ?? [[], ''];
           points?.push(points[points.length - 1] + result.points);
+          data.set(result.driver.code, [
+            points,
+            `#${result.team.color ?? 'black'}` ,
+          ]);
         } else {
           data.set(result.driver.code, [
             [result.points],
-            TeamColorMapper.mapTeamIdToColor(result.team.id),
+            `#${result.team.color ?? 'black'}` ,
           ]);
         }
       });
