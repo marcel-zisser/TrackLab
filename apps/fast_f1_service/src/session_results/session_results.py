@@ -4,7 +4,47 @@ import logging
 from datetime import datetime
 
 from generated.results_pb2 import SessionResultResponse
-from generated.types_pb2 import DriverResult, SessionResult
+from generated.types_pb2 import DriverResult, SessionResult, Driver, Team
+
+
+def init_session_result(race):
+  session_result = SessionResult()
+
+  session_result.sessionType = race.name
+  session_result.eventName = race.event.EventName
+  session_result.eventFormat = race.event.EventFormat
+
+  session_result.location.country = race.event.Country
+  session_result.location.locality = race.event.Location
+
+  session_result.date = datetime.isoformat(race.date)
+  session_result.year = race.event.year
+
+  return session_result
+
+
+def map_session_results(driver_result_data):
+    return DriverResult(
+      driver = Driver(
+        id = driver_result_data.get('DriverId'),
+        permanentNumber = driver_result_data.get('DriverNumber'),
+        code = driver_result_data.get('Abbreviation'),
+        givenName = driver_result_data.get('FirstName'),
+        familyName = driver_result_data.get('LastName'),
+        headshotUrl = driver_result_data.get('HeadshotUrl'),
+        countryCode = driver_result_data.get('Countrycode'),
+      ),
+      team = Team(
+        id = driver_result_data.get('TeamId'),
+        name = driver_result_data.get('TeamName'),
+        color = driver_result_data.get('TeamColor'),
+      ),
+      position = driver_result_data.get('Position'),
+      classifiedPosition = driver_result_data.get('ClassifiedPosition'),
+      gridPosition = driver_result_data.get('GridPosition'),
+      points = driver_result_data.get('Points'),
+      status = driver_result_data.get('Status')
+    )
 
 
 class SessionResultsServicer(results_pb2_grpc.SessionResultsServicer):
@@ -22,6 +62,11 @@ class SessionResultsServicer(results_pb2_grpc.SessionResultsServicer):
       event = event_schedule.get_event_by_round(index + 1)
 
       if (event.EventDate - datetime.today()).value < 0:
+        if event.EventFormat == 'sprint_qualifying':
+          sprint = event.get_sprint()
+          sprint.load(laps=False, telemetry=False, weather=False, messages=False)
+          self.currentRaces.append(sprint)
+
         race = event.get_race()
         race.load(laps=False, telemetry=False, weather=False, messages=False)
         self.currentRaces.append(race)
@@ -30,29 +75,11 @@ class SessionResultsServicer(results_pb2_grpc.SessionResultsServicer):
     response = SessionResultResponse()
 
     for race in self.currentRaces:
-      session_result = SessionResult()
+      session_result = init_session_result(race)
+
       for _, row in race.results.iterrows():
-        driver_result = DriverResult(
-          driverNumber = row.get('DriverNumber'),
-          driverId = row.get('DriverId'),
-          code = row.get('Abbreviation'),
-          givenName = row.get('FirstName'),
-          familyName = row.get('LastName'),
-          headshotUrl = row.get('HeadshotUrl'),
-          countryCode = row.get('Countrycode'),
+        session_result.driverResults.append(map_session_results(row))
 
-          teamId = row.get('TeamId'),
-          teamName = row.get('TeamName'),
-          teamColor = row.get('TeamColor'),
-
-          position = row.get('Position'),
-          classifiedPosition = row.get('ClassifiedPosition'),
-          gridPosition = row.get('GridPosition'),
-
-          status = row.get('Status'),
-          points = row.get('Points')
-        )
-        session_result.driverResults.append(driver_result)
-      response.results.append(session_result)
+      response.sessionResults.append(session_result)
 
     return response

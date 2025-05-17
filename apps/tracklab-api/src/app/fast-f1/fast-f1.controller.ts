@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { FastF1Service } from './fast-f1.service';
-import { SessionResultResponse } from '../../generated/results';
+import { RaceResult } from '@tracklab/models';
 
 @Controller('fast-f1')
 export class FastF1Controller {
@@ -8,7 +8,7 @@ export class FastF1Controller {
   }
 
   @Get('test')
-  getFeature(): Promise<SessionResultResponse> {
+  getCurrentSeasonResults(): Promise<RaceResult[]> {
     return this.fastF1Service.getSessionResults();
   }
 }

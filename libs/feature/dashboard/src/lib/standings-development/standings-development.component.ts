@@ -20,14 +20,14 @@ import { EChartsType } from 'echarts/core';
 export class StandingsDevelopmentComponent {
   private readonly darkModeService = inject(DarkModeService);
 
-  private chart: any | undefined;
+  private chart: EChartsType | undefined;
 
   seasonData = input<RaceResult[] | undefined>();
   xAxisData = computed(() =>
     this.seasonData()?.map((race) => {
-      const locality = race.circuit.location.locality;
+      const locality = race.location.locality;
 
-      return race.type === 'race' ? locality : `${locality} Sprint`;
+      return race.type === 'Race' ? locality : `${locality} Sprint`;
     })
   );
 
@@ -42,7 +42,7 @@ export class StandingsDevelopmentComponent {
         } else {
           data.set(result.driver.code, [
             [result.points],
-            TeamColorMapper.mapTeamIdToColor(result.constructor.constructorId),
+            TeamColorMapper.mapTeamIdToColor(result.team.id),
           ]);
         }
       });

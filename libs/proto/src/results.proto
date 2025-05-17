@@ -15,5 +15,5 @@ message SessionResultRequest {
 }
 
 message SessionResultResponse {
-  repeated SessionResult results = 1;
+  repeated SessionResult sessionResults = 1;
 }

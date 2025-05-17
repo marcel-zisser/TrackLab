@@ -1,2 +1,2 @@
-export { Result } from './results';
+export { DriverResult } from './driverResult';
 export { RaceResult } from './raceResult';

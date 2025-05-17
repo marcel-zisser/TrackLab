@@ -1,6 +1,6 @@
-import { Constructor } from '../constructor';
+import { Team } from '../team';
 import { StandingsEntry } from './standings-entry';
 
 export interface ConstructorStandingsEntry extends StandingsEntry {
-  Constructor: Constructor;
+  Constructor: Team;
 }

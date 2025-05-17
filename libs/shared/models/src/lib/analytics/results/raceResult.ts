@@ -1,12 +1,10 @@
-import { Circuit } from '../circuit';
-import { Result } from './results';
+import { DriverResult } from './driverResult';
+import { Location } from '../location';
 
 export interface RaceResult {
-  season: number;
-  round: number;
+  year: number;
   date: string;
-  time: string;
-  type: 'race' | 'sprint';
-  circuit: Circuit;
-  results: Result[];
+  type: string;
+  location: Location;
+  results: DriverResult[];
 }

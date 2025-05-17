@@ -1,4 +1,4 @@
-import { computed, inject, Injectable } from '@angular/core';
+import { computed, effect, inject, Injectable } from '@angular/core';
 import { BackendService } from '@tracklab/services';
 import {
   ConstructorStandingsEntry,
@@ -17,7 +17,7 @@ export class DashboardService {
     this.backendService.doGet<StandingsResponse>('dashboard/standings');
 
   private developmentResource =
-    this.backendService.doGet<RaceResult[]>('dashboard/development');
+    this.backendService.doGet<RaceResult[]>('fast-f1/test');
 
   driverStandings = computed<DriverStandingsEntry[] | undefined>(
     () => this.standingsResource.value()?.driverStandings?.standingsList

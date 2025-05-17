@@ -9,6 +9,7 @@ const outDir = 'apps/tracklab-api/src/generated';
 const cmd = [
   'npx protoc',
   '--plugin=protoc-gen-ts_proto=node_modules\\.bin\\protoc-gen-ts_proto.cmd',
+  '--ts_proto_opt=nestJs=true',
   '--ts_proto_out=' + outDir,
   '--proto_path=libs/proto/src',
   ...protoFiles
