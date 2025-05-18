@@ -18,7 +18,6 @@
             "output": "proto"
           }
         ],
-        "output-path": "dist/apps/tracklab-api/proto",
         "command": "webpack-cli build",
         "args": [
           "node-env=production"
@@ -29,8 +28,7 @@
           "args": [
             "node-env=development"
           ]
-        },
-        "cachable": false
+        }
       }
     },
     "serve": {
