@@ -5,16 +5,11 @@ import logging
 import grpc
 
 from generated.results_pb2_grpc import add_SessionResultsServicer_to_server
-from generated.route_guide_pb2_grpc import add_RouteGuideServicer_to_server
-from route_guide.route_guide import RouteGuideServicer
 from session_results.session_results import SessionResultsServicer
 
 
 async def serve():
   server = grpc.aio.server(futures.ThreadPoolExecutor(max_workers=10))
-  add_RouteGuideServicer_to_server(
-    RouteGuideServicer(), server
-  )
   add_SessionResultsServicer_to_server(
     SessionResultsServicer(), server
   )
