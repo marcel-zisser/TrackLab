@@ -1,31 +1,8 @@
-@if (!data()) {
+@if (data()) {
   <p-table
-    [value]="[1,2,3,4,5]"
-    [columns]="columns()"
-  class="flex-1">
-    <ng-template #header let-columns>
-      <tr>
-        @for (col of columns; track col) {
-          <th>
-            {{ col.header }}
-          </th>
-        }
-      </tr>
-    </ng-template>
-    <ng-template #body let-columns="columns">
-      <tr>
-        @for (col of columns; track col) {
-          <td>
-            <p-skeleton></p-skeleton>
-          </td>
-        }
-      </tr>
-    </ng-template>
-  </p-table>
-} @else {
-  <p-table
-    [value]="data() ?? []"
-    [columns]="columns()"
+    #table
+    [value]="driverRows()"
+    [columns]="driverColumns"
     [scrollable]="true"
     [size]="'small'"
     (click)="onTableClick()"
@@ -58,9 +35,11 @@
       </tr>
     </ng-template>
   </p-table>
-  <p-popover #op>
+  <p-popover #op [style]="{'width': '20%'}">
     <ng-template #content>
-      <tl-driver-card></tl-driver-card>
+      <tl-driver-card [driverInfo]="popoverData()"></tl-driver-card>
     </ng-template>
   </p-popover>
+} @else {
+  <tl-skeleton-table [rowNumber]="20" [columns]="driverColumns"></tl-skeleton-table>
 }

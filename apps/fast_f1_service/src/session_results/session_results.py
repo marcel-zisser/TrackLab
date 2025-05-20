@@ -32,7 +32,7 @@ def map_session_results(driver_result_data):
         givenName = driver_result_data.get('FirstName'),
         familyName = driver_result_data.get('LastName'),
         headshotUrl = driver_result_data.get('HeadshotUrl'),
-        countryCode = driver_result_data.get('Countrycode'),
+        countryCode = driver_result_data.get('CountryCode'),
       ),
       team = Team(
         id = driver_result_data.get('TeamId'),

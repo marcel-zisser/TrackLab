@@ -1,0 +1,23 @@
+<p-table
+  [value]="value()"
+  [columns]="columns()"
+  class="flex-1">
+  <ng-template #header let-columns>
+    <tr>
+      @for (col of columns; track col) {
+        <th>
+          {{ col.header }}
+        </th>
+      }
+    </tr>
+  </ng-template>
+  <ng-template #body let-columns="columns">
+    <tr>
+      @for (col of columns; track col) {
+        <td>
+          <p-skeleton></p-skeleton>
+        </td>
+      }
+    </tr>
+  </ng-template>
+</p-table>

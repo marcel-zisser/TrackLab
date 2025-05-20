@@ -34,11 +34,13 @@ export class FastF1Service implements OnModuleInit {
             code: driver.code,
             givenName: driver.givenName,
             familyName: driver.familyName,
+            countryCode: driver.countryCode,
+            headshotUrl: driver.headshotUrl.replace('1col', '3col'),
           },
           team: {
             id: team.id,
             name: team.name,
-            color: team.color
+            color: `#${team.color}`
           },
           gridPosition: driverResult.gridPosition,
           status: driverResult.status

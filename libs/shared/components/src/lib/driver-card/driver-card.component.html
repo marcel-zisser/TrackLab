@@ -1,38 +1,40 @@
-<div class="flex flex-row gap-8">
-  <div class="flex flex-grow-1 justify-center items-center">
-    <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" class="m-2" size="xlarge"
-              shape="circle" />
-  </div>
-  <div class="flex-grow-3 grid grid-cols-2 gap-x-4">
-    <div class="font-bold">
-      First name:
+@let info = driverInfo();
+
+@if (info) {
+  <div class="flex flex-row gap-4 p-2">
+    <div class="flex flex-grow-1 justify-center items-center">
+      <p-avatar [image]="info.driver.headshotUrl"  size="xlarge"
+                shape="circle" />
+
     </div>
-    <div>
-      Oscar
-    </div>
-    <div class="font-bold">
-      Last name:
-    </div>
-    <div>
-      Piastri
-    </div>
-    <div class="font-bold">
-     Nationality:
-    </div>
-    <div>
-      Australia
-    </div>
-    <div class="font-bold">
-      Team:
-    </div>
-    <div>
-      McLaren
-    </div>
-    <div class="font-bold">
+    <div class="flex-grow-2 grid grid-cols-2 gap-x-4">
+      <div class="col-span-2 text-lg mb-2">
+       {{ info.driver.givenName }} {{ info.driver.familyName }}
+      </div>
+      <div class="font-bold">
+        Age:
+      </div>
+      <div>
+        {{ info.team.name }}
+      </div>
+      <div class="font-bold">
+        Team:
+      </div>
+      <div>
+        {{ info.team.name }}
+      </div>
+      <div class="font-bold">
+        Wins:
+      </div>
+      <div>
+        {{ info.wins }}
+      </div>
+      <div class="font-bold">
         Points:
-    </div>
-    <div>
-      135
+      </div>
+      <div>
+        {{ info.points }}
+      </div>
     </div>
   </div>
-</div>
+}

@@ -1,16 +1,26 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, OnInit } from '@angular/core';
 import { Skeleton } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import { Column } from '@tracklab/models';
+import { SkeletonTableComponent } from '@tracklab/shared/components';
 
 @Component({
   selector: 'tl-stat-spotlight',
-  imports: [Skeleton, TableModule],
+  imports: [TableModule, SkeletonTableComponent],
   templateUrl: './stat-spotlight.component.html',
   styleUrl: './stat-spotlight.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StatSpotlightComponent {
+export class StatSpotlightComponent implements OnInit {
   data = input.required<unknown[] | undefined>();
-  columns = input.required<Column[]>();
+
+  statSpotlightColumns: Column[] = [];
+
+  ngOnInit() {
+    this.statSpotlightColumns = [
+      { field: 'category', header: 'Category' },
+      { field: 'driver', header: 'Driver' },
+      { field: 'data', header: 'Data' },
+    ];
+  }
 }

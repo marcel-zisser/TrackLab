@@ -1,7 +1,7 @@
 @if (data()) {
   <p-table
     [value]="data() ?? []"
-    [columns]="statSpotlightColumns"
+    [columns]="constructorColumns"
     [scrollable]="true"
     [size]="'small'"
     scrollHeight="flex">
@@ -15,15 +15,21 @@
       </tr>
     </ng-template>
     <ng-template #body let-rowData let-columns="columns">
-      <tr>
+      <tr [pSelectableRow]="rowData" class="!hover:underline hover:!bg-primary  hover:!text-white">
         @for (col of columns; track col) {
-          <td>
-            {{ rowData[col.field] }}
-          </td>
+          @if (col.field === 'driver') {
+            <td>
+              {{ rowData[col.field] }}
+            </td>
+          } @else {
+            <td>
+              {{ rowData[col.field] }}
+            </td>
+          }
         }
       </tr>
     </ng-template>
   </p-table>
 } @else {
-  <tl-skeleton-table [rowNumber]="5" [columns]="statSpotlightColumns"></tl-skeleton-table>
+  <tl-skeleton-table [rowNumber]="10" [columns]="constructorColumns"></tl-skeleton-table>
 }

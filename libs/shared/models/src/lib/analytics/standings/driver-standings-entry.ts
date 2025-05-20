@@ -3,6 +3,8 @@ import { Team } from '../team';
 import { Driver } from '../driver';
 
 export interface DriverStandingsEntry extends StandingsEntry {
-  Driver: Driver;
-  Constructors: Team[]
+  driver: Driver;
+  teams: Team[];
+  points: number;
+  wins: number;
 }

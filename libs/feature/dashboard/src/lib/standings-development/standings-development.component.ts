@@ -41,12 +41,12 @@ export class StandingsDevelopmentComponent {
           points?.push(points[points.length - 1] + result.points);
           data.set(result.driver.code, [
             points,
-            `#${result.team.color ?? 'black'}` ,
+            result.team.color ?? 'black' ,
           ]);
         } else {
           data.set(result.driver.code, [
             [result.points],
-            `#${result.team.color ?? 'black'}` ,
+            result.team.color ?? 'black' ,
           ]);
         }
       });
