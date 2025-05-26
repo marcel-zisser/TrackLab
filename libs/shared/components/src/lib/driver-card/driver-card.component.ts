@@ -5,11 +5,10 @@ import {
 } from '@angular/core';
 import { Avatar } from 'primeng/avatar';
 import { DriverInfo } from '@tracklab/models';
-import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'tl-driver-card',
-  imports: [Avatar, NgOptimizedImage],
+  imports: [Avatar],
   templateUrl: './driver-card.component.html',
   styleUrl: './driver-card.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

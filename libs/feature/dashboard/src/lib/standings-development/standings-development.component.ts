@@ -71,6 +71,7 @@ export class StandingsDevelopmentComponent {
       enterable: true,
       order: 'valueDesc',
       confine: false,
+      appendTo: 'body',
       className: 'tl-tooltip',
     },
     dataZoom: [
