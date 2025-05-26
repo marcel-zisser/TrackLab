@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  input,
+  input
 } from '@angular/core';
 import { Avatar } from 'primeng/avatar';
 import { DriverInfo } from '@tracklab/models';

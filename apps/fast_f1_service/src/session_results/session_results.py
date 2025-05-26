@@ -48,8 +48,6 @@ def map_session_results(driver_result_data):
 
 
 class SessionResultsServicer(results_pb2_grpc.SessionResultsServicer):
-  """Provides methods that implement functionality of route guide server."""
-
   def __init__(self):
     logging.getLogger("fastf1").setLevel(logging.WARNING)
 

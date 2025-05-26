@@ -4,18 +4,12 @@
   <div class="flex flex-row gap-4 p-2">
     <div class="flex flex-grow-1 justify-center items-center">
       <p-avatar [image]="info.driver.headshotUrl"  size="xlarge"
-                shape="circle" />
+                shape="circle"/>
 
     </div>
     <div class="flex-grow-2 grid grid-cols-2 gap-x-4">
       <div class="col-span-2 text-lg mb-2">
        {{ info.driver.givenName }} {{ info.driver.familyName }}
-      </div>
-      <div class="font-bold">
-        Age:
-      </div>
-      <div>
-        {{ info.team.name }}
       </div>
       <div class="font-bold">
         Team:
