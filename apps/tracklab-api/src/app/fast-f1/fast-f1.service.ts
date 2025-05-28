@@ -3,20 +3,29 @@ import { ClientGrpc } from '@nestjs/microservices';
 import { SessionResultsClient } from '../../generated/results';
 import { firstValueFrom } from 'rxjs';
 import { RaceResult, DriverResult } from '@tracklab/models';
+import { EventScheduleClient } from '../../generated/event-schedule';
 
 @Injectable()
 export class FastF1Service implements OnModuleInit {
   private sessionResultsService: SessionResultsClient;
+  private eventScheduleService: EventScheduleClient;
 
   constructor(@Inject('TRACKLAB_PACKAGE') private client: ClientGrpc) {}
 
   onModuleInit() {
     this.sessionResultsService = this.client.getService<SessionResultsClient>('SessionResults');
+    this.eventScheduleService = this.client.getService<EventScheduleClient>('EventSchedule');
   }
 
-  async getSessionResults(): Promise<RaceResult[]> {
+  async getSessionResults(year: number, round: number, session: number): Promise<RaceResult[]> {
     const response: RaceResult[] = [];
-    const sessionResults = await firstValueFrom(this.sessionResultsService.getSessionResults({ season: '2025' }));
+    const sessionResults = await firstValueFrom(
+      this.sessionResultsService.getSessionResults({
+        season: year,
+        round: round,
+        session: session
+      })
+    );
 
     for (const sessionResult of sessionResults.sessionResults) {
       const mappedResults: DriverResult[] = [];
@@ -60,5 +69,14 @@ export class FastF1Service implements OnModuleInit {
     }
 
     return response;
+  }
+
+  async getEventSchedule(season: number) {
+    const response: RaceResult[] = [];
+    const eventSchedule = await firstValueFrom(
+      this.eventScheduleService.getEventSchedule({ season: 2025 })
+    );
+
+    return eventSchedule;
   }
 }

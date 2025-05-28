@@ -17,7 +17,7 @@ export class DashboardService {
     this.backendService.doGet<StandingsResponse>('dashboard/standings');
 
   private developmentResource =
-    this.backendService.doGet<RaceResult[]>('fast-f1/test');
+    this.backendService.doGet<RaceResult[]>(`fast-f1/session-results?year=${new Date().getFullYear()}`);
 
   currentSeason = this.developmentResource.value.asReadonly();
 

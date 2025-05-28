@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package at.tracklab;
+
+import "types.proto";
+
+service EventSchedule {
+
+  // Obtains results based on the attributes defined in the request.
+  rpc GetEventSchedule(EventScheduleRequest) returns (EventScheduleResponse) {}
+}
+
+message EventScheduleRequest {
+  int32 season = 1;
+}
+
+message EventScheduleResponse {
+  repeated Event events = 1;
+}

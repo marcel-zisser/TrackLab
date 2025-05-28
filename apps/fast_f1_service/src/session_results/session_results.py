@@ -7,7 +7,37 @@ from generated.results_pb2 import SessionResultResponse
 from generated.types_pb2 import DriverResult, SessionResult, Driver, Team
 
 
+def load_season_results(season: int):
+  """
+  This function loads the race and sprint results for a given season
+  :param season: the season to load the results of
+  :return: a list of results ordered by date
+  """
+  season_results = []
+  event_schedule = fastf1.get_event_schedule(season)
+
+  for index in range(len(event_schedule) - 1):
+    event = event_schedule.get_event_by_round(index + 1)
+
+    if (event.EventDate - datetime.today()).value < 0:
+      if event.EventFormat == 'sprint_qualifying':
+        sprint = event.get_sprint()
+        sprint.load(laps=False, telemetry=False, weather=False, messages=False)
+        season_results.append(sprint)
+
+      race = event.get_race()
+      race.load(laps=False, telemetry=False, weather=False, messages=False)
+      season_results.append(race)
+
+  return season_results
+
+
 def init_session_result(race):
+  """
+  Initializes the session object with the basic session data
+  :param race: the raw race object
+  :return: the initializes session results object
+  """
   session_result = SessionResult()
 
   session_result.sessionType = race.name
@@ -24,55 +54,49 @@ def init_session_result(race):
 
 
 def map_session_results(driver_result_data):
-    return DriverResult(
-      driver = Driver(
-        id = driver_result_data.get('DriverId'),
-        permanentNumber = driver_result_data.get('DriverNumber'),
-        code = driver_result_data.get('Abbreviation'),
-        givenName = driver_result_data.get('FirstName'),
-        familyName = driver_result_data.get('LastName'),
-        headshotUrl = driver_result_data.get('HeadshotUrl'),
-        countryCode = driver_result_data.get('CountryCode'),
-      ),
-      team = Team(
-        id = driver_result_data.get('TeamId'),
-        name = driver_result_data.get('TeamName'),
-        color = driver_result_data.get('TeamColor'),
-      ),
-      position = driver_result_data.get('Position'),
-      classifiedPosition = driver_result_data.get('ClassifiedPosition'),
-      gridPosition = driver_result_data.get('GridPosition'),
-      points = driver_result_data.get('Points'),
-      status = driver_result_data.get('Status')
-    )
+  """
+  Maps the raw result data to proper objects
+  :param driver_result_data: the raw data
+  :return: The mapped data in proper objects
+  """
+  return DriverResult(
+    driver = Driver(
+      id = driver_result_data.get('DriverId'),
+      permanentNumber = driver_result_data.get('DriverNumber'),
+      code = driver_result_data.get('Abbreviation'),
+      givenName = driver_result_data.get('FirstName'),
+      familyName = driver_result_data.get('LastName'),
+      headshotUrl = driver_result_data.get('HeadshotUrl'),
+      countryCode = driver_result_data.get('CountryCode'),
+    ),
+    team = Team(
+      id = driver_result_data.get('TeamId'),
+      name = driver_result_data.get('TeamName'),
+      color = driver_result_data.get('TeamColor'),
+    ),
+    position = driver_result_data.get('Position'),
+    classifiedPosition = driver_result_data.get('ClassifiedPosition'),
+    gridPosition = driver_result_data.get('GridPosition'),
+    points = driver_result_data.get('Points'),
+    status = driver_result_data.get('Status')
+  )
 
 
 class SessionResultsServicer(results_pb2_grpc.SessionResultsServicer):
   def __init__(self):
     logging.getLogger("fastf1").setLevel(logging.WARNING)
 
-    self.currentRaces = []
-
     current_year = datetime.today().year
-    event_schedule = fastf1.get_event_schedule(current_year)
+    self.current_results = load_season_results(current_year)
 
-    for index in range(len(event_schedule) - 1):
-      event = event_schedule.get_event_by_round(index + 1)
-
-      if (event.EventDate - datetime.today()).value < 0:
-        if event.EventFormat == 'sprint_qualifying':
-          sprint = event.get_sprint()
-          sprint.load(laps=False, telemetry=False, weather=False, messages=False)
-          self.currentRaces.append(sprint)
-
-        race = event.get_race()
-        race.load(laps=False, telemetry=False, weather=False, messages=False)
-        self.currentRaces.append(race)
 
   def GetSessionResults(self, request, context):
     response = SessionResultResponse()
+    current_year = datetime.today().year
 
-    for race in self.currentRaces:
+    session_results = self.current_results if request.season == current_year else load_season_results(request.season)
+
+    for race in session_results:
       session_result = init_session_result(race)
 
       for _, row in race.results.iterrows():

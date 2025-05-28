@@ -15,7 +15,10 @@ import { join } from 'path';
         options: {
           package: 'at.tracklab',
           url: 'localhost:50051',
-          protoPath: join(__dirname, '../tracklab-api/proto/results.proto')
+          protoPath: [
+            join(__dirname, '../tracklab-api/proto/results.proto'),
+            join(__dirname, '../tracklab-api/proto/event-schedule.proto')
+          ]
         },
       },
     ]),

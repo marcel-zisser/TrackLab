@@ -11,7 +11,9 @@ service SessionResults {
 }
 
 message SessionResultRequest {
-  string season = 1;
+  int32 season = 1;
+  optional int32 round = 2;
+  optional int32 session = 3;
 }
 
 message SessionResultResponse {

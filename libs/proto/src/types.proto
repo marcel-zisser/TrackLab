@@ -64,3 +64,14 @@ message SessionResult {
   repeated DriverResult driverResults = 7;
 }
 
+message Event {
+  int32 roundNumber = 1;
+  string country = 2;
+  string location = 3;
+  string officialEventName = 4;
+  string eventName = 5;
+  string eventDate = 6;
+  string eventFormat = 7;
+  bool f1ApiSupport = 8;
+}
+
