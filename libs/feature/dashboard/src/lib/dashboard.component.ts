@@ -12,6 +12,7 @@ import { DashboardService } from './dashboard.service';
 import { StatSpotlightComponent } from './stat-spotlight/stat-spotlight.component';
 import { DriverStandingsComponent } from './driver-standings/driver-standings.component';
 import { TeamStandingsComponent } from './team-standings/team-standings.component';
+import { SeasonProgressComponent } from './season-progress/season-progress.component';
 
 @Component({
   selector: 'tl-dashboard',
@@ -21,6 +22,7 @@ import { TeamStandingsComponent } from './team-standings/team-standings.componen
     DriverStandingsComponent,
     StatSpotlightComponent,
     TeamStandingsComponent,
+    SeasonProgressComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',

@@ -2,7 +2,7 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { SessionResultsClient } from '../../generated/results';
 import { firstValueFrom } from 'rxjs';
-import { RaceResult, DriverResult } from '@tracklab/models';
+import { RaceResult, DriverResult, Event } from '@tracklab/models';
 import { EventScheduleClient } from '../../generated/event-schedule';
 
 @Injectable()
@@ -71,12 +71,11 @@ export class FastF1Service implements OnModuleInit {
     return response;
   }
 
-  async getEventSchedule(season: number) {
-    const response: RaceResult[] = [];
+  async getEventSchedule(season: number): Promise<Event[]> {
     const eventSchedule = await firstValueFrom(
-      this.eventScheduleService.getEventSchedule({ season: 2025 })
+      this.eventScheduleService.getEventSchedule({ season: season })
     );
 
-    return eventSchedule;
+    return eventSchedule.events;
   }
 }

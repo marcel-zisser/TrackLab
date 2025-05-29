@@ -1,0 +1,23 @@
+<div class="flex flex-col items-center gap-1 mb-8">
+  <p-progress-bar class="w-full" [value]="percentageFinished()"></p-progress-bar>
+  {{ finishedEvents() }} out of {{ totalEvents() }} rounds finished
+</div>
+
+@let event = nextEvent();
+
+@if(event) {
+  <h1 class="text-primary font-bold">Next up</h1>
+  <div>
+    <p class="font-bold">{{ event.eventName }}</p>
+    <p class="font-bold">{{ event.eventDate }}</p>
+    <p class="font-bold">{{ event.eventFormat }}</p>
+    <p class="font-bold">{{ event.location }}</p>
+    <p class="font-bold">{{ event.country }}</p>
+  </div>
+
+  <div>
+
+  </div>
+} @else {
+  <p>No upcoming events!</p>
+}

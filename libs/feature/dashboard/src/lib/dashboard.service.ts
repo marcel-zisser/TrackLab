@@ -1,9 +1,11 @@
-import { computed, effect, inject, Injectable } from '@angular/core';
+import { computed, inject, Injectable } from '@angular/core';
 import { BackendService } from '@tracklab/services';
 import {
-  ConstructorStandingsEntry, Driver,
-  DriverStandingsEntry, RaceResult,
-  StandingsResponse
+  ConstructorStandingsEntry,
+  DriverStandingsEntry,
+  RaceResult,
+  StandingsResponse,
+  Event
 } from '@tracklab/models';
 
 @Injectable({
@@ -13,14 +15,18 @@ export class DashboardService {
 
   private readonly backendService = inject(BackendService);
 
+  private eventScheduleResource =
+    this.backendService.doGet<Event[]>(`fast-f1/event-schedule?year=${new Date().getFullYear()}`);
+
   private standingsResource =
     this.backendService.doGet<StandingsResponse>('dashboard/standings');
 
   private developmentResource =
     this.backendService.doGet<RaceResult[]>(`fast-f1/session-results?year=${new Date().getFullYear()}`);
 
-  currentSeason = this.developmentResource.value.asReadonly();
+  eventSchedule = this.eventScheduleResource.value.asReadonly();
 
+  currentSeason = this.developmentResource.value.asReadonly();
 
   constructorStandings = computed<ConstructorStandingsEntry[] | undefined>(
     () => this.standingsResource.value()?.constructorStandings?.standingsList
