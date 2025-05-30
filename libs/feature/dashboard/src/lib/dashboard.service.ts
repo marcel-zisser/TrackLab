@@ -16,13 +16,13 @@ export class DashboardService {
   private readonly backendService = inject(BackendService);
 
   private eventScheduleResource =
-    this.backendService.doGet<Event[]>(`fast-f1/event-schedule?year=${new Date().getFullYear()}`);
+    this.backendService.doGetResource<Event[]>(`fast-f1/event-schedule?year=${new Date().getFullYear()}`);
 
   private standingsResource =
-    this.backendService.doGet<StandingsResponse>('dashboard/standings');
+    this.backendService.doGetResource<StandingsResponse>('dashboard/standings');
 
   private developmentResource =
-    this.backendService.doGet<RaceResult[]>(`fast-f1/session-results?year=${new Date().getFullYear()}`);
+    this.backendService.doGetResource<RaceResult[]>(`fast-f1/session-results?year=${new Date().getFullYear()}`);
 
   eventSchedule = this.eventScheduleResource.value.asReadonly();
 

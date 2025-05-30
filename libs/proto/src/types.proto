@@ -26,13 +26,18 @@ message Team {
 }
 
 message Circuit {
-  string message = 2;
+  string id = 1;
+  string name = 2;
+  string url = 3;
+  Location location = 4;
 
 }
 
 message Location {
   string country = 1;
   string locality = 2;
+  float latitude = 3;
+  float longitude = 4;
 }
 
 message DriverResult {
@@ -51,6 +56,11 @@ message DriverResult {
   string raceTime = 11;
 }
 
+message SessionInfo {
+  string name = 1;
+  string date = 2;
+}
+
 message SessionResult {
   string sessionType = 1;
   string eventName = 2;
@@ -66,12 +76,18 @@ message SessionResult {
 
 message Event {
   int32 roundNumber = 1;
+
   string country = 2;
   string location = 3;
-  string officialEventName = 4;
-  string eventName = 5;
-  string eventDate = 6;
-  string eventFormat = 7;
+
+  string officialName = 4;
+  string name = 5;
+
+  string date = 6;
+  string format = 7;
+
   bool f1ApiSupport = 8;
+
+  repeated SessionInfo sessionInfos = 9;
 }
 

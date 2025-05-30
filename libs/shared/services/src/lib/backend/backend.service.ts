@@ -1,8 +1,8 @@
 import { Inject, inject, Injectable, InjectionToken } from '@angular/core';
 import {
-  HttpClient,
+  HttpClient, HttpParams,
   httpResource,
-  HttpResourceRef,
+  HttpResourceRef
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -19,12 +19,27 @@ export class BackendService {
   /**
    * Executes a GET request to the backend API to a specific endpoint
    * @param url the endpoint to be targeted
+   * @param params query params to append to the URL
    * @returns {HttpResourceRef} HttpResourceRef with the result of the request
    */
-  doGet<T>(url: string | undefined): HttpResourceRef<T | undefined> {
+  doGet<T>(url: string | undefined, params?: HttpParams): Observable<T | undefined> {
+    return this.httpClient.get<T>(this.apiUrl + url, {
+      params: params
+    });
+  }
+
+  /**
+   * Executes a GET request to the backend API to a specific endpoint
+   * @param url the endpoint to be targeted
+   * @param params query params to append to the URL
+   * @returns {HttpResourceRef} HttpResourceRef with the result of the request
+   */
+  doGetResource<T>(url: string | undefined, params?: HttpParams): HttpResourceRef<T | undefined> {
     return httpResource<T>({
       method: 'GET',
       url: this.apiUrl + url,
+      params: params,
+      withCredentials: true
     });
   }
 

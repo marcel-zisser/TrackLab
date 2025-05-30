@@ -6,3 +6,4 @@ export { Circuit } from './circuit';
 export { Location } from './location';
 export { DriverInfo } from './driver-info';
 export { Event } from './event';
+export { SessionInfo } from './session-info';

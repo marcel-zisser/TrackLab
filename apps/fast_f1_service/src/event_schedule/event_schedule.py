@@ -5,9 +5,40 @@ import logging
 
 from generated import event_schedule_pb2_grpc
 from generated.event_schedule_pb2 import EventScheduleResponse
-from generated.types_pb2 import Event
+from generated.types_pb2 import Event, SessionInfo
 
-def map_event(event_data):
+
+def map_session_infos(event_date) -> list[SessionInfo]:
+  """
+  Maps the sessions infos of the event into an array
+  :param event_date: the raw data
+  :return: array of session infos
+  """
+  return [
+    SessionInfo(
+      name = event_date.get('Session1'),
+      date = datetime.isoformat(event_date.get('Session1Date'))
+    ),
+    SessionInfo(
+      name = event_date.get('Session2'),
+      date = datetime.isoformat(event_date.get('Session2Date'))
+    ),
+    SessionInfo(
+      name = event_date.get('Session3'),
+      date = datetime.isoformat(event_date.get('Session3Date'))
+    ),
+    SessionInfo(
+      name = event_date.get('Session4'),
+      date = datetime.isoformat(event_date.get('Session4Date'))
+    ),
+    SessionInfo(
+      name = event_date.get('Session5'),
+      date = datetime.isoformat(event_date.get('Session5Date'))
+    ),
+  ]
+
+
+def map_event(event_data) -> Event:
   """
   Maps the event data to an Event object
   :param event_data: the raw data
@@ -17,20 +48,18 @@ def map_event(event_data):
     roundNumber = event_data.get('RoundNumber'),
     country = event_data.get('Country'),
     location = event_data.get('Location'),
-    officialEventName = event_data.get('OfficialEventName'),
-    eventName = event_data.get('EventName'),
-    eventDate = datetime.isoformat(event_data.get('EventDate')),
-    eventFormat = event_data.get('EventFormat'),
-    f1ApiSupport = event_data.get('F1ApiSupport')
+    officialName = event_data.get('OfficialEventName'),
+    name = event_data.get('EventName'),
+    date = datetime.isoformat(event_data.get('EventDate')),
+    format = event_data.get('EventFormat'),
+    f1ApiSupport = event_data.get('F1ApiSupport'),
+    sessionInfos = map_session_infos(event_data)
   )
 
 
 class EventScheduleServicer(event_schedule_pb2_grpc.EventScheduleServicer):
-  def __init__(self):
-    logging.getLogger("fastf1").setLevel(logging.WARNING)
 
-
-  def GetEventSchedule(self, request, context):
+  def GetEventSchedule(self, request, context) -> EventScheduleResponse:
     response = EventScheduleResponse()
     event_schedule = fastf1.get_event_schedule(request.season)
 

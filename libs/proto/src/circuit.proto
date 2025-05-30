@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package at.tracklab;
+
+import "types.proto";
+
+service CircuitInfo {
+  rpc GetCircuitBaseInformation(CircuitBaseRequest) returns (Circuit) {}
+}
+
+message CircuitBaseRequest {
+  int32 season = 1;
+  int32 round = 2;
+}

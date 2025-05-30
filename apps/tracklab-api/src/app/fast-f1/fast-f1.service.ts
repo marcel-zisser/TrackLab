@@ -2,19 +2,22 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { SessionResultsClient } from '../../generated/results';
 import { firstValueFrom } from 'rxjs';
-import { RaceResult, DriverResult, Event } from '@tracklab/models';
+import { Circuit, DriverResult, Event, RaceResult } from '@tracklab/models';
 import { EventScheduleClient } from '../../generated/event-schedule';
+import { CircuitInfoClient } from '../../generated/circuit';
 
 @Injectable()
 export class FastF1Service implements OnModuleInit {
   private sessionResultsService: SessionResultsClient;
   private eventScheduleService: EventScheduleClient;
+  private circuitService: CircuitInfoClient;
 
   constructor(@Inject('TRACKLAB_PACKAGE') private client: ClientGrpc) {}
 
   onModuleInit() {
     this.sessionResultsService = this.client.getService<SessionResultsClient>('SessionResults');
     this.eventScheduleService = this.client.getService<EventScheduleClient>('EventSchedule');
+    this.circuitService = this.client.getService<CircuitInfoClient>('CircuitInfo');
   }
 
   async getSessionResults(year: number, round: number, session: number): Promise<RaceResult[]> {
@@ -77,5 +80,11 @@ export class FastF1Service implements OnModuleInit {
     );
 
     return eventSchedule.events;
+  }
+
+  async getCircuitInfo(season: number, round: number): Promise<Circuit> {
+    return await firstValueFrom(
+      this.circuitService.getCircuitBaseInformation({ season: season, round: round })
+    );
   }
 }

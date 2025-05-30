@@ -1,6 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { FastF1Service } from './fast-f1.service';
-import { Event, RaceResult } from '@tracklab/models';
+import { Circuit, Event, RaceResult } from '@tracklab/models';
 
 @Controller('fast-f1')
 export class FastF1Controller {
@@ -17,5 +17,10 @@ export class FastF1Controller {
   @Get('event-schedule')
   getEventSchedule(@Query('year') year: number): Promise<Event[]> {
     return this.fastF1Service.getEventSchedule(year);
+  }
+
+  @Get('circuit')
+  getCircuitInfo(@Query('year') year: number, @Query('round') round: number): Promise<Circuit> {
+    return this.fastF1Service.getCircuitInfo(year, round);
   }
 }
