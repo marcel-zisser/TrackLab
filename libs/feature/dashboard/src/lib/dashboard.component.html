@@ -9,6 +9,15 @@
 
   <div
     class="col-span-1 flex flex-col flex-1 p-4 gap-4 h-full overflow-hidden bg-white dark:bg-surface-900 rounded shadow-lg">
+    <div class="flex flex-row justify-between">
+      <h1 class="text-primary font-bold">Reliability Tracker</h1>
+      <p-select-button class="h-fit"
+                       [ngModel]="reliabilityDataSelector()"
+                       [options]="stateOptions"
+                       [size]="'small'"
+                       (onChange)="changeReliabilitySelector($event)"></p-select-button>
+    </div>
+    <tl-reliability-tracker [dataSelector]="reliabilityDataSelector()"></tl-reliability-tracker>
   </div>
 
   <div class="col-span-1 flex flex-col p-4 gap-4 overflow-hidden bg-white dark:bg-surface-900 rounded shadow-lg">
@@ -24,8 +33,7 @@
 
   <div class="col-span-2 flex flex-col p-4 gap-4 h-full overflow-hidden bg-white dark:bg-surface-900 rounded shadow-lg">
     <h1 class="text-primary font-bold">Driver Standings Development</h1>
-    <tl-standings-development class="flex-1 min-h-0"
-                              [seasonData]="seasonResults()"></tl-standings-development>
+    <tl-standings-development [seasonData]="seasonResults()"></tl-standings-development>
   </div>
 
   <div class="col-span-1 flex flex-col p-4 gap-4 overflow-hidden bg-white dark:bg-surface-900 rounded shadow-lg">

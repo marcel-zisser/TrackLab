@@ -10,7 +10,7 @@ import { provideHttpClient } from '@angular/common/http';
 
 import * as echarts from 'echarts/core';
 import { provideEchartsCore } from 'ngx-echarts';
-import { BarChart, LineChart } from 'echarts/charts';
+import { BarChart, LineChart, PieChart } from 'echarts/charts';
 import {
   DataZoomComponent,
   GridComponent,
@@ -26,6 +26,7 @@ echarts.registerTheme('tracklab-dark', customDark);
 echarts.use([
   BarChart,
   LineChart,
+  PieChart,
   GridComponent,
   CanvasRenderer,
   TitleComponent,

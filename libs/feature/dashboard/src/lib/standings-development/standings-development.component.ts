@@ -8,7 +8,6 @@ import {
 import { NgxEchartsDirective } from 'ngx-echarts';
 import { DarkModeService } from '@tracklab/services';
 import { RaceResult } from '@tracklab/models';
-import { EChartsType } from 'echarts/core';
 
 @Component({
   selector: 'tl-standings-development',
@@ -19,8 +18,6 @@ import { EChartsType } from 'echarts/core';
 })
 export class StandingsDevelopmentComponent {
   private readonly darkModeService = inject(DarkModeService);
-
-  private chart: EChartsType | undefined;
 
   seasonData = input<RaceResult[] | undefined>();
   xAxisData = computed(() =>
@@ -37,7 +34,7 @@ export class StandingsDevelopmentComponent {
     this.seasonData()?.forEach((race) => {
       race.results.forEach((result) => {
         if (data.has(result.driver.code)) {
-          const [points, color] = data.get(result.driver.code) ?? [[], ''];
+          const [points,] = data.get(result.driver.code) ?? [[], ''];
           points?.push(points[points.length - 1] + result.points);
           data.set(result.driver.code, [
             points,
@@ -118,12 +115,4 @@ export class StandingsDevelopmentComponent {
       containLabel: true, // ensures labels aren't cut off
     },
   }));
-
-  onChartInit(chart: EChartsType) {
-    this.chart = chart;
-
-    window.addEventListener('resize', () => {
-      this.chart?.resize();
-    });
-  }
 }

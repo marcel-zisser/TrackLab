@@ -2,11 +2,9 @@
   <div echarts
        #chart
        class="chart"
-       [loading]="seriesData() === undefined"
+       [loading]="reliabilityData() === undefined"
        [options]="chartOptions()"
        [theme]="chartTheme()"
        [autoResize]="true"
   ></div>
 </div>
-
-

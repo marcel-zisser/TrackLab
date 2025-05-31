@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, input, OnInit } from '@angular/core';
-import { Skeleton } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import { Column } from '@tracklab/models';
 import { SkeletonTableComponent } from '@tracklab/shared/components';

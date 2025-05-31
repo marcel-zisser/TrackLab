@@ -29,7 +29,9 @@ export class SeasonProgressComponent {
     ((this.finishedEvents() ?? 0) / (this.totalEvents() ?? 1)) * 100).toFixed(2)
   );
   protected nextEvent = computed( () =>
-    this.eventSchedule()?.find(event => new Date(event.date) > new Date())
+    this.eventSchedule()?.find(event =>
+      event.sessionInfos.some(session => new Date(session.date) > new Date())
+    )
   );
   protected raceDate = computed(() => {
     const raceDateString =
