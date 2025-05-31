@@ -2,7 +2,7 @@
             md:grid grid-cols-1 md:grid-cols-4 md:gap-8 md:space-y-0
             h-full overflow-auto">
 
-  <div class="col-span-2 flex flex-col p-4 gap-4 h-full overflow-hidden bg-white dark:bg-surface-900 rounded shadow-lg">
+  <div class="col-span-2 flex flex-col p-4 gap-4 overflow-hidden bg-white dark:bg-surface-900 rounded shadow-lg">
     <h1 class="text-primary font-bold">Season Progress</h1>
     <tl-season-progress></tl-season-progress>
   </div>
@@ -11,13 +11,13 @@
     class="col-span-1 flex flex-col flex-1 p-4 gap-4 h-full overflow-hidden bg-white dark:bg-surface-900 rounded shadow-lg">
   </div>
 
-  <div class="col-span-1 flex flex-col p-4 gap-4 h-full overflow-hidden bg-white dark:bg-surface-900 rounded shadow-lg">
+  <div class="col-span-1 flex flex-col p-4 gap-4 overflow-hidden bg-white dark:bg-surface-900 rounded shadow-lg">
     <h1 class="text-primary font-bold">Driver Standings</h1>
     <tl-driver-standings class="overflow-auto"
                          [data]="driverStandings()"></tl-driver-standings>
   </div>
 
-  <div class="col-span-1 flex flex-col p-4 gap-4 h-full overflow-hidden bg-white dark:bg-surface-900 rounded shadow-lg">
+  <div class="col-span-1 flex flex-col p-4 gap-4 overflow-hidden bg-white dark:bg-surface-900 rounded shadow-lg">
     <h1 class="text-primary font-bold">Stat Spotlight</h1>
     <tl-stat-spotlight [data]="statSpotlightData()"></tl-stat-spotlight>
   </div>
@@ -28,7 +28,7 @@
                               [seasonData]="seasonResults()"></tl-standings-development>
   </div>
 
-  <div class="col-span-1 flex flex-col p-4 gap-4 h-full overflow-hidden bg-white dark:bg-surface-900 rounded shadow-lg">
+  <div class="col-span-1 flex flex-col p-4 gap-4 overflow-hidden bg-white dark:bg-surface-900 rounded shadow-lg">
     <h1 class="text-primary font-bold">Constructor Standings</h1>
     <tl-team-standings class="overflow-auto"
                        [data]="constructorStandings()"></tl-team-standings>

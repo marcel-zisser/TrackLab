@@ -34,3 +34,7 @@ body {
   max-height: 15rem;
   overflow-y: auto;
 }
+
+h1 {
+  font-size: large;
+}
