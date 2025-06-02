@@ -21,13 +21,6 @@ export class SeasonProgressComponent {
 
   private eventSchedule = this.dashboardService.eventSchedule;
 
-  protected totalEvents = computed(() => this.eventSchedule()?.length);
-  protected finishedEvents = computed(() =>
-    this.eventSchedule()?.filter(event => new Date(event.date) < new Date()).length
-  );
-  protected percentageFinished = computed( () => (
-    ((this.finishedEvents() ?? 0) / (this.totalEvents() ?? 1)) * 100).toFixed(2)
-  );
   protected nextEvent = computed( () =>
     this.eventSchedule()?.find(event =>
       event.sessionInfos.some(session => new Date(session.date) > new Date())
@@ -39,6 +32,14 @@ export class SeasonProgressComponent {
 
     return new Date(raceDateString);
   })
+
+  protected totalEvents = computed(() => this.eventSchedule()?.length);
+  protected finishedEvents = computed(() =>
+    (this.nextEvent()?.roundNumber ?? 1) - 1
+  );
+  protected percentageFinished = computed( () => (
+    ((this.finishedEvents() ?? 0) / (this.totalEvents() ?? 1)) * 100).toFixed(2)
+  );
 
   protected circuit = signal<Circuit | undefined>(undefined);
 

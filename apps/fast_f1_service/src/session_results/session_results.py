@@ -19,13 +19,15 @@ def load_season_results(season: int):
   for index in range(len(event_schedule) - 1):
     event = event_schedule.get_event_by_round(index + 1)
 
-    if (event.EventDate - datetime.today()).value < 0:
-      if event.EventFormat == 'sprint_qualifying':
-        sprint = event.get_sprint()
+    if event.EventFormat == 'sprint_qualifying':
+      sprint = event.get_sprint()
+      if (sprint.date - datetime.today()).value < 0:
         sprint.load(laps=False, telemetry=False, weather=False, messages=False)
         season_results.append(sprint)
 
-      race = event.get_race()
+
+    race = event.get_race()
+    if (race.date - datetime.today()).value < 0:
       race.load(laps=False, telemetry=False, weather=False, messages=False)
       season_results.append(race)
 
