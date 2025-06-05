@@ -1,17 +1,18 @@
-<div class="flex flex-col items-center gap-1 mb-8">
-  <p-progress-bar class="w-full" [value]="percentageFinished()"></p-progress-bar>
-  {{ finishedEvents() }} out of {{ totalEvents() }} rounds finished
-</div>
-
 @let event = nextEvent();
 @let circuitInfo = circuit();
 
 @if (event && circuitInfo) {
   <div class="flex flex-col h-full">
-  <h1 class="text-primary font-bold">Next up</h1>
-  <div class="flex flex-col flex-1 justify-around gap-4">
+  <div class="flex flex-col flex-1 justify-evenly gap-4">
+    <div class="flex flex-col items-center gap-1">
+      <p-progress-bar class="w-full" [value]="percentageFinished()"></p-progress-bar>
+      {{ finishedEvents() }} out of {{ totalEvents() }} rounds finished
+    </div>
+    
     <div class="flex flex-col md:flex-row md:justify-between">
       <div>
+        <h1 class="text-primary font-bold">Next up</h1>
+
         <p class="font-bold">{{ event.name }}</p>
         <p class="text-sm">{{ circuitInfo?.name }}, {{ event.location }}</p>
       </div>
