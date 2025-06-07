@@ -1,2 +1,3 @@
 export * from './lib/backend';
 export * from './lib/theme';
+export * from './lib/local-storage';

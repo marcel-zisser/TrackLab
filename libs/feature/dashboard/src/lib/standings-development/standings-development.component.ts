@@ -6,7 +6,7 @@ import {
   input
 } from '@angular/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
-import { DarkModeService } from '@tracklab/services';
+import { ThemeService } from '@tracklab/services';
 import { RaceResult } from '@tracklab/models';
 
 @Component({
@@ -17,7 +17,7 @@ import { RaceResult } from '@tracklab/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StandingsDevelopmentComponent {
-  private readonly darkModeService = inject(DarkModeService);
+  private readonly darkModeService = inject(ThemeService);
 
   seasonData = input<RaceResult[] | undefined>();
   xAxisData = computed(() =>
@@ -59,7 +59,7 @@ export class StandingsDevelopmentComponent {
   );
 
   protected readonly chartTheme = computed(() =>
-    this.darkModeService.chartTheme() === 'dark' ? 'tracklab-dark' : ''
+    this.darkModeService.theme() === 'dark' ? 'tracklab-dark' : ''
   );
 
   chartOptions = computed(() => ({

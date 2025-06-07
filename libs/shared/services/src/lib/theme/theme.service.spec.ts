@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { DarkModeService } from './dark-mode.service';
+import { ThemeService } from './theme.service';
 
 describe('DarkModeService', () => {
-  let service: DarkModeService;
+  let service: ThemeService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(DarkModeService);
+    service = TestBed.inject(ThemeService);
   });
 
   it('should be created', () => {

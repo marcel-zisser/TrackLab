@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
-import { DarkModeService } from '@tracklab/services';
+import { ThemeService } from '@tracklab/services';
 import { ReliabilityTrackerService } from './reliability-tracker.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { ReliabilityTrackerService } from './reliability-tracker.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReliabilityTrackerComponent {
-  private readonly darkModeService = inject(DarkModeService);
+  private readonly darkModeService = inject(ThemeService);
   private readonly reliabilityTrackerService = inject(ReliabilityTrackerService);
 
   dataSelector = input.required<string>();
@@ -25,7 +25,7 @@ export class ReliabilityTrackerComponent {
   });
 
   protected readonly chartTheme = computed(() =>
-    this.darkModeService.chartTheme() === 'dark' ? 'tracklab-dark' : ''
+    this.darkModeService.theme() === 'dark' ? 'tracklab-dark' : ''
   );
 
   chartOptions = computed(() => ({

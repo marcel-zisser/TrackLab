@@ -3,9 +3,10 @@ import { Menubar } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import { RouterLink } from '@angular/router';
 import { ButtonIcon } from 'primeng/button';
-import { ToggleSwitch } from 'primeng/toggleswitch';
+import { ToggleSwitch, ToggleSwitchChangeEvent } from 'primeng/toggleswitch';
 import { NgClass } from '@angular/common';
-import { DarkModeService } from '@tracklab/services';
+import { Theme, ThemeService } from '@tracklab/services';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'tl-header',
@@ -15,15 +16,18 @@ import { DarkModeService } from '@tracklab/services';
     ToggleSwitch,
     ButtonIcon,
     NgClass,
+    FormsModule
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent implements OnInit {
-  private readonly darkModeService = inject(DarkModeService);
+  private readonly themeService = inject(ThemeService);
 
   items: MenuItem[] | undefined;
+  theme = this.themeService.theme();
+
 
   ngOnInit() {
     this.items = [
@@ -41,6 +45,8 @@ export class HeaderComponent implements OnInit {
   }
 
   toggleDarkMode() {
-    this.darkModeService.toggleDarkMode();
+    this.themeService.toggleDarkMode();
   }
+
+  protected readonly Theme = Theme;
 }

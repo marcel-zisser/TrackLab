@@ -6,9 +6,13 @@
   </ng-template>
   <ng-template #end>
     <div class="flex items-center gap-2">
-      <p-toggle-switch (onChange)="toggleDarkMode()"
-                       pButtonIcon="pi-home"
-                       [style]="{display: 'flex'}">
+      <p-toggle-switch pButtonIcon="pi-home"
+                       [(ngModel)]="theme"
+                       [style]="{display: 'flex'}"
+                       [trueValue]="Theme.Dark"
+                       [falseValue]="Theme.Light"
+                       (onChange)="toggleDarkMode()"
+      >
         <ng-template #handle let-checked="checked">
           <i [ngClass]="['!text-xs', 'pi', checked ? 'pi-moon' : 'pi-sun']"></i>
         </ng-template>
