@@ -48,3 +48,5 @@ Thumbs.db
 
 # But do not ignore __init__.py files in those folders
 !**/generated/__init__.py
+
+.env

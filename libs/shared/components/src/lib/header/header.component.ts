@@ -37,7 +37,7 @@ export class HeaderComponent implements OnInit {
 
   private clickedInsideMenu = false;
 
-  protected loggedIn = this.authenticationService.loggedIn;
+  protected loggedIn = this.authenticationService.isAuthenticated;
 
   items: MenuItem[] | undefined;
   theme = this.themeService.theme();
@@ -88,7 +88,8 @@ export class HeaderComponent implements OnInit {
   openLoginDialog() {
     this.dialogService.open(LoginComponent, {
       header: 'Login',
-      closable: true
+      closable: true,
+      modal: true
     });
   }
 }

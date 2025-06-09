@@ -1,0 +1,22 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres
+    container_name: tracklab_db
+    restart: always
+    # set shared memory limit when using docker-compose
+    shm_size: 128mb
+    # or set shared memory limit when deploy via swarm stack
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    networks:
+      - db_network
+
+networks:
+  db_network:
+    driver: bridge

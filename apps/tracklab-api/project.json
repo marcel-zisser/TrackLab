@@ -5,10 +5,32 @@
   "projectType": "application",
   "tags": [],
   "targets": {
+    "migrate-db": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prisma migrate reset",
+        "args": ["--force --schema=apps/tracklab-api/prisma/schema.prisma"]
+      }
+    },
+    "init-db": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx ts-node init-db/init-db"
+      },
+      "dependsOn": ["migrate-db"]
+    },
+    "generate-prisma": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prisma generate",
+        "args": ["--schema=apps/tracklab-api/prisma/schema.prisma"]
+      }
+    },
     "build": {
       "executor": "nx:run-commands",
       "dependsOn": [
-        "generate-proto"
+        "generate-proto",
+        "init-db"
       ],
       "options": {
         "assets": [
