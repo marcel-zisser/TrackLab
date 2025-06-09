@@ -6,3 +6,7 @@
   margin-right: 1rem;
   cursor: pointer;
 }
+
+.avatar {
+  border: 2px solid var(--p-primary-color);
+}

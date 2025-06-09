@@ -1,11 +1,13 @@
-<p-menubar [model]="items" [autoDisplay]="true" [style]="{'height': '4rem', 'padding': '0 2rem', 'font-size': 'large'}" >
+<p-menubar [model]="items"
+           [autoDisplay]="true"
+           [style]="{'height': '4rem', 'padding': '0 2rem', 'font-size': 'large', 'border': '0'}">
   <ng-template #start>
     <div routerLink="" class="logo">
       TrackLab
     </div>
   </ng-template>
   <ng-template #end>
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-8">
       <p-toggle-switch pButtonIcon="pi-home"
                        [(ngModel)]="theme"
                        [style]="{display: 'flex'}"
@@ -18,6 +20,27 @@
         </ng-template>
       </p-toggle-switch>
 
+      @if (loggedIn()) {
+        <p-avatar class="cursor-pointer" [class.avatar]="showUserMenu()" label="P" size="normal" shape="circle" (click)="toggleUserMenu()" />
+      } @else {
+        <p-button [label]="'Sign-in'"
+                  [size]="'small'"
+                  [icon]="'pi pi-sign-in'"
+                  [rounded]="true"
+                  (onClick)="openLoginDialog()"
+        ></p-button>
+      }
     </div>
   </ng-template>
 </p-menubar>
+
+@if (showUserMenu()) {
+  <div class="absolute z-10 right-0 mr-1
+              bg-white dark:bg-surface-900 rounded-xl shadow-xl"
+       tabindex="0"
+       (click)="onMenuClick()"
+       (keyup.enter)="onMenuClick()"
+  >
+    <tl-user-menu></tl-user-menu>
+  </div>
+}
