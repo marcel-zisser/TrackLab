@@ -1,10 +1,11 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { JwtTokenInformation, LoginRequest, LoginResponse, RefreshTokenResponse } from '@tracklab/models';
 import { jwtDecode } from 'jwt-decode';
-import { catchError, first, map, Observable, of } from 'rxjs';
+import { catchError, first, firstValueFrom, map, Observable, of } from 'rxjs';
 import { ApiEndpoint, ApiRoutes, BackendService } from '../backend';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { LocalStorageService } from '../local-storage';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +15,13 @@ export class AuthenticationService {
   private readonly backendService = inject(BackendService);
   private readonly router = inject(Router);
   private readonly jwtHelper = inject(JwtHelperService);
+  private readonly localStorageService = inject(LocalStorageService);
 
   private readonly _isAuthenticated = signal(false);
+
+  constructor() {
+    this.checkAuthentication();
+  }
 
   /**
    * Returns a read-only signal to determine authentication status
@@ -44,11 +50,11 @@ export class AuthenticationService {
    * @param token the token to be set
    */
   saveToken(token: string): void {
-    localStorage.setItem('auth_token', token);
+    this.localStorageService.setItem('access_token', token);
     window.dispatchEvent(
       new StorageEvent('storage', {
-        key: 'auth_token',
-        newValue: token,
+        key: 'access_token',
+        newValue: token
       })
     );
     this._isAuthenticated.set(true);
@@ -58,12 +64,12 @@ export class AuthenticationService {
    * Retrieves the current JWT token from local storage
    * @returns {string} the current JWT token
    */
-  getToken(): string | null {
-    return localStorage.getItem('auth_token');
+  async getToken(): Promise<string | null> {
+    return await this.jwtHelper.tokenGetter();
   }
 
-  getDecodedToken(): JwtTokenInformation | undefined {
-    const token = this.getToken();
+  async getDecodedToken(): Promise<JwtTokenInformation | undefined> {
+    const token = await this.getToken();
     if (token) {
       return jwtDecode<JwtTokenInformation>(token);
     }
@@ -74,29 +80,29 @@ export class AuthenticationService {
   /**
    * Checks if the user is currently authenticated
    */
-  checkAuthentication(): Observable<boolean> {
-    const token = this.getToken();
+  async checkAuthentication(): Promise<boolean> {
+    const token = await this.getToken();
     const isAuthenticated = token
       ? !this.jwtHelper.isTokenExpired(token)
       : false;
 
     if (!isAuthenticated) {
-      return this.refreshToken().pipe(
+      return firstValueFrom(this.refreshToken().pipe(
         map((response) => {
           if (response?.accessToken) {
             this.saveToken(response.accessToken);
-            this._isAuthenticated.set(true);
             return true;
           } else {
-            this.logout();
+            this._isAuthenticated.set(false);
+            localStorage.removeItem('access_token');
             return false;
           }
         })
-      );
+      ));
     }
 
     this._isAuthenticated.set(true);
-    return of(true);
+    return true;
   }
 
   /**
@@ -112,7 +118,8 @@ export class AuthenticationService {
       .pipe(
         first(),
         catchError(() => {
-          this.logout();
+          this._isAuthenticated.set(false);
+          localStorage.removeItem('access_token');
           return of(null);
         })
       );
@@ -130,8 +137,8 @@ export class AuthenticationService {
       .pipe(first())
       .subscribe(() => {
         this._isAuthenticated.set(false);
-        localStorage.removeItem('auth_token');
-        this.router.navigate([]);
+        localStorage.removeItem('access_token');
+        window.location.reload();
       });
   }
 }

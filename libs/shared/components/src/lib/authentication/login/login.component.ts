@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Button } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthenticationService } from '@tracklab/services';
 import { first } from 'rxjs';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'tl-login',
-  imports: [CommonModule, Button, InputText, ReactiveFormsModule],
+  imports: [Button, InputText, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,9 +18,9 @@ export class LoginComponent {
 
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private ref: DynamicDialogRef) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required]],
+      username: ['', [Validators.required]],
       password: ['', [Validators.required]],
     });
   }
@@ -37,6 +37,7 @@ export class LoginComponent {
         .subscribe({
           next: (response) => {
             this.authenticationService.saveToken(response.accessToken);
+            this.ref.close();
           },
           error: () => {
             this.loginForm.reset();
@@ -44,6 +45,8 @@ export class LoginComponent {
             this.loginForm.enable();
           },
         });
+    } else {
+      this.markFormAsInvalid();
     }
   }
 

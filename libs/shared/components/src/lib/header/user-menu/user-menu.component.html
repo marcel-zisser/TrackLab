@@ -1,10 +1,14 @@
 <ul class="flex flex-col">
-  <li class="menu-item rounded-xl">
+  <li class="menu-item rounded-xl"
+      tabindex="0">
     <i class="pi pi-cog"></i>
     <div>Settings</div>
   </li>
   <p-divider styleClass="divider"></p-divider>
-  <li class="menu-item rounded-xl">
+  <li class="menu-item rounded-xl"
+      tabindex="1"
+      (click)="logout()"
+      (keydown.enter)="logout()">
     <i class="pi pi-sign-out"></i>
     <div>Logout</div>
   </li>

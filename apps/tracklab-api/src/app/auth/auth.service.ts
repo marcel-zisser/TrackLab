@@ -11,8 +11,8 @@ import { User } from '@prisma/client';
 export class AuthService {
   constructor(private userService: UserService, private jwtService: JwtService) {}
 
-  async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.userService.findOne(username);
+  async validateUser(email: string, pass: string): Promise<any> {
+    const user = await this.userService.findOne(email);
 
     if (!user) {
       return null;
@@ -78,11 +78,6 @@ export class AuthService {
     return {
       accessToken: await this.generateAccessToken(user),
     };
-  }
-
-  extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    return type === 'Bearer' ? token : undefined;
   }
 
   /**

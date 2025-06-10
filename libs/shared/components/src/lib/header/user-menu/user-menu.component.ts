@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Divider } from 'primeng/divider';
+import { AuthenticationService } from '@tracklab/services';
 
 @Component({
   selector: 'tl-user-menu',
@@ -10,4 +11,10 @@ import { Divider } from 'primeng/divider';
   styleUrl: './user-menu.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserMenuComponent {}
+export class UserMenuComponent {
+  private readonly authenticationService = inject(AuthenticationService);
+
+  protected logout() {
+    this.authenticationService.logout();
+  }
+}
