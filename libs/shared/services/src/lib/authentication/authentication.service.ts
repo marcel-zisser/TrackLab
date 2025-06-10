@@ -1,9 +1,14 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { JwtTokenInformation, LoginRequest, LoginResponse, RefreshTokenResponse } from '@tracklab/models';
+import {
+  JwtTokenInformation,
+  LoginRequest,
+  LoginResponse,
+  RefreshTokenResponse,
+  RegisterRequest
+} from '@tracklab/models';
 import { jwtDecode } from 'jwt-decode';
 import { catchError, first, firstValueFrom, map, Observable, of } from 'rxjs';
 import { ApiEndpoint, ApiRoutes, BackendService } from '../backend';
-import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { LocalStorageService } from '../local-storage';
 
@@ -13,7 +18,6 @@ import { LocalStorageService } from '../local-storage';
 export class AuthenticationService {
 
   private readonly backendService = inject(BackendService);
-  private readonly router = inject(Router);
   private readonly jwtHelper = inject(JwtHelperService);
   private readonly localStorageService = inject(LocalStorageService);
 
@@ -41,6 +45,22 @@ export class AuthenticationService {
 
     return this.backendService.doPost<LoginResponse, LoginRequest>(
       `${ApiRoutes.get(ApiEndpoint.Login)}`,
+      body
+    );
+  }
+
+  /**
+   * Registers in a user with the provided data
+   * @param username the provided username
+   * @param email the provided email address
+   * @param password the provided password
+   * @returns {Observable<LoginResponse>} Observable with information about the success of the login
+   */
+  register(username: string, email: string, password: string): Observable<void> {
+    const body: RegisterRequest = { username: username, email: email, password: password };
+
+    return this.backendService.doPost<void, LoginRequest>(
+      `${ApiRoutes.get(ApiEndpoint.Register)}`,
       body
     );
   }

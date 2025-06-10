@@ -2,10 +2,10 @@
 import { Injectable, UnauthorizedException,  } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { JwtTokenInformation, LoginRequest, LoginResponse, RefreshTokenResponse } from '@tracklab/models';
+import { JwtTokenInformation, LoginResponse, RefreshTokenResponse } from '@tracklab/models';
 import { Request, Response } from 'express';
 import * as bcrypt from 'bcrypt';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -25,6 +25,16 @@ export class AuthService {
 
     const { password, ...result } = user;
     return result;
+  }
+
+  /**
+   * Registers a user
+   * @param user the user
+   * @returns {Promise<LoginResponse>} Returns JWT token on success
+   */
+  async register(user: Prisma.UserCreateInput): Promise<User> {
+    user.password = await bcrypt.hash(user.password, 10);
+    return await this.userService.create(user);
   }
 
   /**

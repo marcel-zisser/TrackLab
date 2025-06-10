@@ -4,7 +4,8 @@ import { InputText } from 'primeng/inputtext';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthenticationService } from '@tracklab/services';
 import { first } from 'rxjs';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { RegisterComponent } from '../register/register.component';
 
 @Component({
   selector: 'tl-login',
@@ -15,6 +16,7 @@ import { DynamicDialogRef } from 'primeng/dynamicdialog';
 })
 export class LoginComponent {
   private readonly authenticationService = inject(AuthenticationService);
+  private readonly dialogService = inject(DialogService);
 
   loginForm: FormGroup;
 
@@ -49,6 +51,17 @@ export class LoginComponent {
       this.markFormAsInvalid();
     }
   }
+
+  openRegistration() {
+    this.ref.close();
+
+    this.dialogService.open(RegisterComponent, {
+      header: 'Register',
+      closable: true,
+      modal: true
+    });
+  }
+
 
   private markFormAsInvalid() {
     Object.keys(this.loginForm.controls).forEach((field) => {

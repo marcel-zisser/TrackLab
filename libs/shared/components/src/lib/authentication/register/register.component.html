@@ -1,0 +1,26 @@
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <div>
+    <div class="flex items-center gap-4 mb-4">
+      <label for="username" class="font-semibold w-24">Username</label>
+      <input pInputText formControlName="username" id="username" class="flex-auto" type="text" />
+    </div>
+    <div class="flex items-center gap-4 mb-4">
+      <label for="email" class="font-semibold w-24">E-Mail</label>
+      <input pInputText formControlName="email" id="email" class="flex-auto" type="text" />
+    </div>
+    <div class="flex items-center gap-4 mb-2">
+      <label for="password" class="font-semibold w-24">Password</label>
+      <input pInputText formControlName="password" id="password" class="flex-auto" type="password" />
+    </div>
+    <div class="flex items-center gap-4 mb-4">
+      <label for="passwordRepeat" class="font-semibold w-24">Repeat Password</label>
+      <input pInputText formControlName="passwordRepeat" id="passwordRepeat" class="flex-auto" type="password" />
+    </div>
+    <div class="flex flex-row gap-4 justify-end mt-4">
+      <p-button label="Cancel" [text]="true" severity="secondary" />
+      <p-button label="Register" type="submit" />
+    </div>
+  </div>
+</form>
+
+

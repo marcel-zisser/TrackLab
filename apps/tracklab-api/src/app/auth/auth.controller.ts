@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, Res, Request, HttpCode, Req } from '@nestjs/common';
+import { Controller, Post, UseGuards, Res, Request, HttpCode, Req, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { LoginResponse, RefreshTokenResponse } from '@tracklab/models';
@@ -7,6 +7,26 @@ import { User } from '@prisma/client';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+
+  @Post('register')
+  async register(
+    @Request() request: ExpressRequest,
+    @Res({ passthrough: true }) response: ExpressResponse
+  ): Promise<void> {
+    const createdUser = await this.authService.register({
+      username: request.body.username,
+      email: request.body.email,
+      password: request.body.password,
+      firstName: '',
+      lastName: ''
+    });
+
+    if (createdUser) {
+      response.sendStatus(HttpStatus.CREATED)
+    } else {
+      response.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+  }
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
@@ -18,11 +38,11 @@ export class AuthController {
   }
 
   @Post('logout')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   logout(@Res() res: ExpressResponse): ExpressResponse {
     // Clear refresh token from cookies
     res.clearCookie('refreshToken');
-    return res.sendStatus(204);
+    return res.sendStatus(HttpStatus.NO_CONTENT);
   }
 
   @Post('refresh')
