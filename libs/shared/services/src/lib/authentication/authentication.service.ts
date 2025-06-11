@@ -24,7 +24,9 @@ export class AuthenticationService {
   private readonly _isAuthenticated = signal(false);
 
   constructor() {
-    this.checkAuthentication();
+    if (this.jwtHelper.tokenGetter()) {
+      this.checkAuthentication();
+    }
   }
 
   /**
@@ -36,12 +38,12 @@ export class AuthenticationService {
 
   /**
    * Logs in a user with the provided credentials
-   * @param username the provided username
+   * @param email the provided email
    * @param password the provided password
    * @returns {Observable<LoginResponse>} Observable with information about the success of the login
    */
-  login(username: string, password: string): Observable<LoginResponse> {
-    const body: LoginRequest = { username: username, password: password };
+  login(email: string, password: string): Observable<LoginResponse> {
+    const body: LoginRequest = { email: email, password: password };
 
     return this.backendService.doPost<LoginResponse, LoginRequest>(
       `${ApiRoutes.get(ApiEndpoint.Login)}`,
@@ -51,13 +53,14 @@ export class AuthenticationService {
 
   /**
    * Registers in a user with the provided data
-   * @param username the provided username
+   * @param firstName the provided first name
+   * @param lastName the provided last name
    * @param email the provided email address
    * @param password the provided password
    * @returns {Observable<LoginResponse>} Observable with information about the success of the login
    */
-  register(username: string, email: string, password: string): Observable<void> {
-    const body: RegisterRequest = { username: username, email: email, password: password };
+  register(firstName: string, lastName: string, email: string, password: string): Observable<void> {
+    const body: RegisterRequest = { firstName: firstName, lastName: lastName, email: email, password: password };
 
     return this.backendService.doPost<void, LoginRequest>(
       `${ApiRoutes.get(ApiEndpoint.Register)}`,
@@ -156,7 +159,6 @@ export class AuthenticationService {
       )
       .pipe(first())
       .subscribe(() => {
-        this._isAuthenticated.set(false);
         localStorage.removeItem('access_token');
         window.location.reload();
       });

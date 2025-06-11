@@ -11,7 +11,7 @@ import { Prisma, User } from '@prisma/client';
 export class AuthService {
   constructor(private userService: UserService, private jwtService: JwtService) {}
 
-  async validateUser(email: string, pass: string): Promise<any> {
+  async validateUser(email: string, pass: string): Promise<User> {
     const user = await this.userService.findOne(email);
 
     if (!user) {
@@ -23,8 +23,13 @@ export class AuthService {
       return null;
     }
 
-    const { password, ...result } = user;
-    return result;
+    return {
+      uuid: user.uuid,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      password: ''
+    };
   }
 
   /**
@@ -80,7 +85,6 @@ export class AuthService {
       uuid: decodedToken.sub,
       firstName: decodedToken.firstName,
       lastName: decodedToken.lastName,
-      username: decodedToken.userName,
       email: '',
       password: '',
     } satisfies User;
@@ -98,7 +102,6 @@ export class AuthService {
   private async generateAccessToken(user: User): Promise<string> {
     const payload = {
       sub: user.uuid,
-      username: user.username,
       firstName: user.firstName,
       lastName: user.lastName,
     } satisfies JwtTokenInformation;
@@ -112,7 +115,6 @@ export class AuthService {
   private async generateRefreshToken(user: User): Promise<string> {
     const payload = {
       sub: user.uuid,
-      username: user.username,
       firstName: user.firstName,
       lastName: user.lastName,
     } satisfies JwtTokenInformation;

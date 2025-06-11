@@ -1,22 +1,39 @@
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+<form class="flex flex-col gap-4 p-4" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+  @if(loginFailed()) {
+    <p-message severity="error"
+               icon="pi pi-times-circle"
+               styleClass="mb-2"
+    >
+      Login failed. Please try again.
+    </p-message>
+  }
+
   <div>
     <div class="flex items-center gap-4 mb-4">
-      <label for="username" class="font-semibold w-24">Username</label>
-      <input pInputText formControlName="username" id="username" class="flex-auto" type="text" />
+      <label for="email" class="font-semibold w-24">E-Mail</label>
+      <input pInputText formControlName="email" id="email" class="flex-auto" type="text" />
     </div>
     <div>
       <div class="flex items-center gap-4 mb-2">
         <label for="password" class="font-semibold w-24">Password</label>
-        <input pInputText formControlName="password" id="password" class="flex-auto" type="password" />
+        <p-password id="password"
+                    class="flex-auto"
+                    formControlName="password"
+                    [toggleMask]="true"
+                    [feedback]="false"
+        />
       </div>
     </div>
   </div>
-  <div class="flex flex-col items-center text-xs mt-4">
+
+  <div class="flex flex-col items-center text-xs">
     <span class="">Dont have an account?</span>
-    <a class="underline cursor-pointer" (click)="openRegistration()">Create one here.</a>
+    <button class="underline cursor-pointer" type="button" (click)="openRegistration()">Create one here.</button>
   </div>
-  <div class="flex flex-row gap-4 justify-end mt-4">
-    <p-button label="Cancel" [text]="true" severity="secondary" />
+
+  <div class="flex flex-row gap-4 justify-end">
+    <p-button label="Cancel" [text]="true" (onClick)="closeDialog()" severity="secondary" />
     <p-button label="Login" type="submit" />
   </div>
 </form>

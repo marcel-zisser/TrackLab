@@ -8,12 +8,12 @@ export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
   /**
-   * Searches for a user based on the username
-   * @param username the username to search for
+   * Searches for a user based on the email
+   * @param email the email to search for
    */
-  async findOne(username: string): Promise<User> {
+  async findOne(email: string): Promise<User> {
     return this.prisma.user.findUnique({
-      where: { username: username },
+      where: { email: email },
       omit: { password: false },
     });
   }

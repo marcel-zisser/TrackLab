@@ -6,6 +6,7 @@ import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { first } from 'rxjs';
 import { InputText } from 'primeng/inputtext';
 import { Button } from 'primeng/button';
+import { matchValuesValidator } from '../match-values.validator';
 
 @Component({
   selector: 'tl-register',
@@ -21,21 +22,25 @@ export class RegisterComponent {
 
   constructor(private fb: FormBuilder, private ref: DynamicDialogRef) {
     this.registerForm = this.fb.group({
-      username: ['', [Validators.required]],
+      firstName: ['', [Validators.required]],
+      lastName: ['', []],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
       passwordRepeat: ['', [Validators.required]],
-    });
+    },
+      {
+        validators: [matchValuesValidator('password', 'passwordRepeat')]
+      });
   }
 
   onSubmit() {
     if (this.registerForm.valid) {
-      const { username, email, password } = this.registerForm.value;
+      const { firstName, lastName, email, password } = this.registerForm.value;
 
       this.registerForm.disable();
 
       this.authenticationService
-        .register(username, email, password)
+        .register(firstName, lastName, email, password)
         .pipe(first())
         .subscribe({
           next: () => {

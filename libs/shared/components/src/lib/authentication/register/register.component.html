@@ -1,8 +1,12 @@
 <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
   <div>
     <div class="flex items-center gap-4 mb-4">
-      <label for="username" class="font-semibold w-24">Username</label>
-      <input pInputText formControlName="username" id="username" class="flex-auto" type="text" />
+      <label for="firstName" class="font-semibold w-24">First name</label>
+      <input pInputText formControlName="firstName" id="firstName" class="flex-auto" type="text" />
+    </div>
+    <div class="flex items-center gap-4 mb-4">
+      <label for="lastName" class="font-semibold w-24">Last name</label>
+      <input pInputText formControlName="lastName" id="lastName" class="flex-auto" type="text" />
     </div>
     <div class="flex items-center gap-4 mb-4">
       <label for="email" class="font-semibold w-24">E-Mail</label>

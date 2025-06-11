@@ -14,11 +14,10 @@ export class AuthController {
     @Res({ passthrough: true }) response: ExpressResponse
   ): Promise<void> {
     const createdUser = await this.authService.register({
-      username: request.body.username,
       email: request.body.email,
       password: request.body.password,
-      firstName: '',
-      lastName: ''
+      firstName: request.body.firstName,
+      lastName: request.body.lastName
     });
 
     if (createdUser) {
