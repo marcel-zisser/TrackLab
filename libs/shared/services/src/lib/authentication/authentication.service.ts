@@ -87,8 +87,8 @@ export class AuthenticationService {
    * Retrieves the current JWT token from local storage
    * @returns {string} the current JWT token
    */
-  async getToken(): Promise<string | null> {
-    return await this.jwtHelper.tokenGetter();
+  getToken(): string | Promise<string> {
+    return this.jwtHelper.tokenGetter();
   }
 
   async getDecodedToken(): Promise<JwtTokenInformation | undefined> {

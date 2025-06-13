@@ -8,6 +8,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { RegisterComponent } from '../register/register.component';
 import { Password } from 'primeng/password';
 import { Message } from 'primeng/message';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'tl-login',
@@ -19,6 +20,7 @@ import { Message } from 'primeng/message';
 export class LoginComponent {
   private readonly authenticationService = inject(AuthenticationService);
   private readonly dialogService = inject(DialogService);
+  private readonly messageService = inject(MessageService);
 
   loginForm: FormGroup;
   loginFailed = signal(false);
@@ -40,9 +42,16 @@ export class LoginComponent {
         .login(email, password)
         .pipe(first())
         .subscribe({
-          next: (response) => {
+          next: async (response) => {
             this.loginFailed.set(false);
             this.authenticationService.saveToken(response.accessToken);
+
+            const decodedToken = await this.authenticationService.getDecodedToken();
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Login successful',
+              detail: `Welcome back, ${decodedToken?.firstName}!`
+            })
             this.ref.close();
           },
           error: () => {

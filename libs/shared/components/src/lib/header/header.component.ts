@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, HostListener, inject, OnInit, signal } from '@angular/core';
 import { Menubar } from 'primeng/menubar';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { RouterLink } from '@angular/router';
 import { Button, ButtonIcon } from 'primeng/button';
 import { ToggleSwitch } from 'primeng/toggleswitch';
@@ -11,6 +11,7 @@ import { Avatar } from 'primeng/avatar';
 import { UserMenuComponent } from './user-menu/user-menu.component';
 import { DialogService } from 'primeng/dynamicdialog';
 import { LoginComponent } from '../authentication';
+import { Toast } from 'primeng/toast';
 
 @Component({
   selector: 'tl-header',
@@ -23,9 +24,10 @@ import { LoginComponent } from '../authentication';
     FormsModule,
     Avatar,
     UserMenuComponent,
-    Button
+    Button,
+    Toast
   ],
-  providers: [DialogService],
+  providers: [DialogService, MessageService],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
