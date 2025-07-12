@@ -1,7 +1,14 @@
 import { Route } from '@angular/router';
 import { ConstructionComponent } from '@tracklab/shared/components';
 import { DashboardComponent } from '@tracklab/dashboard';
-import { AnalyticsComponent } from '@tracklab/analytics';
+import {
+  AnalysisBaseComponent,
+  AnalysisSelectionComponent,
+  AnalyticsComponent, StrategyComparisonComponent
+} from '@tracklab/analytics';
+import {
+  AnalysisHostComponent
+} from '../../../../libs/feature/analytics/src/lib/analysis-host/analysis-host.component';
 
 export const appRoutes: Route[] = [
   {
@@ -10,9 +17,20 @@ export const appRoutes: Route[] = [
     component: DashboardComponent,
   },
   {
-    title: 'Analytics',
     path: 'analytics',
-    component: AnalyticsComponent
+    component: AnalyticsComponent,
+    children: [
+      {
+        title: 'Analytics',
+        path: '',
+        component: AnalysisSelectionComponent
+      },
+      {
+        title: 'Analysis',
+        path: ':type',
+        component: AnalysisHostComponent
+      }
+    ]
   },
   {
     title: 'Pitwall Copilot',

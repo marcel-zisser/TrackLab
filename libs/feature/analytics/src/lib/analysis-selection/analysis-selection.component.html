@@ -1,0 +1,15 @@
+<p-auto-complete
+  styleClass="w-full mb-8"
+  [inputStyle]="{ width: '100%' }"
+  [placeholder]="'Enter analysis-base keywords...'"
+></p-auto-complete>
+<div class="flex flex-col md:flex-row w-full gap-8">
+  @for(tile of tiles; track tile) {
+    <tl-analytics-tile
+      [title]="tile.title"
+      [description]="tile.description"
+      [icon]="tile.icon"
+      (click)="tile.callback()"
+    ></tl-analytics-tile>
+  }
+</div>
