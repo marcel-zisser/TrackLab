@@ -6,6 +6,8 @@ import grpc
 
 from circuit_info.circuit_info import CircuitInfoServicer
 from event_schedule.event_schedule import EventScheduleServicer
+from generated.analytics_pb2_grpc import add_AnalyticsServicer_to_server
+from analytics.analytics import AnalyticsServicer
 from session_results.session_results import SessionResultsServicer
 from generated.circuit_pb2_grpc import add_CircuitInfoServicer_to_server
 from generated.event_schedule_pb2_grpc import add_EventScheduleServicer_to_server
@@ -22,6 +24,9 @@ async def serve():
   )
   add_CircuitInfoServicer_to_server(
     CircuitInfoServicer(), server
+  )
+  add_AnalyticsServicer_to_server(
+    AnalyticsServicer(), server
   )
   server.add_insecure_port("[::]:50051")
   await server.start()

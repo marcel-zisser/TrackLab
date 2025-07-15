@@ -11,7 +11,7 @@ import { ReliabilityTrackerService } from './reliability-tracker.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReliabilityTrackerComponent {
-  private readonly darkModeService = inject(ThemeService);
+  private readonly themeService = inject(ThemeService);
   private readonly reliabilityTrackerService = inject(ReliabilityTrackerService);
 
   dataSelector = input.required<string>();
@@ -24,9 +24,7 @@ export class ReliabilityTrackerComponent {
     }
   });
 
-  protected readonly chartTheme = computed(() =>
-    this.darkModeService.theme() === 'dark' ? 'tracklab-dark' : ''
-  );
+  protected readonly chartTheme = this.themeService.chartTheme;
 
   chartOptions = computed(() => ({
     tooltip: {

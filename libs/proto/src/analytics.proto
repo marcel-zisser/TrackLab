@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package at.tracklab;
+
+import "types.proto";
+
+service Analytics {
+  rpc GetSessionStrategy(StrategyRequest) returns (StrategyResponse) {}
+}
+
+message StrategyRequest {
+  int32 year = 1;
+  int32 round = 2;
+  string session = 3;
+}
+
+message StrategyResponse {
+  repeated Strategy strategy = 1;
+}

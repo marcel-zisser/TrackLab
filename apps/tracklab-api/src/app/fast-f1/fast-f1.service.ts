@@ -5,12 +5,14 @@ import { firstValueFrom } from 'rxjs';
 import { Circuit, DriverResult, Event, RaceResult } from '@tracklab/models';
 import { EventScheduleClient } from '../../generated/event-schedule';
 import { CircuitInfoClient } from '../../generated/circuit';
+import { AnalyticsClient } from '../../generated/analytics';
 
 @Injectable()
 export class FastF1Service implements OnModuleInit {
   private sessionResultsService: SessionResultsClient;
   private eventScheduleService: EventScheduleClient;
   private circuitService: CircuitInfoClient;
+  private analyticsService: AnalyticsClient;
 
   constructor(@Inject('TRACKLAB_PACKAGE') private client: ClientGrpc) {}
 
@@ -18,6 +20,7 @@ export class FastF1Service implements OnModuleInit {
     this.sessionResultsService = this.client.getService<SessionResultsClient>('SessionResults');
     this.eventScheduleService = this.client.getService<EventScheduleClient>('EventSchedule');
     this.circuitService = this.client.getService<CircuitInfoClient>('CircuitInfo');
+    this.analyticsService = this.client.getService<AnalyticsClient>('Analytics');
   }
 
   async getSessionResults(year: number, round: number, session: number): Promise<RaceResult[]> {
@@ -74,6 +77,10 @@ export class FastF1Service implements OnModuleInit {
     return response;
   }
 
+  /**
+   * Retrieves the even schedule for a given season
+   * @param season the season
+   */
   async getEventSchedule(season: number): Promise<Event[]> {
     const eventSchedule = await firstValueFrom(
       this.eventScheduleService.getEventSchedule({ season: season })
@@ -82,9 +89,26 @@ export class FastF1Service implements OnModuleInit {
     return eventSchedule.events;
   }
 
+  /**
+   * Retrieves circuit info for a given round in a season
+   * @param season the season
+   * @param round the round within the season
+   */
   async getCircuitInfo(season: number, round: number): Promise<Circuit> {
     return await firstValueFrom(
       this.circuitService.getCircuitBaseInformation({ season: season, round: round })
+    );
+  }
+
+  /**
+   * Retrieves the strategies for a given session
+   * @param year the year of the session
+   * @param round the round of the session within the season
+   * @param session the session type
+   */
+  async getSessionStrategy(year: number, round: number, session: string) {
+    return await firstValueFrom(
+      this.analyticsService.getSessionStrategy({ year: year, round: round, session: session })
     );
   }
 }

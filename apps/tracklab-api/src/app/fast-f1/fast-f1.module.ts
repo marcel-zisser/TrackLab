@@ -18,7 +18,8 @@ import { join } from 'path';
           protoPath: [
             join(__dirname, '../tracklab-api/proto/results.proto'),
             join(__dirname, '../tracklab-api/proto/event-schedule.proto'),
-            join(__dirname, '../tracklab-api/proto/circuit.proto')
+            join(__dirname, '../tracklab-api/proto/circuit.proto'),
+            join(__dirname, '../tracklab-api/proto/analytics.proto')
           ]
         },
       },

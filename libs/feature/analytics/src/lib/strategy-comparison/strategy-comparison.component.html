@@ -1,6 +1,12 @@
 <tl-analysis-base>
   <div chart>
-
+    <div echarts
+         class="chart"
+         [loading]="seriesData() === undefined"
+         [options]="chartOptions()"
+         [theme]="chartTheme()"
+         [autoResize]="true"
+    ></div>
   </div>
   <div options>
       <label for="year"></label>

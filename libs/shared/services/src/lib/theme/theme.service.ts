@@ -1,17 +1,27 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { LocalStorageService } from '../local-storage';
 import { Theme } from './theme.enum';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ThemeService {
   private readonly localStorageService = inject(LocalStorageService);
 
-  private _theme = signal<string>(this.localStorageService.getItem('theme') ?? Theme.Light);
+  private _theme = signal<string>(
+    this.localStorageService.getItem('theme') ?? Theme.Light
+  );
+
+  private _chartTheme = computed(() =>
+    this._theme() === 'dark' ? 'tracklab-dark' : ''
+  );
 
   get theme() {
     return this._theme.asReadonly();
+  }
+
+  get chartTheme() {
+    return this._chartTheme;
   }
 
   /**

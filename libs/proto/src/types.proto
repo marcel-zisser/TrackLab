@@ -91,3 +91,10 @@ message Event {
   repeated SessionInfo sessionInfos = 9;
 }
 
+message Strategy {
+  string driver = 1;
+  int32 stint = 2;
+  int32 stintLength = 3;
+  string compound = 4;
+}
+
