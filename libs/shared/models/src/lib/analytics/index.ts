@@ -1,5 +1,8 @@
 export * from './standings';
 export * from './results';
+export * from './strategy';
+export * from './enums';
+export * from './maps';
 export { Team } from './team';
 export { Driver } from './driver';
 export { Circuit } from './circuit';

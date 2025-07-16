@@ -10,7 +10,7 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 
 import * as echarts from 'echarts/core';
 import { provideEchartsCore } from 'ngx-echarts';
-import { BarChart, LineChart, PieChart } from 'echarts/charts';
+import { BarChart, CustomChart, LineChart, PieChart } from 'echarts/charts';
 import {
   DataZoomComponent,
   GridComponent,
@@ -38,7 +38,8 @@ echarts.use([
   TooltipComponent,
   LegendComponent,
   ToolboxComponent,
-  DataZoomComponent
+  DataZoomComponent,
+  CustomChart
 ]);
 
 export const appConfig: ApplicationConfig = {
