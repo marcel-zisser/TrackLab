@@ -83,9 +83,7 @@
     },
     "serve": {
       "executor": "nx:run-commands",
-      "dependsOn": [
-        "fast_f1_service:generate-proto"
-      ],
+      "dependsOn": ["fast_f1_service:generate-proto"],
       "options": {
         "command": "uv run --env-file ../fast_f1_service.env python -u -m main",
         "cwd": "apps/fast_f1_service/src"
@@ -95,7 +93,8 @@
   "tags": [],
   "release": {
     "version": {
-      "generator": "@nxlv/python:release-version"
+      "generator": "@nxlv/python:release-version",
+      "useLegacyVersioning": true
     }
   }
 }

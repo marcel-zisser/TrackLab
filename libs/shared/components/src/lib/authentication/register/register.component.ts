@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { AuthenticationService } from '@tracklab/services';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -10,17 +10,20 @@ import { matchValuesValidator } from '../match-values.validator';
 
 @Component({
   selector: 'tl-register',
-  imports: [CommonModule, ReactiveFormsModule, InputText, Button],
+  imports: [ReactiveFormsModule, InputText, Button],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegisterComponent {
+  private fb = inject(FormBuilder);
+  private ref = inject(DynamicDialogRef);
+
   private readonly authenticationService = inject(AuthenticationService);
 
   registerForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private ref: DynamicDialogRef) {
+  constructor() {
     this.registerForm = this.fb.group({
       firstName: ['', [Validators.required]],
       lastName: ['', []],

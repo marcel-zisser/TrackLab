@@ -4,7 +4,7 @@ import {
   computed,
   inject, signal
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { StandingsDevelopmentComponent } from './standings-development/standings-development.component';
 import { DashboardService } from './dashboard.service';
 import { StatSpotlightComponent } from './stat-spotlight/stat-spotlight.component';
@@ -18,7 +18,6 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'tl-dashboard',
   imports: [
-    CommonModule,
     StandingsDevelopmentComponent,
     DriverStandingsComponent,
     StatSpotlightComponent,
@@ -27,7 +26,7 @@ import { FormsModule } from '@angular/forms';
     ReliabilityTrackerComponent,
     SelectButton,
     FormsModule
-  ],
+],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

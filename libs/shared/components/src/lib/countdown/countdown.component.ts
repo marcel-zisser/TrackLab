@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, input, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'tl-countdown',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './countdown.component.html',
   styleUrl: './countdown.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -4,6 +4,7 @@ onlyBuiltDependencies:
   - '@prisma/client'
   - '@prisma/engines'
   - '@swc/core'
+  - '@tailwindcss/oxide'
   - bcrypt
   - esbuild
   - lmdb
@@ -12,3 +13,4 @@ onlyBuiltDependencies:
   - prisma
   - protobufjs
   - protoc
+  - unrs-resolver

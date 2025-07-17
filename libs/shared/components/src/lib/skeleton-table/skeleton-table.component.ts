@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { TableModule } from 'primeng/table';
 import { Skeleton } from 'primeng/skeleton';
 import { Column } from '@tracklab/models';
 
 @Component({
   selector: 'tl-skeleton-table',
-  imports: [CommonModule, TableModule, Skeleton],
+  imports: [TableModule, Skeleton],
   templateUrl: './skeleton-table.component.html',
   styleUrl: './skeleton-table.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -18,6 +18,9 @@ import { MessageService } from 'primeng/api';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {
+  private fb = inject(FormBuilder);
+  private ref = inject(DynamicDialogRef);
+
   private readonly authenticationService = inject(AuthenticationService);
   private readonly dialogService = inject(DialogService);
   private readonly messageService = inject(MessageService);
@@ -25,7 +28,7 @@ export class LoginComponent {
   loginForm: FormGroup;
   loginFailed = signal(false);
 
-  constructor(private fb: FormBuilder, private ref: DynamicDialogRef) {
+  constructor() {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],

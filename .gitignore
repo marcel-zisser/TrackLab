@@ -50,3 +50,5 @@ Thumbs.db
 !**/generated/__init__.py
 
 .env
+.cursor/rules/nx-rules.mdc
+.github/instructions/nx.instructions.md
