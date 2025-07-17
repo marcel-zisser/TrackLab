@@ -15,7 +15,8 @@
         class="w-full"
         [inputId]="'year'"
         [options]="years"
-        [(ngModel)]="year"
+        [ngModel]="year()"
+        (ngModelChange)="year.set($event)"
         [filter]="true">
       </p-dropdown>
       <label [for]="'year'">Year</label>
@@ -25,10 +26,10 @@
       <p-dropdown
         class="w-full"
         [inputId]="'race'"
-        [options]="years"
+        [options]="races()"
         [filter]="true"
-        [ngModel]="year()"
-        (ngModelChange)="year.set($event)">
+        [ngModel]="race()"
+        (ngModelChange)="race.set($event)">
       </p-dropdown>
       <label [for]="'race'">Race</label>
     </p-floatlabel>
@@ -37,9 +38,10 @@
       <p-dropdown
         class="w-full"
         [inputId]="'session'"
-        [options]="years"
-        [(ngModel)]="year"
-        [filter]="true">
+        [options]="sessions()"
+        [filter]="true"
+        [ngModel]="session()"
+        (ngModelChange)="session.set($event)">
       </p-dropdown>
       <label [for]="'session'">Session</label>
     </p-floatlabel>

@@ -2,12 +2,19 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  inject, signal
+  inject,
+  signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import { BackendService, ThemeService } from '@tracklab/services';
-import { StrategyResponse, TireColors, TireCompound } from '@tracklab/models';
+import {
+  Event,
+  SelectionOption,
+  StrategyResponse,
+  TireColors,
+  TireCompound,
+} from '@tracklab/models';
 import { DropdownModule } from 'primeng/dropdown';
 import { AnalysisBaseComponent } from '../analysis-base/analysis-base.component';
 import { FloatLabel } from 'primeng/floatlabel';
@@ -29,35 +36,63 @@ export class StrategyComparisonComponent {
   private readonly themeService = inject(ThemeService);
   private readonly backendService = inject(BackendService);
 
-  protected readonly years = Array.from(
+  protected readonly years: SelectionOption<number, number>[] = Array.from(
     { length: new Date().getFullYear() - 2018 + 1 },
     (_, i) => 2018 + i
   ).map((year) => ({ label: year, value: year }));
-  protected readonly races = computed( () => {
-    this.backendService.doGet(`fast-f1/event-schedule?year=${this.year}`)
-  });
 
-  protected year = signal<string | undefined>(undefined);
-  protected race = signal<string | undefined>(undefined);
-  protected session: string | undefined = undefined;
-
-  protected strategyData = this.backendService.doGetResource<StrategyResponse>(
-    `fast-f1/strategy?year=${this.year}&round=12&session=Race`
+  protected readonly races = computed<SelectionOption<string, Event>[]>(
+    () =>
+      this.raceResource
+        ?.value()
+        ?.map((race) => ({ label: race.name, value: race })) ?? []
   );
 
+  protected readonly sessions = computed<SelectionOption<string, string>[]>(
+    () =>
+      this.race()?.sessionInfos.map((session) => ({
+        label: session.name,
+        value: session.name,
+      })) ?? []
+  );
+
+  protected year = signal<string | undefined>(undefined);
+
+  protected race = signal<Event | undefined>(undefined);
+  protected session = signal<string | undefined>(undefined);
+  protected readonly raceResource = this.backendService.doGetResource<Event[]>(
+    `fast-f1/event-schedule?year=${this.year()}`
+  );
+
+  protected strategyDataResource =
+    this.backendService.doGetResource<StrategyResponse>(
+      `fast-f1/strategy?year=${this.year}&round=${
+        this.race()?.roundNumber
+      }&session=${this.session()}`
+    );
+
+  protected strategyData = this.strategyDataResource?.value;
+
   protected drivers = computed(() => {
-    const drivers = new Set<string>();
-    this.strategyData
-      .value()
-      ?.strategy?.forEach((strategy) => drivers.add(strategy.driver));
-    return drivers;
+    if (this.strategyData) {
+      const drivers = new Set<string>();
+      this.strategyData()?.strategy?.forEach((strategy) =>
+        drivers.add(strategy.driver)
+      );
+      return drivers;
+    }
+    return undefined;
   });
 
   protected processedData = computed(() => {
+    if (!this.strategyData) {
+      return undefined;
+    }
+
     const processedData: any[] = [];
     const driverStintSums = new Map<string, number>();
 
-    this.strategyData.value()?.strategy.forEach((strategy) => {
+    this.strategyData()?.strategy.forEach((strategy) => {
       const key = strategy.driver;
       const startLap = driverStintSums.get(key) || 0;
       processedData.push([
@@ -102,7 +137,7 @@ export class StrategyComparisonComponent {
     },
     yAxis: {
       type: 'category',
-      data: Array.from(this.drivers().values()),
+      data: Array.from(this.drivers()?.values() ?? []),
     },
     series: [
       {
