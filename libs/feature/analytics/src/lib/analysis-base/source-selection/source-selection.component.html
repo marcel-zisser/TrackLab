@@ -1,0 +1,37 @@
+<div class="flex flex-col gap-8">
+  <p-floatlabel variant="on">
+    <p-select
+      class="w-full"
+      [inputId]="'year'"
+      [options]="years"
+      [ngModel]="year()"
+      (ngModelChange)="year.set($event)"
+      [filter]="true">
+    </p-select>
+    <label [for]="'year'">Year</label>
+  </p-floatlabel>
+
+  <p-floatlabel variant="on">
+    <p-select
+      class="w-full"
+      [inputId]="'event'"
+      [options]="events()"
+      [filter]="true"
+      [ngModel]="event()"
+      (ngModelChange)="event.set($event)">
+    </p-select>
+    <label [for]="'event'">Event</label>
+  </p-floatlabel>
+
+  <p-floatlabel variant="on">
+    <p-select
+      class="w-full"
+      [inputId]="'session'"
+      [options]="sessions()"
+      [filter]="true"
+      [ngModel]="session()"
+      (ngModelChange)="session.set($event)">
+    </p-select>
+    <label [for]="'session'">Session</label>
+  </p-floatlabel>
+</div>

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AnalyticsTile } from '@tracklab/models';
 import { AutoComplete } from 'primeng/autocomplete';
 import { AnalyticsTileComponent } from './analytics-tile/analytics-tile.component';
+import { PrimeIcons } from 'primeng/api';
 
 @Component({
   selector: 'tl-analysis-base-selection',
@@ -31,7 +32,7 @@ export class AnalysisSelectionComponent {
         title: 'Strategy Comparison',
         description:
           'Compare the strategies of different teams for a given race',
-        icon: '',
+        icon: PrimeIcons.BARS,
         callback: () => {
           this.router.navigate(['strategy-comparison'], {
             relativeTo: this.activatedRoute,
@@ -39,12 +40,13 @@ export class AnalysisSelectionComponent {
         },
       },
       {
-        title: 'Strategy Comparison',
-        description:
-          'Compare the strategies of different teams for a given race',
-        icon: '',
+        title: 'Team Pace Comparison',
+        description: 'Compare the pace of different teams for a given race',
+        icon: PrimeIcons.STOPWATCH,
         callback: () => {
-          console.log('Shit works');
+          this.router.navigate(['team-pace-comparison'], {
+            relativeTo: this.activatedRoute,
+          });
         },
       },
       {

@@ -2,34 +2,31 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   inject,
   signal,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import { BackendService, ThemeService } from '@tracklab/services';
 import {
   Event,
-  SelectionOption,
+  RaceSelection,
   Strategy,
   StrategyResponse,
   TireColors,
   TireCompound,
 } from '@tracklab/models';
-import { AnalysisBaseComponent } from '../analysis-base/analysis-base.component';
-import { FloatLabel } from 'primeng/floatlabel';
-import { Select } from 'primeng/select';
-import { first, map } from 'rxjs';
+import {
+  AnalysisBaseComponent,
+  SourceSelectionComponent,
+} from '../../analysis-base';
+import { first } from 'rxjs';
 
 @Component({
   selector: 'tl-strategy-comparison',
   imports: [
     AnalysisBaseComponent,
-    FormsModule,
     NgxEchartsDirective,
-    FloatLabel,
-    Select,
+    SourceSelectionComponent,
   ],
   templateUrl: './strategy-comparison.component.html',
   styleUrl: './strategy-comparison.component.css',
@@ -39,30 +36,17 @@ export class StrategyComparisonComponent {
   private readonly themeService = inject(ThemeService);
   private readonly backendService = inject(BackendService);
 
-  protected readonly years: SelectionOption<number, number>[] = Array.from(
-    { length: new Date().getFullYear() - 2018 + 1 },
-    (_, i) => 2018 + i,
-  ).map((year) => ({ label: year, value: year }));
+  protected selectedYear: string | undefined;
+  protected selectedEvent: Event | undefined;
+  protected selectedSession: string | undefined;
 
   protected readonly chartTheme = this.themeService.chartTheme;
-  protected readonly year = signal<string | undefined>(undefined);
-  protected readonly race = signal<Event | undefined>(undefined);
-  protected readonly session = signal<string | undefined>(undefined);
   protected readonly strategyData = signal<Strategy[] | undefined>(undefined);
-  protected readonly races = signal<SelectionOption<string, Event>[]>([]);
   protected readonly processedData = computed(() =>
     this.processData(this.strategyData()),
   );
 
   protected readonly chartOptions = computed(() => this.createChartOptions());
-  protected readonly sessions = computed<SelectionOption<string, string>[]>(
-    () =>
-      this.race()?.sessionInfos.map((session) => ({
-        label: session.name,
-        value: session.name,
-      })) ?? [],
-  );
-
   protected drivers = computed(() => {
     const strategyData = this.strategyData();
     if (strategyData) {
@@ -73,9 +57,26 @@ export class StrategyComparisonComponent {
     return undefined;
   });
 
-  constructor() {
-    effect(() => this.createEventScheduleEffect());
-    effect(() => this.loadStrategyDataEffect());
+  /**
+   * Effect to load the strategy data, once all inputs have been selected
+   * @protected
+   */
+  protected loadStrategyData(selectedRace: RaceSelection) {
+    if (selectedRace.year && selectedRace.event && selectedRace.session) {
+      this.selectedYear = selectedRace.year;
+      this.selectedEvent = selectedRace.event;
+      this.selectedSession = selectedRace.session;
+
+      this.strategyData.set(undefined);
+      this.backendService
+        .doGet<StrategyResponse>(
+          `fast-f1/strategy?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}&session=${selectedRace.session}`,
+        )
+        .pipe(first((response) => !!response))
+        .subscribe({
+          next: (response) => this.strategyData.set(response.strategy),
+        });
+    }
   }
 
   /**
@@ -112,7 +113,7 @@ export class StrategyComparisonComponent {
   private createChartOptions() {
     return {
       title: {
-        text: 'Strategy Comparison',
+        text: `Strategy Comparison ${this.selectedEvent?.name ?? ''} ${this.selectedYear ?? ''}`,
         left: 'center',
       },
       tooltip: {
@@ -177,45 +178,5 @@ export class StrategyComparisonComponent {
         },
       ],
     };
-  }
-
-  /**
-   * Creates the effect to watch the year, to dynamically load the corresponding races
-   * @private
-   */
-  private createEventScheduleEffect() {
-    if (this.year()) {
-      this.race.set(undefined);
-      this.session.set(undefined);
-      this.backendService
-        .doGet<Event[]>(`fast-f1/event-schedule?year=${this.year()}`)
-        .pipe(
-          first((races) => !!races),
-          map((races: Event[]) =>
-            races.map((race) => ({ label: race.name, value: race })),
-          ),
-        )
-        .subscribe({
-          next: (races) => this.races.set(races),
-        });
-    }
-  }
-
-  /**
-   * Effect to load the strategy data, once all inputs have been selected
-   * @private
-   */
-  private loadStrategyDataEffect() {
-    if (this.year() && this.race() && this.session()) {
-      this.strategyData.set(undefined);
-      this.backendService
-        .doGet<StrategyResponse>(
-          `fast-f1/strategy?year=${this.year()}&round=${this.race()?.roundNumber}&session=${this.session()}`,
-        )
-        .pipe(first((response) => !!response))
-        .subscribe({
-          next: (response) => this.strategyData.set(response.strategy),
-        });
-    }
   }
 }

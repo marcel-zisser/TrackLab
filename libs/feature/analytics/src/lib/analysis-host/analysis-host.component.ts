@@ -1,5 +1,14 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, Type } from '@angular/core';
-import { StrategyComparisonComponent } from '../strategy-comparison/strategy-comparison.component';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  OnInit,
+  Type,
+} from '@angular/core';
+import {
+  StrategyComparisonComponent,
+  TeamPaceComparisonComponent,
+} from '../analyses';
 import { ActivatedRoute } from '@angular/router';
 import { ConstructionComponent } from '@tracklab/shared/components';
 import { NgComponentOutlet } from '@angular/common';
@@ -15,6 +24,7 @@ export class AnalysisHostComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly analysisMap = new Map<string, Type<any>>([
     ['strategy-comparison', StrategyComparisonComponent],
+    ['team-pace-comparison', TeamPaceComparisonComponent],
   ]);
 
   protected componentToRender: Type<any> | null = null;
