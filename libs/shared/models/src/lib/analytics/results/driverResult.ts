@@ -1,5 +1,5 @@
-import { Team } from '../team';
-import { Driver } from '../driver';
+import { Team } from '../base/team';
+import { Driver } from '../base/driver';
 
 export interface DriverResult {
   position: number;

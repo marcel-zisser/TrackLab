@@ -1,5 +1,5 @@
 import { DriverResult } from './driverResult';
-import { Location } from '../location';
+import { Location } from '../base/location';
 
 export interface RaceResult {
   year: number;

@@ -4,6 +4,7 @@ import {
   computed,
   effect,
   inject,
+  input,
   linkedSignal,
   output,
   signal,
@@ -11,7 +12,7 @@ import {
 import { FloatLabel } from 'primeng/floatlabel';
 import { Select } from 'primeng/select';
 import { Event, RaceSelection, SelectionOption } from '@tracklab/models';
-import { first, map } from 'rxjs';
+import { first, map, retry } from 'rxjs';
 import { BackendService } from '@tracklab/services';
 import { FormsModule } from '@angular/forms';
 
@@ -23,6 +24,7 @@ import { FormsModule } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SourceSelectionComponent {
+  withSessionSelection = input<boolean>(true);
   raceSelection = output<RaceSelection>();
 
   private readonly backendService = inject(BackendService);
@@ -72,6 +74,7 @@ export class SourceSelectionComponent {
           map((races: Event[]) =>
             races.map((race) => ({ label: race.name, value: race })),
           ),
+          retry(5),
         )
         .subscribe({
           next: (races) => this.events.set(races),
@@ -88,7 +91,7 @@ export class SourceSelectionComponent {
     const event = this.event();
     const session = this.session();
 
-    if (year && event && session) {
+    if (year && event && (session || !this.withSessionSelection())) {
       this.raceSelection.emit({ year, event, session });
     }
   }

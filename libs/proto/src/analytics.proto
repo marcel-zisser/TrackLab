@@ -6,6 +6,7 @@ import "types.proto";
 
 service Analytics {
   rpc GetSessionStrategy(StrategyRequest) returns (StrategyResponse) {}
+  rpc GetQuickLaps(QuickLapsRequest) returns (QuickLapsResponse) {}
 }
 
 message StrategyRequest {
@@ -16,4 +17,13 @@ message StrategyRequest {
 
 message StrategyResponse {
   repeated Strategy strategy = 1;
+}
+
+message QuickLapsRequest {
+  int32 year = 1;
+  int32 round = 2;
+}
+
+message QuickLapsResponse {
+  repeated Lap laps = 1;
 }

@@ -1,7 +1,7 @@
-import { Event } from '../analytics/event';
+import { Event } from '../analytics/base/event';
 
 export interface RaceSelection {
   year: string;
   event: Event;
-  session: string;
+  session?: string;
 }

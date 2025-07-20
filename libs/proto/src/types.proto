@@ -98,3 +98,37 @@ message Strategy {
   string compound = 4;
 }
 
+message Duration {
+  int32 hours = 1;
+  int32 minutes = 2;
+  int32 seconds = 4;
+  int32 milliseconds = 5;
+}
+
+message Lap {
+  Duration time = 1;
+  string driver = 2;
+  int32 driverNumber = 3;
+  string team = 4;
+  string teamColor = 5;
+  Duration lapTime = 6;
+  int32 lapNumber = 7;
+  int32 stint = 8;
+  Duration pitOutTime = 9;
+  Duration pitInTime = 10;
+  Duration sector1Time = 11;
+  Duration sector2Time = 12;
+  Duration sector3Time = 13;
+  float speedI1 = 14;
+  float speedI2 = 15;
+  float speedFL = 16;
+  float speedST = 17;
+  bool isPersonalBest = 18;
+  string tireCompound = 19;
+  int32 tireLife = 20;
+  bool freshTire = 21;
+  int32 trackStatus = 22;
+  int32 position = 23;
+  bool deleted = 24;
+  string deletedReason = 25;
+}

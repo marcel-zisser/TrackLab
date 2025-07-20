@@ -9,9 +9,9 @@ import { NgxEchartsDirective } from 'ngx-echarts';
 import { BackendService, ThemeService } from '@tracklab/services';
 import {
   Event,
+  Lap,
+  QuickLapsResponse,
   RaceSelection,
-  Strategy,
-  StrategyResponse,
   TireColors,
   TireCompound,
 } from '@tracklab/models';
@@ -41,18 +41,18 @@ export class TeamPaceComparisonComponent {
   protected selectedSession: string | undefined;
 
   protected readonly chartTheme = this.themeService.chartTheme;
-  protected readonly strategyData = signal<Strategy[] | undefined>(undefined);
+  protected readonly paceData = signal<Lap[] | undefined>(undefined);
   protected readonly processedData = computed(() =>
-    this.processData(this.strategyData()),
+    this.processData(this.paceData()),
   );
 
   protected readonly chartOptions = computed(() => this.createChartOptions());
-  protected drivers = computed(() => {
-    const strategyData = this.strategyData();
-    if (strategyData) {
-      const drivers = new Set<string>();
-      strategyData.forEach((strategy) => drivers.add(strategy.driver));
-      return drivers;
+  protected teams = computed(() => {
+    const paceData = this.paceData();
+    if (paceData) {
+      const teams = new Set<string>();
+      paceData.forEach((strategy) => teams.add(strategy.team));
+      return teams;
     }
     return undefined;
   });
@@ -67,14 +67,14 @@ export class TeamPaceComparisonComponent {
       this.selectedEvent = selectedRace.event;
       this.selectedSession = selectedRace.session;
 
-      this.strategyData.set(undefined);
+      this.paceData.set(undefined);
       this.backendService
-        .doGet<StrategyResponse>(
-          `fast-f1/laps?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}&session=${selectedRace.session}`,
+        .doGet<QuickLapsResponse>(
+          `fast-f1/quick-laps?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}`,
         )
         .pipe(first((response) => !!response))
         .subscribe({
-          next: (response) => this.strategyData.set(response.strategy),
+          next: (response) => this.paceData.set(response.laps),
         });
     }
   }
@@ -83,24 +83,16 @@ export class TeamPaceComparisonComponent {
    * Processes the strategy data retrieved from the backend
    * @private
    */
-  private processData(data: Strategy[] | undefined) {
+  private processData(data: Lap[] | undefined) {
     if (!data) {
       return undefined;
     }
 
     const processedData: any[] = [];
-    const driverStintSums = new Map<string, number>();
 
-    data.forEach((strategy) => {
-      const key = strategy.driver;
-      const startLap = driverStintSums.get(key) || 0;
-      processedData.push([
-        key,
-        startLap,
-        strategy.stintLength,
-        strategy.compound,
-      ]);
-      driverStintSums.set(key, startLap + strategy.stintLength);
+    data.forEach((lap) => {
+      const key = lap.team;
+      processedData.push([key]);
     });
 
     return processedData;
@@ -134,12 +126,13 @@ export class TeamPaceComparisonComponent {
         top: 50,
       },
       xAxis: {
-        type: 'value',
-        name: 'Laps',
+        type: 'categories',
+        name: 'Teams',
+        data: Array.from(this.teams()?.values() ?? []),
       },
       yAxis: {
-        type: 'category',
-        data: Array.from(this.drivers()?.values() ?? []),
+        type: 'value',
+        name: 'Laptime',
       },
       series: [
         {

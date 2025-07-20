@@ -17,30 +17,38 @@ export class FastF1Service implements OnModuleInit {
   constructor(@Inject('TRACKLAB_PACKAGE') private client: ClientGrpc) {}
 
   onModuleInit() {
-    this.sessionResultsService = this.client.getService<SessionResultsClient>('SessionResults');
-    this.eventScheduleService = this.client.getService<EventScheduleClient>('EventSchedule');
-    this.circuitService = this.client.getService<CircuitInfoClient>('CircuitInfo');
-    this.analyticsService = this.client.getService<AnalyticsClient>('Analytics');
+    this.sessionResultsService =
+      this.client.getService<SessionResultsClient>('SessionResults');
+    this.eventScheduleService =
+      this.client.getService<EventScheduleClient>('EventSchedule');
+    this.circuitService =
+      this.client.getService<CircuitInfoClient>('CircuitInfo');
+    this.analyticsService =
+      this.client.getService<AnalyticsClient>('Analytics');
   }
 
-  async getSessionResults(year: number, round: number, session: number): Promise<RaceResult[]> {
+  async getSessionResults(
+    year: number,
+    round: number,
+    session: number,
+  ): Promise<RaceResult[]> {
     const response: RaceResult[] = [];
     const sessionResults = await firstValueFrom(
       this.sessionResultsService.getSessionResults({
         season: year,
         round: round,
-        session: session
-      })
+        session: session,
+      }),
     );
 
     for (const sessionResult of sessionResults.sessionResults) {
       const mappedResults: DriverResult[] = [];
 
-      sessionResult.driverResults.forEach(driverResult => {
+      sessionResult.driverResults.forEach((driverResult) => {
         const driver = driverResult.driver;
         const team = driverResult.team;
 
-          mappedResults.push({
+        mappedResults.push({
           position: driverResult.position,
           points: driverResult.points ?? 0,
           driver: {
@@ -55,11 +63,11 @@ export class FastF1Service implements OnModuleInit {
           team: {
             id: team.id,
             name: team.name,
-            color: `#${team.color}`
+            color: `#${team.color}`,
           },
           gridPosition: driverResult.gridPosition,
-          status: driverResult.status
-        })
+          status: driverResult.status,
+        });
       });
 
       response.push({
@@ -68,9 +76,9 @@ export class FastF1Service implements OnModuleInit {
         type: sessionResult.sessionType,
         location: {
           country: sessionResult.location.country,
-          locality: sessionResult.location.locality
+          locality: sessionResult.location.locality,
         },
-        results: mappedResults
+        results: mappedResults,
       });
     }
 
@@ -83,7 +91,7 @@ export class FastF1Service implements OnModuleInit {
    */
   async getEventSchedule(season: number): Promise<Event[]> {
     const eventSchedule = await firstValueFrom(
-      this.eventScheduleService.getEventSchedule({ season: season })
+      this.eventScheduleService.getEventSchedule({ season: season }),
     );
 
     return eventSchedule.events;
@@ -96,7 +104,10 @@ export class FastF1Service implements OnModuleInit {
    */
   async getCircuitInfo(season: number, round: number): Promise<Circuit> {
     return await firstValueFrom(
-      this.circuitService.getCircuitBaseInformation({ season: season, round: round })
+      this.circuitService.getCircuitBaseInformation({
+        season: season,
+        round: round,
+      }),
     );
   }
 
@@ -108,7 +119,17 @@ export class FastF1Service implements OnModuleInit {
    */
   async getSessionStrategy(year: number, round: number, session: string) {
     return await firstValueFrom(
-      this.analyticsService.getSessionStrategy({ year: year, round: round, session: session })
+      this.analyticsService.getSessionStrategy({
+        year: year,
+        round: round,
+        session: session,
+      }),
+    );
+  }
+
+  async getQuickLaps(year: number, round: number) {
+    return await firstValueFrom(
+      this.analyticsService.getQuickLaps({ year: year, round: round }),
     );
   }
 }
