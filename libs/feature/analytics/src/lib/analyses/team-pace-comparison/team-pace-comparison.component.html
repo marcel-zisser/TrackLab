@@ -1,6 +1,6 @@
 <tl-analysis-base class="base">
   <div chart class="chart-container">
-    @if (selectedEvent && selectedYear && selectedSession) {
+    @if (selectedEvent && selectedYear) {
       <div echarts
            class="chart"
            [loading]="processedData() === undefined"

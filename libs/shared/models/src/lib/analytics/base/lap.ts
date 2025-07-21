@@ -6,7 +6,7 @@ export interface Lap {
   driverNumber: number;
   team: string;
   teamColor: string;
-  lapTime: Duration | undefined;
+  lapTime: Duration;
   lapNumber: number;
   stint: number;
   pitOutTime: Duration | undefined;

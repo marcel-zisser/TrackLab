@@ -8,18 +8,21 @@ import {
 import { NgxEchartsDirective } from 'ngx-echarts';
 import { BackendService, ThemeService } from '@tracklab/services';
 import {
+  Duration,
   Event,
   Lap,
   QuickLapsResponse,
   RaceSelection,
-  TireColors,
-  TireCompound,
 } from '@tracklab/models';
 import {
   AnalysisBaseComponent,
   SourceSelectionComponent,
 } from '../../analysis-base';
 import { first } from 'rxjs';
+import * as echarts from 'echarts/core';
+import 'echarts/extension/dataTool';
+
+const prepareBoxplotData = (echarts as any).dataTool.prepareBoxplotData;
 
 @Component({
   selector: 'tl-team-pace-comparison',
@@ -38,34 +41,52 @@ export class TeamPaceComparisonComponent {
 
   protected selectedYear: string | undefined;
   protected selectedEvent: Event | undefined;
-  protected selectedSession: string | undefined;
 
   protected readonly chartTheme = this.themeService.chartTheme;
   protected readonly paceData = signal<Lap[] | undefined>(undefined);
   protected readonly processedData = computed(() =>
     this.processData(this.paceData()),
   );
+  protected teams = computed(() =>
+    Array.from(this.processedData()?.keys() ?? []),
+  );
+  protected readonly boxplotData = computed(() => {
+    const boxplotData = prepareBoxplotData(
+      this.teams().map(
+        (team) => this.processedData()?.get(team)?.lapTimes ?? [],
+      ),
+      {},
+    );
+    boxplotData.boxData = boxplotData.boxData?.map((item: any, i: any) => ({
+      value: item,
+      itemStyle: {
+        color: this.processedData()?.get(this.teams()?.[i])?.color ?? '#000',
+        borderColor: '#777',
+      },
+    }));
 
-  protected readonly chartOptions = computed(() => this.createChartOptions());
-  protected teams = computed(() => {
-    const paceData = this.paceData();
-    if (paceData) {
-      const teams = new Set<string>();
-      paceData.forEach((strategy) => teams.add(strategy.team));
-      return teams;
-    }
-    return undefined;
+    return boxplotData;
   });
+
+  protected yAxisMin = computed(() => {
+    const minBox: number[] = this.boxplotData().boxData.map(
+      (box: any) => box.value[0],
+    );
+    const outliers: number[] = this.boxplotData().outliers.map(
+      (outlier: any) => outlier[1],
+    );
+    return Math.min(...minBox, ...outliers) - 1000;
+  });
+  protected readonly chartOptions = computed(() => this.createChartOptions());
 
   /**
    * Effect to load the pace data, once all inputs have been selected
    * @protected
    */
   protected loadPaceData(selectedRace: RaceSelection) {
-    if (selectedRace.year && selectedRace.event && selectedRace.session) {
+    if (selectedRace.year && selectedRace.event) {
       this.selectedYear = selectedRace.year;
       this.selectedEvent = selectedRace.event;
-      this.selectedSession = selectedRace.session;
 
       this.paceData.set(undefined);
       this.backendService
@@ -88,14 +109,21 @@ export class TeamPaceComparisonComponent {
       return undefined;
     }
 
-    const processedData: any[] = [];
+    const groupedLaps = new Map<
+      string,
+      { color: string; lapTimes: number[] }
+    >();
 
     data.forEach((lap) => {
-      const key = lap.team;
-      processedData.push([key]);
+      if (!groupedLaps.has(lap.team)) {
+        groupedLaps.set(lap.team, { color: lap.teamColor, lapTimes: [] });
+      }
+      groupedLaps
+        .get(lap.team)
+        ?.lapTimes.push(this.convertToMilliseconds(lap.lapTime));
     });
 
-    return processedData;
+    return groupedLaps;
   }
 
   /**
@@ -104,72 +132,72 @@ export class TeamPaceComparisonComponent {
    */
   private createChartOptions() {
     return {
-      title: {
-        text: `Strategy Comparison ${this.selectedEvent?.name ?? ''} ${this.selectedYear ?? ''}`,
-        left: 'center',
-      },
+      title: { text: 'Lap Time Distribution by Team' },
       tooltip: {
-        formatter: (p: any) => {
-          const [driver, startLap, length, compound] = p.data;
-          return `<strong>${driver}</strong><br/>${compound} <br/>${length} Laps<br/>Lap ${startLap} → ${
-            startLap + length
-          }`;
+        trigger: 'item',
+        formatter: (params: any) => {
+          if (params.value.length === 6) {
+            return `<b>Min</b>: ${this.millisecondsToTimingString(params.value[1])}<br/>
+                    <b>Q1</b>: ${this.millisecondsToTimingString(params.value[2])}<br/>
+                    <b>Median</b>:: ${this.millisecondsToTimingString(params.value[3])}<br/>
+                    <b>Q3</b>:: ${this.millisecondsToTimingString(params.value[4])}<br/>
+                    <b>Max</b>:: ${this.millisecondsToTimingString(params.value[5])}`;
+          } else {
+            return `Lap: ${this.millisecondsToTimingString(params.value[1])}`;
+          }
         },
       },
-      legend: {
-        data: ['SOFT', 'MEDIUM', 'HARD', TireCompound.Inter],
-      },
-      grid: {
-        left: 50,
-        right: 50,
-        bottom: 50,
-        top: 50,
-      },
       xAxis: {
-        type: 'categories',
-        name: 'Teams',
-        data: Array.from(this.teams()?.values() ?? []),
+        type: 'category',
+        data: this.teams(),
+        axisLabel: { rotate: 20 },
       },
       yAxis: {
         type: 'value',
-        name: 'Laptime',
+        name: 'Lap Time',
+        min: this.yAxisMin(),
+        axisLabel: {
+          formatter: (val: number) => this.millisecondsToTimingString(val),
+        },
       },
       series: [
         {
-          type: 'custom',
-          renderItem: function (params: any, api: any) {
-            const driverIndex = api.value(0);
-            const start = api.value(1);
-            const length = api.value(2);
-            const compound = api.value(3);
-            const end = start + length;
-
-            const y = api.coord([0, driverIndex])[1];
-            const xStart = api.coord([start, 0])[0];
-            const xEnd = api.coord([end, 0])[0];
-
-            return {
-              type: 'rect',
-              shape: {
-                x: xStart,
-                y: y - 10,
-                width: xEnd - xStart,
-                height: 20,
-              },
-              style: {
-                fill: TireColors.get(compound),
-                stroke: '#777',
-                lineWidth: 1.5,
-              },
-            };
-          },
-          encode: {
-            x: [1, 2],
-            y: 0,
-          },
-          data: this.processedData(),
+          type: 'boxplot',
+          data: this.boxplotData().boxData,
+        },
+        {
+          name: 'Outliers',
+          type: 'scatter',
+          data: this.boxplotData().outliers,
         },
       ],
     };
+  }
+
+  /**
+   * Converts Duration to milliseconds
+   * @param lapTime the duration to convert
+   * @private
+   */
+  private convertToMilliseconds(lapTime: Duration): number {
+    return (
+      (lapTime.hours * 60 * 60 * 1000 || 0) +
+      (lapTime.minutes * 60 * 1000 || 0) +
+      (lapTime.seconds * 1000 || 0) +
+      (lapTime.milliseconds || 0)
+    );
+  }
+
+  /**
+   * Converts the milliseconds to a string in format mm:ss:mmmm
+   * @param milliseconds the milliseconds to convert
+   * @private
+   */
+  private millisecondsToTimingString(milliseconds: number): string {
+    const totalMs = Math.round(milliseconds);
+    const minutes = Math.floor(totalMs / 60000);
+    const seconds = Math.floor((totalMs % 60000) / 1000);
+    const millis = totalMs % 1000;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}.${millis.toString().padStart(3, '0')}`;
   }
 }
