@@ -1,7 +1,6 @@
 from datetime import datetime
 
 import fastf1
-import logging
 
 from generated import event_schedule_pb2_grpc
 from generated.event_schedule_pb2 import EventScheduleResponse
@@ -16,24 +15,24 @@ def map_session_infos(event_date) -> list[SessionInfo]:
   """
   return [
     SessionInfo(
-      name = event_date.get('Session1'),
-      date = datetime.isoformat(event_date.get('Session1Date'))
+      name=event_date.Session1,
+      date=datetime.isoformat(event_date.Session1Date)
     ),
     SessionInfo(
-      name = event_date.get('Session2'),
-      date = datetime.isoformat(event_date.get('Session2Date'))
+      name=event_date.Session2,
+      date=datetime.isoformat(event_date.Session2Date)
     ),
     SessionInfo(
-      name = event_date.get('Session3'),
-      date = datetime.isoformat(event_date.get('Session3Date'))
+      name=event_date.Session3,
+      date=datetime.isoformat(event_date.Session3Date)
     ),
     SessionInfo(
-      name = event_date.get('Session4'),
-      date = datetime.isoformat(event_date.get('Session4Date'))
+      name=event_date.Session4,
+      date=datetime.isoformat(event_date.Session4Date)
     ),
     SessionInfo(
-      name = event_date.get('Session5'),
-      date = datetime.isoformat(event_date.get('Session5Date'))
+      name=event_date.Session5,
+      date=datetime.isoformat(event_date.Session5Date)
     ),
   ]
 
@@ -45,15 +44,15 @@ def map_event(event_data) -> Event:
   :return: the mapped Event object
   """
   return Event(
-    roundNumber = event_data.get('RoundNumber'),
-    country = event_data.get('Country'),
-    location = event_data.get('Location'),
-    officialName = event_data.get('OfficialEventName'),
-    name = event_data.get('EventName'),
-    date = datetime.isoformat(event_data.get('EventDate')),
-    format = event_data.get('EventFormat'),
-    f1ApiSupport = event_data.get('F1ApiSupport'),
-    sessionInfos = map_session_infos(event_data)
+    roundNumber=event_data.RoundNumber,
+    country=event_data.Country,
+    location=event_data.Location,
+    officialName=event_data.OfficialEventName,
+    name=event_data.EventName,
+    date=datetime.isoformat(event_data.EventDate),
+    format=event_data.EventFormat,
+    f1ApiSupport=event_data.F1ApiSupport,
+    sessionInfos=map_session_infos(event_data)
   )
 
 
@@ -63,7 +62,8 @@ class EventScheduleServicer(event_schedule_pb2_grpc.EventScheduleServicer):
     response = EventScheduleResponse()
     event_schedule = fastf1.get_event_schedule(request.season)
 
-    for index in range(len(event_schedule) - 1):
-      response.events.append(map_event(event_schedule.get_event_by_round(index + 1)))
+    for event in event_schedule.itertuples():
+      if event.EventFormat != 'testing':
+        response.events.append(map_event(event))
 
     return response
