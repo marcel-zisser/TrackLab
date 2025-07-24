@@ -2,7 +2,13 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { SessionResultsClient } from '../../generated/results';
 import { firstValueFrom } from 'rxjs';
-import { Circuit, DriverResult, Event, RaceResult } from '@tracklab/models';
+import {
+  Circuit,
+  CircuitInformation,
+  DriverResult,
+  Event,
+  RaceResult,
+} from '@tracklab/models';
 import { EventScheduleClient } from '../../generated/event-schedule';
 import { CircuitInfoClient } from '../../generated/circuit';
 import { AnalyticsClient } from '../../generated/analytics';
@@ -98,15 +104,35 @@ export class FastF1Service implements OnModuleInit {
   }
 
   /**
-   * Retrieves circuit info for a given round in a season
+   * Retrieves circuit base info for a given round in a season
    * @param season the season
    * @param round the round within the season
    */
-  async getCircuitInfo(season: number, round: number): Promise<Circuit> {
+  async getCircuit(season: number, round: number): Promise<Circuit> {
     return await firstValueFrom(
-      this.circuitService.getCircuitBaseInformation({
-        season: season,
+      this.circuitService.getCircuit({
+        year: season,
         round: round,
+      }),
+    );
+  }
+
+  /**
+   * Retrieves advanced circuit info for a given round in a season for a given session
+   * @param season the season
+   * @param round the round within the season
+   * @param session the session
+   */
+  async getCircuitInfo(
+    season: number,
+    round: number,
+    session: string,
+  ): Promise<CircuitInformation> {
+    return await firstValueFrom(
+      this.circuitService.getCircuitInformation({
+        year: season,
+        round: round,
+        session: session,
       }),
     );
   }
@@ -127,9 +153,30 @@ export class FastF1Service implements OnModuleInit {
     );
   }
 
+  /**
+   * Retrieves Quick Laps for a given race
+   * @param year the year of the race
+   * @param round the round of the race
+   */
   async getQuickLaps(year: number, round: number) {
     return await firstValueFrom(
       this.analyticsService.getQuickLaps({ year: year, round: round }),
+    );
+  }
+
+  /**
+   * Retrieves the speed traces for a given session
+   * @param year the year of the session
+   * @param round the round of the session within the season
+   * @param session the session type
+   */
+  async getSpeedTraces(year: number, round: number, session: string) {
+    return await firstValueFrom(
+      this.analyticsService.getSpeedTraces({
+        year: year,
+        round: round,
+        session: session,
+      }),
     );
   }
 }

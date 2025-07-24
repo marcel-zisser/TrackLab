@@ -3,8 +3,8 @@ import fastf1.plotting
 from pandas import NaT
 
 from generated import analytics_pb2_grpc
-from generated.analytics_pb2 import StrategyResponse, StrategyRequest, QuickLapsResponse
-from generated.types_pb2 import Strategy, Lap, Duration
+from generated.analytics_pb2 import StrategyResponse, StrategyRequest, QuickLapsResponse, SpeedTracesResponse
+from generated.types_pb2 import Strategy, Lap, Duration, SpeedTrace
 
 
 class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
@@ -57,14 +57,14 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
     team_palette = {team: fastf1.plotting.get_team_color(team, session=session)
                     for team in team_order}
 
-    for index, row in transformed_laps.iterrows():
-      time = row['Time']
-      lap_time = row['LapTime']
-      pit_in_time = row['PitInTime']
-      pit_out_time = row['PitOutTime']
-      sector1_time = row['Sector1Time']
-      sector2_time = row['Sector2Time']
-      sector3_time = row['Sector3Time']
+    for row in transformed_laps.itertuples():
+      time = row.Time
+      lap_time = row.LapTime
+      pit_in_time = row.PitInTime
+      pit_out_time = row.PitOutTime
+      sector1_time = row.Sector1Time
+      sector2_time = row.Sector2Time
+      sector3_time = row.Sector3Time
 
       response.laps.append(
         Lap(
@@ -74,18 +74,18 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
             seconds=time.components.seconds,
             milliseconds=time.components.milliseconds
           ) if time is not NaT else Duration(),
-          driver=row['Driver'],
-          driverNumber=int(row['DriverNumber']),
-          team=row['Team'],
-          teamColor=team_palette[row['Team']],
+          driver=row.Driver,
+          driverNumber=int(row.DriverNumber),
+          team=row.Team,
+          teamColor=team_palette[row.Team],
           lapTime=Duration(
             hours=lap_time.components.hours,
             minutes=lap_time.components.minutes,
             seconds=lap_time.components.seconds,
             milliseconds=lap_time.components.milliseconds
           ) if lap_time is not NaT else Duration(),
-          lapNumber=int(row['LapNumber']),
-          stint=int(row['Stint']),
+          lapNumber=int(row.LapNumber),
+          stint=int(row.Stint),
           pitOutTime=Duration(
             hours=pit_out_time.components.hours,
             minutes=pit_out_time.components.minutes,
@@ -116,19 +116,36 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
             seconds=sector3_time.components.seconds,
             milliseconds=sector3_time.components.milliseconds
           ) if sector3_time is not NaT else Duration(),
-          speedI1=float(row['SpeedI1']),
-          speedI2=float(row['SpeedI2']),
-          speedFL=float(row['SpeedFL']),
-          speedST=float(row['SpeedST']),
-          isPersonalBest=bool(row['IsPersonalBest']),
-          tireCompound=row['Compound'],
-          tireLife=int(row['TyreLife']),
-          freshTire=bool(row['FreshTyre']),
-          trackStatus=int(row['TrackStatus']),
-          position=int(row['Position']),
-          deleted=bool(row['Deleted']),
-          deletedReason=row['DeletedReason']
+          speedI1=float(row.SpeedI1),
+          speedI2=float(row.SpeedI2),
+          speedFL=float(row.SpeedFL),
+          speedST=float(row.SpeedST),
+          isPersonalBest=bool(row.IsPersonalBest),
+          tireCompound=row.Compound,
+          tireLife=int(row.TyreLife),
+          freshTire=bool(row.FreshTyre),
+          trackStatus=int(row.TrackStatus),
+          position=int(row.Position),
+          deleted=bool(row.Deleted),
+          deletedReason=row.DeletedReason
         )
       )
+
+    return response
+
+  def GetSpeedTraces(self, request, context):
+    response = SpeedTracesResponse()
+
+    session = fastf1.get_session(request.year, request.round, request.session)
+    session.load(laps=True, telemetry=True, weather=False, messages=False)
+
+    for driver in session.drivers:
+      fastest_lap = session.laps.pick_drivers(driver).pick_fastest()
+      # team_color = fastf1.plotting.get_team_color(fastest_lap['Team'], session=session)
+      if fastest_lap is not None:
+        car_data = fastest_lap.get_car_data().add_distance()
+        response.speed_traces.extend(
+          [SpeedTrace(driver=fastest_lap.Driver, distance=trace.Distance, speed=trace.Speed) for trace in
+           car_data.itertuples()])
 
     return response

@@ -25,7 +25,7 @@ import 'echarts/extension/dataTool';
 const prepareBoxplotData = (echarts as any).dataTool.prepareBoxplotData;
 
 @Component({
-  selector: 'tl-team-pace-comparison',
+  selector: 'tl-speed-traces',
   imports: [
     AnalysisBaseComponent,
     NgxEchartsDirective,

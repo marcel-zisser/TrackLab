@@ -7,3 +7,6 @@ export { Event } from './event';
 export { SessionInfo } from './session-info';
 export { Lap } from './lap';
 export { Duration } from './duration';
+export { CircuitInformation } from './circuit-information';
+export { TrackLocation } from './track-location';
+export { SpeedTrace } from './speed-trace';

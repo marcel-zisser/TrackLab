@@ -30,7 +30,13 @@ message Circuit {
   string name = 2;
   string url = 3;
   Location location = 4;
+}
 
+message CircuitInformation {
+  repeated TrackLocation corners = 1;
+  repeated TrackLocation marshall_lights = 2;
+  repeated TrackLocation marshall_sectors = 3;
+  float rotation = 4;
 }
 
 message Location {
@@ -38,6 +44,15 @@ message Location {
   string locality = 2;
   float latitude = 3;
   float longitude = 4;
+}
+
+message TrackLocation {
+  float x = 1;
+  float y = 2;
+  int32 number = 3;
+  string letter = 4;
+  float angle = 5;
+  float distance = 6;
 }
 
 message DriverResult {
@@ -131,4 +146,10 @@ message Lap {
   int32 position = 23;
   bool deleted = 24;
   string deletedReason = 25;
+}
+
+message SpeedTrace{
+  string driver = 1;
+  float distance = 2;
+  float speed = 3;
 }

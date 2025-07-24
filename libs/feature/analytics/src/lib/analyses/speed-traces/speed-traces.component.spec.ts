@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { StrategyComparisonComponent } from './strategy-comparison.component';
+import { SpeedTracesComponent } from './speed-traces.component';
 
 describe('SpeedTracesComponent', () => {
-  let component: StrategyComparisonComponent;
-  let fixture: ComponentFixture<StrategyComparisonComponent>;
+  let component: SpeedTracesComponent;
+  let fixture: ComponentFixture<SpeedTracesComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [StrategyComparisonComponent],
+      imports: [SpeedTracesComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(StrategyComparisonComponent);
+    fixture = TestBed.createComponent(SpeedTracesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

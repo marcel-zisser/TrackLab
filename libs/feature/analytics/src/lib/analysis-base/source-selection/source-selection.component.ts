@@ -32,7 +32,9 @@ export class SourceSelectionComponent {
   protected readonly years: SelectionOption<number, number>[] = Array.from(
     { length: new Date().getFullYear() - 2018 + 1 },
     (_, i) => 2018 + i,
-  ).map((year) => ({ label: year, value: year }));
+  )
+    .reverse()
+    .map((year) => ({ label: year, value: year }));
 
   protected readonly year = signal<string | undefined>(undefined);
   protected readonly event = signal<Event | undefined>(undefined);
@@ -48,10 +50,12 @@ export class SourceSelectionComponent {
 
   protected readonly sessions = computed<SelectionOption<string, string>[]>(
     () =>
-      this.event()?.sessionInfos.map((session) => ({
-        label: session.name,
-        value: session.name,
-      })) ?? [],
+      this.event()
+        ?.sessionInfos.reverse()
+        .map((session) => ({
+          label: session.name,
+          value: session.name,
+        })) ?? [],
   );
 
   constructor() {

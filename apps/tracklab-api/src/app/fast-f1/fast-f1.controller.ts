@@ -1,7 +1,16 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { FastF1Service } from './fast-f1.service';
-import { Circuit, Event, RaceResult } from '@tracklab/models';
-import { QuickLapsResponse, StrategyResponse } from '../../generated/analytics';
+import {
+  Circuit,
+  CircuitInformation,
+  Event,
+  RaceResult,
+} from '@tracklab/models';
+import {
+  QuickLapsResponse,
+  SpeedTracesResponse,
+  StrategyResponse,
+} from '../../generated/analytics';
 
 @Controller('fast-f1')
 export class FastF1Controller {
@@ -22,11 +31,20 @@ export class FastF1Controller {
   }
 
   @Get('circuit')
-  getCircuitInfo(
+  getCircuit(
     @Query('year') year: number,
     @Query('round') round: number,
   ): Promise<Circuit> {
-    return this.fastF1Service.getCircuitInfo(year, round);
+    return this.fastF1Service.getCircuit(year, round);
+  }
+
+  @Get('circuit-info')
+  getCircuitInfo(
+    @Query('year') year: number,
+    @Query('round') round: number,
+    @Query('session') session: string,
+  ): Promise<CircuitInformation> {
+    return this.fastF1Service.getCircuitInfo(year, round, session);
   }
 
   @Get('quick-laps')
@@ -44,5 +62,14 @@ export class FastF1Controller {
     @Query('session') session: string,
   ): Promise<StrategyResponse> {
     return this.fastF1Service.getSessionStrategy(year, round, session);
+  }
+
+  @Get('speed-traces')
+  getSpeedTraces(
+    @Query('year') year: number,
+    @Query('round') round: number,
+    @Query('session') session: string,
+  ): Promise<SpeedTracesResponse> {
+    return this.fastF1Service.getSpeedTraces(year, round, session);
   }
 }

@@ -7,6 +7,7 @@ import "types.proto";
 service Analytics {
   rpc GetSessionStrategy(StrategyRequest) returns (StrategyResponse) {}
   rpc GetQuickLaps(QuickLapsRequest) returns (QuickLapsResponse) {}
+  rpc GetSpeedTraces(SpeedTracesRequest) returns (SpeedTracesResponse) {}
 }
 
 message StrategyRequest {
@@ -26,4 +27,14 @@ message QuickLapsRequest {
 
 message QuickLapsResponse {
   repeated Lap laps = 1;
+}
+
+message SpeedTracesRequest {
+  int32 year = 1;
+  int32 round = 2;
+  string session = 3;
+}
+
+message SpeedTracesResponse {
+  repeated SpeedTrace speed_traces = 2;
 }

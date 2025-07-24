@@ -6,6 +6,7 @@ import {
   Type,
 } from '@angular/core';
 import {
+  SpeedTracesComponent,
   StrategyComparisonComponent,
   TeamPaceComparisonComponent,
 } from '../analyses';
@@ -24,6 +25,7 @@ export class AnalysisHostComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly analysisMap = new Map<string, Type<any>>([
     ['strategy-comparison', StrategyComparisonComponent],
+    ['speed-traces', SpeedTracesComponent],
     ['team-pace-comparison', TeamPaceComparisonComponent],
   ]);
 

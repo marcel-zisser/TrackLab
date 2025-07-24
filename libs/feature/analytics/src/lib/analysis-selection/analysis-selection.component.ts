@@ -50,12 +50,13 @@ export class AnalysisSelectionComponent {
         },
       },
       {
-        title: 'Strategy Comparison',
-        description:
-          'Compare the strategies of different teams for a given race',
-        icon: '',
+        title: 'Speed Traces',
+        description: 'Compare the speed traces of different drivers',
+        icon: PrimeIcons.CHART_LINE,
         callback: () => {
-          console.log('Shit works');
+          this.router.navigate(['speed-traces'], {
+            relativeTo: this.activatedRoute,
+          });
         },
       },
       {

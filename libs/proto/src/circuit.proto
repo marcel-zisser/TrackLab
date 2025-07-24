@@ -5,10 +5,17 @@ package at.tracklab;
 import "types.proto";
 
 service CircuitInfo {
-  rpc GetCircuitBaseInformation(CircuitBaseRequest) returns (Circuit) {}
+  rpc GetCircuit(CircuitRequest) returns (Circuit) {}
+  rpc GetCircuitInformation(CircuitInformationRequest) returns (CircuitInformation) {}
 }
 
-message CircuitBaseRequest {
-  int32 season = 1;
+message CircuitRequest {
+  int32 year = 1;
   int32 round = 2;
+}
+
+message CircuitInformationRequest {
+  int32 year = 1;
+  int32 round = 2;
+  string session = 3;
 }
