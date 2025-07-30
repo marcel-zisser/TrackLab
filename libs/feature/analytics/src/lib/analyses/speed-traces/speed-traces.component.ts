@@ -132,7 +132,6 @@ export class SpeedTracesComponent {
       },
       grid: {
         left: 50,
-        right: 50,
         containLabel: true, // ensures labels aren't cut off
       },
       yAxis: {
@@ -143,11 +142,14 @@ export class SpeedTracesComponent {
       xAxis: {
         type: 'value',
         name: 'Distance in m',
-        max: Math.max(
-          ...Array.from(this.processedData()?.values() ?? [])
-            .flat()
-            .map((trace) => trace.distance),
-        ),
+        max: () => {
+          const max = Math.max(
+            ...Array.from(this.processedData()?.values() ?? [])
+              .flat()
+              .map((trace) => trace.distance),
+          );
+          return max + (max % 100);
+        },
       },
       legend: {
         data: [
