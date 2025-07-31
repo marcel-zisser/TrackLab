@@ -60,12 +60,13 @@ export class AnalysisSelectionComponent {
         },
       },
       {
-        title: 'Strategy Comparison',
-        description:
-          'Compare the strategies of different teams for a given race',
+        title: 'Driver Input Comparison',
+        description: 'Compare the pedal input of different drivers',
         icon: '',
         callback: () => {
-          console.log('Shit works');
+          this.router.navigate(['driver-input'], {
+            relativeTo: this.activatedRoute,
+          });
         },
       },
       {

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TeamPaceComparisonComponent } from './team-pace-comparison.component';
 
-describe('SpeedTracesComponent', () => {
+describe('TeamPaceComponent', () => {
   let component: TeamPaceComparisonComponent;
   let fixture: ComponentFixture<TeamPaceComparisonComponent>;
 

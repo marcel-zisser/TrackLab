@@ -3,8 +3,9 @@ import fastf1.plotting
 from pandas import NaT
 
 from generated import analytics_pb2_grpc
-from generated.analytics_pb2 import StrategyResponse, StrategyRequest, QuickLapsResponse, SpeedTracesResponse
-from generated.types_pb2 import Strategy, Lap, Duration, SpeedTrace
+from generated.analytics_pb2 import StrategyResponse, StrategyRequest, QuickLapsResponse, SpeedTracesResponse, \
+  CarTelemetryResponse
+from generated.types_pb2 import Strategy, Lap, Duration, SpeedTrace, CarTelemetry
 
 
 class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
@@ -141,11 +142,36 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
 
     for driver in session.drivers:
       fastest_lap = session.laps.pick_drivers(driver).pick_fastest()
-      # team_color = fastf1.plotting.get_team_color(fastest_lap['Team'], session=session)
       if fastest_lap is not None:
         car_data = fastest_lap.get_car_data().add_distance()
         response.speed_traces.extend(
           [SpeedTrace(driver=fastest_lap.Driver, distance=trace.Distance, speed=trace.Speed) for trace in
            car_data.itertuples()])
+
+    return response
+
+  def GetCarTelemetry(self, request, context):
+    response = CarTelemetryResponse()
+
+    session = fastf1.get_session(request.year, request.round, request.session)
+    session.load(laps=True, telemetry=True, weather=False, messages=False)
+
+    for driver in session.drivers:
+      fastest_lap = session.laps.pick_drivers(driver).pick_fastest()
+      if fastest_lap is not None:
+        car_data = fastest_lap.get_car_data().add_distance()
+        response.telemetries.extend(
+          [CarTelemetry(
+            driver=fastest_lap.Driver,
+            speed=data.Speed,
+            rpm=data.RPM,
+            nGear=data.nGear,
+            throttle=data.Throttle,
+            brake=data.Brake,
+            drs=data.DRS,
+            distance=data.Distance
+          ) for data in
+            car_data.itertuples()
+          ])
 
     return response

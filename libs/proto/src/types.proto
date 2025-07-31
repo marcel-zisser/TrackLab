@@ -148,8 +148,19 @@ message Lap {
   string deletedReason = 25;
 }
 
-message SpeedTrace{
+message SpeedTrace {
   string driver = 1;
   float distance = 2;
   float speed = 3;
+}
+
+message CarTelemetry {
+  string driver = 1;
+  float speed = 2;
+  float rpm = 3;
+  float nGear = 4;
+  float throttle = 5;
+  bool brake = 6;
+  int32 drs = 7;
+  float distance = 8;
 }
