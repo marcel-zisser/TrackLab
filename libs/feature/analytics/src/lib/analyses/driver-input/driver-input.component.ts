@@ -162,22 +162,22 @@ export class DriverInputComponent {
             itemStyle: { color: 'grey' },
           },
           {
-            name: `${this.driverOne()} - Throttle`,
+            name: `${this.driverOne()}-Throttle`,
             icon: 'path://M0,3 h6 v1 h-6 Z',
             itemStyle: { color: 'green' },
           },
           {
-            name: `${this.driverOne()} - Brake`,
+            name: `${this.driverOne()}-Brake`,
             icon: 'path://M0,3 h6 v1 h-6 Z',
             itemStyle: { color: 'red' },
           },
           {
-            name: `${this.driverTwo()} - Throttle`,
+            name: `${this.driverTwo()}-Throttle`,
             icon: 'path://M0,3 h1 v1 h-1 Z M2,3 h1 v1 h-1 Z M4,3 h1 v1 h-1 Z M6,3 h1 v1 h-1 Z',
             itemStyle: { color: 'green' },
           },
           {
-            name: `${this.driverTwo()} - Brake`,
+            name: `${this.driverTwo()}-Brake`,
             icon: 'path://M0,3 h1 v1 h-1 Z M2,3 h1 v1 h-1 Z M4,3 h1 v1 h-1 Z M6,3 h1 v1 h-1 Z',
             itemStyle: { color: 'red' },
           },
@@ -232,7 +232,7 @@ export class DriverInputComponent {
   private createThrottleSeries(driver: string, lineType: string) {
     return {
       type: 'line',
-      name: `${driver} - Throttle`,
+      name: `${driver}-Throttle`,
       data:
         this.processedData()
           ?.get(driver)
@@ -249,7 +249,7 @@ export class DriverInputComponent {
   private createBrakeSeries(driver: string, lineType: string) {
     return {
       type: 'line',
-      name: `${driver} - Brake`,
+      name: `${driver}-Brake`,
       data:
         this.processedData()
           ?.get(driver)

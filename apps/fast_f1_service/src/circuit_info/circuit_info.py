@@ -40,7 +40,7 @@ class CircuitInfoServicer(circuit_pb2_grpc.CircuitInfoServicer):
 
   def GetCircuitInformation(self, request, context):
     session = fastf1.get_session(request.year, request.round, request.session)
-    session.load(laps=True, telemetry=True, weather=False, messages=False)
+    session.load()
     circuit_info = session.get_circuit_info()
 
     return CircuitInformation(

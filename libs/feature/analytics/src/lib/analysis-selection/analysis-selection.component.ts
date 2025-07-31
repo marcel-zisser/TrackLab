@@ -62,7 +62,7 @@ export class AnalysisSelectionComponent {
       {
         title: 'Driver Input Comparison',
         description: 'Compare the pedal input of different drivers',
-        icon: '',
+        icon: PrimeIcons.ARROW_RIGHT_ARROW_LEFT,
         callback: () => {
           this.router.navigate(['driver-input'], {
             relativeTo: this.activatedRoute,

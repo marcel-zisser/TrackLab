@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseInterceptors } from '@nestjs/common';
 import { FastF1Service } from './fast-f1.service';
 import {
   Circuit,
@@ -12,7 +12,9 @@ import {
   SpeedTracesResponse,
   StrategyResponse,
 } from '../../generated/analytics';
+import { LoggingCacheInterceptor } from '../interceptors/cache-logging.interceptor';
 
+@UseInterceptors(LoggingCacheInterceptor)
 @Controller('fast-f1')
 export class FastF1Controller {
   constructor(private readonly fastF1Service: FastF1Service) {}

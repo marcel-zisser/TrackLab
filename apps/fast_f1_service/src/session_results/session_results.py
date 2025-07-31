@@ -1,8 +1,9 @@
-from generated import results_pb2_grpc
-import fastf1
 import logging
 from datetime import datetime
 
+import fastf1
+
+from generated import results_pb2_grpc
 from generated.results_pb2 import SessionResultResponse
 from generated.types_pb2 import DriverResult, SessionResult, Driver, Team
 
@@ -24,7 +25,6 @@ def load_season_results(season: int):
       if (sprint.date - datetime.today()).value < 0:
         sprint.load(laps=False, telemetry=False, weather=False, messages=False)
         season_results.append(sprint)
-
 
     race = event.get_race()
     if (race.date - datetime.today()).value < 0:
@@ -62,25 +62,25 @@ def map_session_results(driver_result_data):
   :return: The mapped data in proper objects
   """
   return DriverResult(
-    driver = Driver(
-      id = driver_result_data.get('DriverId'),
-      permanentNumber = driver_result_data.get('DriverNumber'),
-      code = driver_result_data.get('Abbreviation'),
-      givenName = driver_result_data.get('FirstName'),
-      familyName = driver_result_data.get('LastName'),
-      headshotUrl = driver_result_data.get('HeadshotUrl'),
-      countryCode = driver_result_data.get('CountryCode'),
+    driver=Driver(
+      id=driver_result_data.get('DriverId'),
+      permanentNumber=driver_result_data.get('DriverNumber'),
+      code=driver_result_data.get('Abbreviation'),
+      givenName=driver_result_data.get('FirstName'),
+      familyName=driver_result_data.get('LastName'),
+      headshotUrl=driver_result_data.get('HeadshotUrl'),
+      countryCode=driver_result_data.get('CountryCode'),
     ),
-    team = Team(
-      id = driver_result_data.get('TeamId'),
-      name = driver_result_data.get('TeamName'),
-      color = driver_result_data.get('TeamColor'),
+    team=Team(
+      id=driver_result_data.get('TeamId'),
+      name=driver_result_data.get('TeamName'),
+      color=driver_result_data.get('TeamColor'),
     ),
-    position = driver_result_data.get('Position'),
-    classifiedPosition = driver_result_data.get('ClassifiedPosition'),
-    gridPosition = driver_result_data.get('GridPosition'),
-    points = driver_result_data.get('Points'),
-    status = driver_result_data.get('Status')
+    position=driver_result_data.get('Position'),
+    classifiedPosition=driver_result_data.get('ClassifiedPosition'),
+    gridPosition=driver_result_data.get('GridPosition'),
+    points=driver_result_data.get('Points'),
+    status=driver_result_data.get('Status')
   )
 
 
@@ -90,7 +90,6 @@ class SessionResultsServicer(results_pb2_grpc.SessionResultsServicer):
 
     current_year = datetime.today().year
     self.current_results = load_season_results(current_year)
-
 
   def GetSessionResults(self, request, context):
     response = SessionResultResponse()

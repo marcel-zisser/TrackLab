@@ -14,7 +14,7 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
     response = StrategyResponse()
 
     session = fastf1.get_session(request.year, request.round, request.session)
-    session.load(laps=True, telemetry=False, weather=False, messages=False)
+    session.load()
 
     laps = session.laps
 
@@ -40,7 +40,7 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
     response = QuickLapsResponse()
 
     session = fastf1.get_session(request.year, request.round, 'Race')
-    session.load(laps=True, telemetry=False, weather=False, messages=False)
+    session.load()
     laps = session.laps.pick_quicklaps()
 
     transformed_laps = laps.copy()
@@ -138,7 +138,7 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
     response = SpeedTracesResponse()
 
     session = fastf1.get_session(request.year, request.round, request.session)
-    session.load(laps=True, telemetry=True, weather=False, messages=False)
+    session.load()
 
     for driver in session.drivers:
       fastest_lap = session.laps.pick_drivers(driver).pick_fastest()
@@ -154,7 +154,7 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
     response = CarTelemetryResponse()
 
     session = fastf1.get_session(request.year, request.round, request.session)
-    session.load(laps=True, telemetry=True, weather=False, messages=False)
+    session.load()
 
     for driver in session.drivers:
       fastest_lap = session.laps.pick_drivers(driver).pick_fastest()
