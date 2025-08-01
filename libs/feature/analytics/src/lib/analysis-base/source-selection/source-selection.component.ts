@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -6,6 +7,7 @@ import {
   inject,
   input,
   linkedSignal,
+  OnInit,
   output,
   signal,
 } from '@angular/core';
@@ -23,11 +25,15 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './source-selection.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SourceSelectionComponent {
+export class SourceSelectionComponent implements OnInit, AfterViewInit {
+  initialYear = input<string>();
+  initialEvent = input<Event>();
+  initialSession = input<string>();
   withSessionSelection = input<boolean>(true);
   raceSelection = output<RaceSelection>();
 
   private readonly backendService = inject(BackendService);
+  private isInitialized = false;
 
   protected readonly years: SelectionOption<number, number>[] = Array.from(
     { length: new Date().getFullYear() - 2018 + 1 },
@@ -51,7 +57,7 @@ export class SourceSelectionComponent {
   protected readonly sessions = computed<SelectionOption<string, string>[]>(
     () =>
       this.event()
-        ?.sessionInfos.reverse()
+        ?.sessionInfos?.reverse()
         .map((session) => ({
           label: session.name,
           value: session.name,
@@ -63,12 +69,22 @@ export class SourceSelectionComponent {
     effect(() => this.emitRaceSelectionEffect());
   }
 
+  ngOnInit() {
+    this.year.set(this.initialYear());
+    this.event.set(this.initialEvent());
+    this.session.set(this.initialSession());
+  }
+
+  ngAfterViewInit() {
+    this.isInitialized = true;
+  }
+
   /**
    * Creates the effect to watch the year, to dynamically load the corresponding races
    * @private
    */
   private createEventScheduleEffect() {
-    if (this.year()) {
+    if (this.year() && this.isInitialized) {
       this.event.set(undefined);
       this.session.set(undefined);
       this.backendService
@@ -95,8 +111,6 @@ export class SourceSelectionComponent {
     const event = this.event();
     const session = this.session();
 
-    if (year && event && (session || !this.withSessionSelection())) {
-      this.raceSelection.emit({ year, event, session });
-    }
+    this.raceSelection.emit({ year, event, session });
   }
 }

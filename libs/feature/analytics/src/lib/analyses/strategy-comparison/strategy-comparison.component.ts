@@ -20,6 +20,7 @@ import {
   SourceSelectionComponent,
 } from '../../analysis-base';
 import { first } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'tl-strategy-comparison',
@@ -35,6 +36,7 @@ import { first } from 'rxjs';
 export class StrategyComparisonComponent {
   private readonly themeService = inject(ThemeService);
   private readonly backendService = inject(BackendService);
+  private readonly activatedRoute = inject(ActivatedRoute);
 
   protected selectedYear: string | undefined;
   protected selectedEvent: Event | undefined;
@@ -57,16 +59,34 @@ export class StrategyComparisonComponent {
     return undefined;
   });
 
+  constructor() {
+    const year = this.activatedRoute.snapshot.queryParamMap.get('year');
+    const eventRound =
+      this.activatedRoute.snapshot.queryParamMap.get('eventRound');
+    const eventName =
+      this.activatedRoute.snapshot.queryParamMap.get('eventName');
+    const session = this.activatedRoute.snapshot.queryParamMap.get('session');
+
+    if (year && eventRound && eventName && session) {
+      this.selectedYear = year;
+      this.selectedEvent = {
+        roundNumber: parseInt(eventRound ?? '0'),
+        name: eventName ?? '',
+      };
+      this.selectedSession = session;
+    }
+  }
+
   /**
    * Effect to load the strategy data, once all inputs have been selected
    * @protected
    */
   protected loadStrategyData(selectedRace: RaceSelection) {
-    if (selectedRace.year && selectedRace.event && selectedRace.session) {
-      this.selectedYear = selectedRace.year;
-      this.selectedEvent = selectedRace.event;
-      this.selectedSession = selectedRace.session;
+    this.selectedYear = selectedRace.year;
+    this.selectedEvent = selectedRace.event;
+    this.selectedSession = selectedRace.session;
 
+    if (selectedRace.year && selectedRace.event && selectedRace.session) {
       this.strategyData.set(undefined);
       this.backendService
         .doGet<StrategyResponse>(

@@ -17,6 +17,7 @@
       [inputId]="'event'"
       [options]="events()"
       [filter]="true"
+      [disabled]="!year()"
       [ngModel]="event()"
       (ngModelChange)="event.set($event)">
     </p-select>
@@ -30,6 +31,7 @@
         [inputId]="'session'"
         [options]="sessions()"
         [filter]="true"
+        [disabled]="!event()"
         [ngModel]="session()"
         (ngModelChange)="session.set($event)">
       </p-select>

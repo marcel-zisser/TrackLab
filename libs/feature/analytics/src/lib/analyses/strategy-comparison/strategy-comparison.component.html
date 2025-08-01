@@ -19,6 +19,9 @@
   <div options class="flex flex-col gap-8">
     <h1>Options</h1>
     <tl-source-selection
+      [initialYear]="selectedYear"
+      [initialEvent]="selectedEvent"
+      [initialSession]="selectedSession"
       (raceSelection)="loadStrategyData($event)"
     ></tl-source-selection>
   </div>

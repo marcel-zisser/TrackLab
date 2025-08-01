@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardService } from '../dashboard.service';
 import { ProgressBar } from 'primeng/progressbar';
@@ -21,24 +28,29 @@ export class SeasonProgressComponent {
 
   private eventSchedule = this.dashboardService.eventSchedule;
 
-  protected nextEvent = computed( () =>
-    this.eventSchedule()?.find(event =>
-      event.sessionInfos.some(session => new Date(session.date) > new Date())
-    )
+  protected nextEvent = computed(() =>
+    this.eventSchedule()?.find((event) =>
+      event.sessionInfos?.some(
+        (session) => new Date(session.date) > new Date(),
+      ),
+    ),
   );
   protected raceDate = computed(() => {
     const raceDateString =
-      this.nextEvent()?.sessionInfos.find( session => session.name === 'Race')?.date ?? '';
+      this.nextEvent()?.sessionInfos?.find((session) => session.name === 'Race')
+        ?.date ?? '';
 
     return new Date(raceDateString);
-  })
+  });
 
   protected totalEvents = computed(() => this.eventSchedule()?.length);
-  protected finishedEvents = computed(() =>
-    (this.nextEvent()?.roundNumber ?? 1) - 1
+  protected finishedEvents = computed(
+    () => (this.nextEvent()?.roundNumber ?? 1) - 1,
   );
-  protected percentageFinished = computed( () => (
-    ((this.finishedEvents() ?? 0) / (this.totalEvents() ?? 1)) * 100).toFixed(2)
+  protected percentageFinished = computed(() =>
+    (((this.finishedEvents() ?? 0) / (this.totalEvents() ?? 1)) * 100).toFixed(
+      2,
+    ),
   );
 
   protected circuit = signal<Circuit | undefined>(undefined);
@@ -46,14 +58,16 @@ export class SeasonProgressComponent {
   constructor() {
     effect(() => {
       if (this.nextEvent()) {
-        const params = new HttpParams().set('year', new Date().getFullYear(),).set('round', this.nextEvent()?.roundNumber ?? '')
-        this.backendService.doGet<Circuit>('fast-f1/circuit', params)
+        const params = new HttpParams()
+          .set('year', new Date().getFullYear())
+          .set('round', this.nextEvent()?.roundNumber ?? '');
+        this.backendService
+          .doGet<Circuit>('fast-f1/circuit', params)
           .pipe(first())
-          .subscribe( (circuit) => {
+          .subscribe((circuit) => {
             this.circuit.set(circuit);
           });
       }
     });
   }
-
 }
