@@ -35,12 +35,12 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
   private readonly backendService = inject(BackendService);
   private isInitialized = false;
 
-  protected readonly years: SelectionOption<number, number>[] = Array.from(
+  protected readonly years: SelectionOption<string, string>[] = Array.from(
     { length: new Date().getFullYear() - 2018 + 1 },
     (_, i) => 2018 + i,
   )
     .reverse()
-    .map((year) => ({ label: year, value: year }));
+    .map((year) => ({ label: `${year}`, value: `${year}` }));
 
   protected readonly year = signal<string | undefined>(undefined);
   protected readonly event = signal<Event | undefined>(undefined);
@@ -71,12 +71,22 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.year.set(this.initialYear());
-    this.event.set(this.initialEvent());
-    this.session.set(this.initialSession());
   }
 
   ngAfterViewInit() {
     this.isInitialized = true;
+
+    const initialEvent = this.initialEvent();
+    const initialSession = this.initialSession();
+
+    if (initialEvent && initialSession) {
+      initialEvent.sessionInfos = [{ name: initialSession ?? '', date: '' }];
+      this.events.set([
+        { label: initialEvent.name ?? '', value: initialEvent },
+      ]);
+      this.event.set(this.initialEvent());
+      this.session.set(this.initialSession());
+    }
   }
 
   /**
@@ -97,7 +107,9 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
           retry(5),
         )
         .subscribe({
-          next: (races) => this.events.set(races),
+          next: (races) => {
+            this.events.set(races);
+          },
         });
     }
   }
