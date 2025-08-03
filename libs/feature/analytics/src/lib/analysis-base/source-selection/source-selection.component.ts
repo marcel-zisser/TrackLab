@@ -13,26 +13,34 @@ import {
 } from '@angular/core';
 import { FloatLabel } from 'primeng/floatlabel';
 import { Select } from 'primeng/select';
-import { Event, RaceSelection, SelectionOption } from '@tracklab/models';
+import {
+  Event,
+  RaceSelection,
+  SelectionOption,
+  SourceSelectionConfig,
+} from '@tracklab/models';
 import { first, map, retry } from 'rxjs';
 import { BackendService } from '@tracklab/services';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { Button } from 'primeng/button';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'tl-source-selection',
-  imports: [FloatLabel, Select, FormsModule],
+  imports: [FloatLabel, Select, FormsModule, Button],
   templateUrl: './source-selection.component.html',
   styleUrl: './source-selection.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SourceSelectionComponent implements OnInit, AfterViewInit {
-  initialYear = input<string>();
-  initialEvent = input<Event>();
-  initialSession = input<string>();
   withSessionSelection = input<boolean>(true);
   raceSelection = output<RaceSelection>();
 
   private readonly backendService = inject(BackendService);
+  private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly clipboard = inject(Clipboard);
+  private initialConfig: SourceSelectionConfig | undefined;
   private isInitialized = false;
 
   protected readonly years: SelectionOption<string, string>[] = Array.from(
@@ -70,22 +78,53 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.year.set(this.initialYear());
+    const config =
+      this.activatedRoute.snapshot.queryParamMap.get('config') ?? '';
+
+    if (config) {
+      this.initialConfig = JSON.parse(
+        decodeURIComponent(atob(config)),
+      ) as SourceSelectionConfig;
+      this.year.set(this.initialConfig.year);
+    }
   }
 
   ngAfterViewInit() {
     this.isInitialized = true;
 
-    const initialEvent = this.initialEvent();
-    const initialSession = this.initialSession();
-
-    if (initialEvent && initialSession) {
-      initialEvent.sessionInfos = [{ name: initialSession ?? '', date: '' }];
+    if (this.initialConfig?.event && this.initialConfig?.session) {
       this.events.set([
-        { label: initialEvent.name ?? '', value: initialEvent },
+        {
+          label: this.initialConfig?.event.name,
+          value: this.initialConfig?.event,
+        },
       ]);
-      this.event.set(this.initialEvent());
-      this.session.set(this.initialSession());
+      this.event.set(this.initialConfig?.event);
+      this.session.set(this.initialConfig?.session);
+    }
+  }
+
+  /**
+   * Copies the link to the chart into the clipboard.
+   */
+  protected copyChartLink() {
+    const year = this.year();
+    const event = this.event();
+    const session = this.session();
+
+    if (year && event && (session || !this.withSessionSelection())) {
+      const config = {
+        year: year,
+        event: event,
+        session: session,
+      } satisfies SourceSelectionConfig;
+
+      const jsonConfig = JSON.stringify(config);
+      const encodedConfig = btoa(encodeURIComponent(jsonConfig));
+
+      this.clipboard.copy(
+        `${window.location.origin}${window.location.pathname}?config=${encodedConfig}`,
+      );
     }
   }
 
@@ -123,6 +162,8 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
     const event = this.event();
     const session = this.session();
 
-    this.raceSelection.emit({ year, event, session });
+    if (year && event && session) {
+      this.raceSelection.emit({ year, event, session });
+    }
   }
 }

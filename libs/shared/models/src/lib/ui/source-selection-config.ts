@@ -1,6 +1,6 @@
 import { Event } from '../analytics';
 
-export interface RaceSelection {
+export interface SourceSelectionConfig {
   year: string;
   event: Event;
   session?: string;

@@ -132,7 +132,10 @@ export class TeamPaceComparisonComponent {
    */
   private createChartOptions() {
     return {
-      title: { text: 'Lap Time Distribution by Team' },
+      title: {
+        text: 'Lap Time Distribution by Team',
+        left: 'center',
+      },
       tooltip: {
         trigger: 'item',
         formatter: (params: any) => {
