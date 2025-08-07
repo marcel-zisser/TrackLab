@@ -222,21 +222,21 @@ export class GearShiftComponent {
   private mapGearToColor(gear: number) {
     switch (gear) {
       case 1:
-        return '#0000ff';
+        return '#8800ff';
       case 2:
-        return '#004dff';
+        return '#0000ff';
       case 3:
-        return '#00b0ff';
+        return '#009dff';
       case 4:
-        return '#00e676';
+        return '#00ffcc';
       case 5:
-        return '#00c853';
+        return '#00ff00';
       case 6:
-        return '#ff6d00';
+        return '#ffbd00';
       case 7:
-        return '#ff3d00';
+        return '#ff6d00';
       case 8:
-        return '#d50000';
+        return '#ff0000';
       default:
         return 'grey';
     }
