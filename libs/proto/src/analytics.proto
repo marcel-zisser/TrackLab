@@ -44,6 +44,7 @@ message CarTelemetryRequest {
   int32 year = 1;
   int32 round = 2;
   string session = 3;
+  bool withPosition = 4;
 }
 
 message CarTelemetryResponse {

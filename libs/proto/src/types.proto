@@ -163,4 +163,12 @@ message CarTelemetry {
   bool brake = 6;
   int32 drs = 7;
   float distance = 8;
+  optional PositionTelemetry position = 9;
+}
+
+message PositionTelemetry {
+  float x = 1;
+  float y = 2;
+  float z = 3;
+  string status = 4;
 }

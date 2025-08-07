@@ -11,3 +11,4 @@ export { CircuitInformation } from './circuit-information';
 export { TrackLocation } from './track-location';
 export { SpeedTrace } from './speed-trace';
 export { CarTelemetry } from './car-telemetry';
+export { PositionTelemetry } from './position-telemetry';

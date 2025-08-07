@@ -1,3 +1,5 @@
+import { PositionTelemetry } from './position-telemetry';
+
 export interface CarTelemetry {
   driver: string;
   speed: number;
@@ -7,4 +9,5 @@ export interface CarTelemetry {
   brake: boolean;
   drs: number;
   distance: number;
+  position?: PositionTelemetry;
 }

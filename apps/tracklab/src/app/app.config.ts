@@ -16,6 +16,7 @@ import {
 } from '@angular/common/http';
 
 import * as echarts from 'echarts/core';
+import 'echarts-gl';
 import { provideEchartsCore } from 'ngx-echarts';
 import {
   BarChart,

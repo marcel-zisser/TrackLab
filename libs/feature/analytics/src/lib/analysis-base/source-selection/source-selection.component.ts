@@ -162,7 +162,7 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
     const event = this.event();
     const session = this.session();
 
-    if (year && event && session) {
+    if (year && event && (session || !this.withSessionSelection())) {
       this.raceSelection.emit({ year, event, session });
     }
   }

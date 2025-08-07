@@ -185,13 +185,20 @@ export class FastF1Service implements OnModuleInit {
    * @param year the year of the session
    * @param round the round of the session within the season
    * @param session the session type
+   * @param withPosition include position data or not
    */
-  async getCarTelemetry(year: number, round: number, session: string) {
+  async getCarTelemetry(
+    year: number,
+    round: number,
+    session: string,
+    withPosition: boolean,
+  ) {
     return await firstValueFrom(
       this.analyticsService.getCarTelemetry({
         year: year,
         round: round,
         session: session,
+        withPosition: withPosition,
       }),
     );
   }

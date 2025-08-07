@@ -81,7 +81,13 @@ export class FastF1Controller {
     @Query('year') year: number,
     @Query('round') round: number,
     @Query('session') session: string,
+    @Query('withPosition') withPosition: boolean,
   ): Promise<CarTelemetryResponse> {
-    return this.fastF1Service.getCarTelemetry(year, round, session);
+    return this.fastF1Service.getCarTelemetry(
+      year,
+      round,
+      session,
+      withPosition,
+    );
   }
 }

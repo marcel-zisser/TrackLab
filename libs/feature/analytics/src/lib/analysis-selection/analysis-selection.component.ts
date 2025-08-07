@@ -70,12 +70,13 @@ export class AnalysisSelectionComponent {
         },
       },
       {
-        title: 'Strategy Comparison',
-        description:
-          'Compare the strategies of different teams for a given race',
-        icon: '',
+        title: 'Gear Shift Visualization',
+        description: 'Visualize the gear shifts of a driver on track',
+        icon: PrimeIcons.COG,
         callback: () => {
-          console.log('Shit works');
+          this.router.navigate(['gear-shift'], {
+            relativeTo: this.activatedRoute,
+          });
         },
       },
     ];

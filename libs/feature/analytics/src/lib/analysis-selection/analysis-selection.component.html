@@ -1,11 +1,12 @@
 <p-auto-complete
-  class="w-full mb-8"
+  class="w-full mb-4"
   [inputStyle]="{ width: '100%' }"
   [placeholder]="'Enter analysis-base keywords...'"
 ></p-auto-complete>
-<div class="grid grid-cols-1 md:grid-cols-6 gap-8 h-full overflow-auto">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-7 p-4 gap-8 overflow-auto">
   @for (tile of tiles; track tile) {
     <tl-analytics-tile
+      class="flex aspect-square"
       [title]="tile.title"
       [description]="tile.description"
       [icon]="tile.icon"

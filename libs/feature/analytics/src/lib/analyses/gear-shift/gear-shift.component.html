@@ -1,0 +1,42 @@
+<tl-analysis-base class="base">
+  <div chart class="chart-container">
+    @if (selectedEvent && selectedYear && selectedSession && selectedDriver()) {
+      <div echarts
+           class="chart"
+           [loading]="processedData() === undefined || circuitInfo() === undefined"
+           [options]="chartOptions()"
+           [theme]="chartTheme()"
+           [autoResize]="true"
+      ></div>
+    } @else {
+      <div class="flex-1 flex flex-col justify-center items-center h-full w-full">
+        <h1>Please select a session.</h1>
+        <h1>Loading a session can take up to 30 seconds.</h1>
+      </div>
+    }
+
+  </div>
+  <div options class="flex flex-col gap-8">
+    <h1>Options</h1>
+    <tl-source-selection
+      [withSessionSelection]="true"
+      (raceSelection)="loadSpeedTraces($event)"
+    ></tl-source-selection>
+
+    @if (selectedEvent && selectedYear && selectedSession) {
+      <p-floatlabel variant="on">
+        <p-select
+          class="w-full"
+          [inputId]="'selectDrivers'"
+          [options]="drivers()"
+          [filter]="true"
+          [loading]="drivers().length === 0"
+          [ngModel]="selectedDriver()"
+          (ngModelChange)="selectedDriver.set($event)">
+        </p-select>
+        <label [for]="'selectDrivers'">Select Drivers</label>
+      </p-floatlabel>
+    }
+  </div>
+
+</tl-analysis-base>

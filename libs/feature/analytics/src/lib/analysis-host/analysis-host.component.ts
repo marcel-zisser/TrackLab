@@ -6,6 +6,8 @@ import {
   Type,
 } from '@angular/core';
 import {
+  DriverInputComponent,
+  GearShiftComponent,
   SpeedTracesComponent,
   StrategyComparisonComponent,
   TeamPaceComparisonComponent,
@@ -13,7 +15,6 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { ConstructionComponent } from '@tracklab/shared/components';
 import { NgComponentOutlet } from '@angular/common';
-import { DriverInputComponent } from '../analyses/driver-input/driver-input.component';
 
 @Component({
   selector: 'tl-analysis-host',
@@ -29,6 +30,7 @@ export class AnalysisHostComponent implements OnInit {
     ['speed-traces', SpeedTracesComponent],
     ['team-pace-comparison', TeamPaceComparisonComponent],
     ['driver-input', DriverInputComponent],
+    ['gear-shift', GearShiftComponent],
   ]);
 
   protected componentToRender: Type<any> | null = null;
