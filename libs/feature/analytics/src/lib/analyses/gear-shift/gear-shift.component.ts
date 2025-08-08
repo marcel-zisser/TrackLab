@@ -25,7 +25,7 @@ import { FormsModule } from '@angular/forms';
 import { Select } from 'primeng/select';
 
 @Component({
-  selector: 'tl-speed-traces',
+  selector: 'tl-gear-shift',
   imports: [
     AnalysisBaseComponent,
     NgxEchartsDirective,

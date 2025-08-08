@@ -8,6 +8,7 @@ import {
 import {
   DriverInputComponent,
   GearShiftComponent,
+  SpeedMapComponent,
   SpeedTracesComponent,
   StrategyComparisonComponent,
   TeamPaceComparisonComponent,
@@ -31,6 +32,7 @@ export class AnalysisHostComponent implements OnInit {
     ['team-pace-comparison', TeamPaceComparisonComponent],
     ['driver-input', DriverInputComponent],
     ['gear-shift', GearShiftComponent],
+    ['speed-map', SpeedMapComponent],
   ]);
 
   protected componentToRender: Type<any> | null = null;

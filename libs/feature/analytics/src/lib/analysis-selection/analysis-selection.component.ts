@@ -60,6 +60,16 @@ export class AnalysisSelectionComponent {
         },
       },
       {
+        title: 'Speed Map',
+        description: 'Visualize the speed of a driver on track',
+        icon: PrimeIcons.MAP,
+        callback: () => {
+          this.router.navigate(['speed-map'], {
+            relativeTo: this.activatedRoute,
+          });
+        },
+      },
+      {
         title: 'Driver Input Comparison',
         description: 'Compare the pedal input of different drivers',
         icon: PrimeIcons.ARROW_RIGHT_ARROW_LEFT,
