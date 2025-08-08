@@ -1,6 +1,13 @@
-import { ChangeDetectionStrategy, Component, HostListener, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostListener,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { Menubar } from 'primeng/menubar';
-import { MenuItem, MessageService } from 'primeng/api';
+import { MenuItem } from 'primeng/api';
 import { RouterLink } from '@angular/router';
 import { Button, ButtonIcon } from 'primeng/button';
 import { ToggleSwitch } from 'primeng/toggleswitch';
@@ -25,9 +32,9 @@ import { Toast } from 'primeng/toast';
     Avatar,
     UserMenuComponent,
     Button,
-    Toast
+    Toast,
   ],
-  providers: [DialogService, MessageService],
+  providers: [DialogService],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -91,7 +98,7 @@ export class HeaderComponent implements OnInit {
     this.dialogService.open(LoginComponent, {
       header: 'Login',
       closable: true,
-      modal: true
+      modal: true,
     });
   }
 }

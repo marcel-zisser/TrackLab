@@ -1,6 +1,6 @@
 <form class="flex flex-col gap-4 p-4" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
-  @if(loginFailed()) {
+  @if (loginFailed()) {
     <p-message severity="error"
                icon="pi pi-times-circle"
                styleClass="mb-2"
@@ -12,18 +12,17 @@
   <div>
     <div class="flex items-center gap-4 mb-4">
       <label for="email" class="font-semibold w-24">E-Mail</label>
-      <input pInputText formControlName="email" id="email" class="flex-auto" type="text" />
+      <input pInputText formControlName="email" id="email" class="flex-auto" type="email" [pAutoFocus]="true" />
     </div>
-    <div>
-      <div class="flex items-center gap-4 mb-2">
-        <label for="password" class="font-semibold w-24">Password</label>
-        <p-password id="password"
-                    class="flex-auto"
-                    formControlName="password"
-                    [toggleMask]="true"
-                    [feedback]="false"
-        />
-      </div>
+    <div class="flex items-center gap-4 mb-4">
+      <label for="password" class="font-semibold w-24">Password</label>
+      <p-password id="password"
+                  class="flex-auto"
+                  formControlName="password"
+                  [toggleMask]="true"
+                  [feedback]="false"
+                  [pAutoFocus]="false"
+      />
     </div>
   </div>
 

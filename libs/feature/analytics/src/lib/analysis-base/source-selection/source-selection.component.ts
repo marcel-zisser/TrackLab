@@ -25,6 +25,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Button } from 'primeng/button';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'tl-source-selection',
@@ -40,6 +41,7 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
   private readonly backendService = inject(BackendService);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly clipboard = inject(Clipboard);
+  private readonly messageService = inject(MessageService);
   private initialConfig: SourceSelectionConfig | undefined;
   private isInitialized = false;
 
@@ -125,6 +127,11 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
       this.clipboard.copy(
         `${window.location.origin}${window.location.pathname}?config=${encodedConfig}`,
       );
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Success',
+        detail: 'Link copied to clipboard',
+      });
     }
   }
 

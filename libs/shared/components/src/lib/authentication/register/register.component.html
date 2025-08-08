@@ -21,7 +21,7 @@
       <input pInputText formControlName="passwordRepeat" id="passwordRepeat" class="flex-auto" type="password" />
     </div>
     <div class="flex flex-row gap-4 justify-end mt-4">
-      <p-button label="Cancel" [text]="true" severity="secondary" />
+      <p-button label="Cancel" [text]="true" severity="secondary" (onClick)="closeDialog()" />
       <p-button label="Register" type="submit" />
     </div>
   </div>

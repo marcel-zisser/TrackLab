@@ -1,7 +1,17 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
 import { Button } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { AuthenticationService } from '@tracklab/services';
 import { first } from 'rxjs';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -9,10 +19,19 @@ import { RegisterComponent } from '../register/register.component';
 import { Password } from 'primeng/password';
 import { Message } from 'primeng/message';
 import { MessageService } from 'primeng/api';
+import { AutoFocus } from 'primeng/autofocus';
 
 @Component({
   selector: 'tl-login',
-  imports: [Button, InputText, ReactiveFormsModule, Password, Message],
+  imports: [
+    Button,
+    InputText,
+    ReactiveFormsModule,
+    Password,
+    Message,
+    AutoFocus,
+  ],
+  providers: [MessageService],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -49,12 +68,13 @@ export class LoginComponent {
             this.loginFailed.set(false);
             this.authenticationService.saveToken(response.accessToken);
 
-            const decodedToken = await this.authenticationService.getDecodedToken();
+            const decodedToken =
+              await this.authenticationService.getDecodedToken();
             this.messageService.add({
               severity: 'success',
               summary: 'Login successful',
-              detail: `Welcome back, ${decodedToken?.firstName}!`
-            })
+              detail: `Welcome back, ${decodedToken?.firstName}!`,
+            });
             this.ref.close();
           },
           error: () => {
@@ -75,7 +95,7 @@ export class LoginComponent {
     this.dialogService.open(RegisterComponent, {
       header: 'Register',
       closable: true,
-      modal: true
+      modal: true,
     });
   }
 
@@ -83,13 +103,12 @@ export class LoginComponent {
     this.ref.close();
   }
 
-
   private markFormAsInvalid() {
     Object.keys(this.loginForm.controls).forEach((field) => {
       const control = this.loginForm.get(field);
       control?.markAsTouched({ onlySelf: true });
       control?.markAsDirty();
-      control?.setErrors({ wrongCredentials: true })
+      control?.setErrors({ wrongCredentials: true });
     });
   }
 }

@@ -3,10 +3,11 @@ import { RouterModule } from '@angular/router';
 import { FooterComponent, HeaderComponent } from '@tracklab/shared/components';
 import { AuthenticationService, Theme, ThemeService } from '@tracklab/services';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { MessageService } from 'primeng/api';
 
 @Component({
   imports: [RouterModule, FooterComponent, HeaderComponent],
-  providers: [JwtHelperService],
+  providers: [JwtHelperService, MessageService],
   selector: 'tl-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',

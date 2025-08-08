@@ -1,7 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { AuthenticationService } from '@tracklab/services';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { first } from 'rxjs';
 import { InputText } from 'primeng/inputtext';
@@ -24,16 +29,18 @@ export class RegisterComponent {
   registerForm: FormGroup;
 
   constructor() {
-    this.registerForm = this.fb.group({
-      firstName: ['', [Validators.required]],
-      lastName: ['', []],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]],
-      passwordRepeat: ['', [Validators.required]],
-    },
+    this.registerForm = this.fb.group(
       {
-        validators: [matchValuesValidator('password', 'passwordRepeat')]
-      });
+        firstName: ['', [Validators.required]],
+        lastName: ['', []],
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required]],
+        passwordRepeat: ['', [Validators.required]],
+      },
+      {
+        validators: [matchValuesValidator('password', 'passwordRepeat')],
+      },
+    );
   }
 
   onSubmit() {
@@ -60,12 +67,16 @@ export class RegisterComponent {
     }
   }
 
+  protected closeDialog() {
+    this.ref.close();
+  }
+
   private markFormAsInvalid() {
     Object.keys(this.registerForm.controls).forEach((field) => {
       const control = this.registerForm.get(field);
       control?.markAsTouched({ onlySelf: true });
       control?.markAsDirty();
-      control?.setErrors({ wrongCredentials: true })
+      control?.setErrors({ wrongCredentials: true });
     });
   }
 }
