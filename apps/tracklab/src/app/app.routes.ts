@@ -2,13 +2,16 @@ import { Route } from '@angular/router';
 import { ConstructionComponent } from '@tracklab/shared/components';
 import { DashboardComponent } from '@tracklab/dashboard';
 import {
-  AnalysisBaseComponent,
+  AnalysisHostComponent,
   AnalysisSelectionComponent,
-  AnalyticsComponent, StrategyComparisonComponent
+  AnalyticsComponent,
 } from '@tracklab/analytics';
 import {
-  AnalysisHostComponent
-} from '../../../../libs/feature/analytics/src/lib/analysis-host/analysis-host.component';
+  CollectionComponent,
+  SettingsComponent,
+  UserComponent,
+} from '@tracklab/user';
+import { authenticationGuard } from '@tracklab/services';
 
 export const appRoutes: Route[] = [
   {
@@ -23,18 +26,35 @@ export const appRoutes: Route[] = [
       {
         title: 'Analytics',
         path: '',
-        component: AnalysisSelectionComponent
+        component: AnalysisSelectionComponent,
       },
       {
         title: 'Analysis',
         path: ':type',
-        component: AnalysisHostComponent
-      }
-    ]
+        component: AnalysisHostComponent,
+      },
+    ],
   },
   {
     title: 'Pitwall Copilot',
     path: 'pitwall-copilot',
-    component: ConstructionComponent
-  }
+    component: ConstructionComponent,
+  },
+  {
+    path: 'user',
+    component: UserComponent,
+    canActivateChild: [authenticationGuard],
+    children: [
+      {
+        title: 'Collection',
+        path: 'collection',
+        component: CollectionComponent,
+      },
+      {
+        title: 'Settings',
+        path: 'settings',
+        component: SettingsComponent,
+      },
+    ],
+  },
 ];

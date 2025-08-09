@@ -4,7 +4,7 @@ import {
   LoginRequest,
   LoginResponse,
   RefreshTokenResponse,
-  RegisterRequest
+  RegisterRequest,
 } from '@tracklab/models';
 import { jwtDecode } from 'jwt-decode';
 import { catchError, first, firstValueFrom, map, Observable, of } from 'rxjs';
@@ -13,10 +13,9 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { LocalStorageService } from '../local-storage';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthenticationService {
-
   private readonly backendService = inject(BackendService);
   private readonly jwtHelper = inject(JwtHelperService);
   private readonly localStorageService = inject(LocalStorageService);
@@ -47,7 +46,7 @@ export class AuthenticationService {
 
     return this.backendService.doPost<LoginResponse, LoginRequest>(
       `${ApiRoutes.get(ApiEndpoint.Login)}`,
-      body
+      body,
     );
   }
 
@@ -59,12 +58,22 @@ export class AuthenticationService {
    * @param password the provided password
    * @returns {Observable<LoginResponse>} Observable with information about the success of the login
    */
-  register(firstName: string, lastName: string, email: string, password: string): Observable<void> {
-    const body: RegisterRequest = { firstName: firstName, lastName: lastName, email: email, password: password };
+  register(
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string,
+  ): Observable<void> {
+    const body: RegisterRequest = {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password,
+    };
 
     return this.backendService.doPost<void, LoginRequest>(
       `${ApiRoutes.get(ApiEndpoint.Register)}`,
-      body
+      body,
     );
   }
 
@@ -77,8 +86,8 @@ export class AuthenticationService {
     window.dispatchEvent(
       new StorageEvent('storage', {
         key: 'access_token',
-        newValue: token
-      })
+        newValue: token,
+      }),
     );
     this._isAuthenticated.set(true);
   }
@@ -87,7 +96,7 @@ export class AuthenticationService {
    * Retrieves the current JWT token from local storage
    * @returns {string} the current JWT token
    */
-  getToken(): string | Promise<string> {
+  async getToken(): Promise<string> {
     return this.jwtHelper.tokenGetter();
   }
 
@@ -110,18 +119,20 @@ export class AuthenticationService {
       : false;
 
     if (!isAuthenticated) {
-      return firstValueFrom(this.refreshToken().pipe(
-        map((response) => {
-          if (response?.accessToken) {
-            this.saveToken(response.accessToken);
-            return true;
-          } else {
-            this._isAuthenticated.set(false);
-            localStorage.removeItem('access_token');
-            return false;
-          }
-        })
-      ));
+      return firstValueFrom(
+        this.refreshToken().pipe(
+          map((response) => {
+            if (response?.accessToken) {
+              this.saveToken(response.accessToken);
+              return true;
+            } else {
+              this._isAuthenticated.set(false);
+              localStorage.removeItem('access_token');
+              return false;
+            }
+          }),
+        ),
+      );
     }
 
     this._isAuthenticated.set(true);
@@ -134,17 +145,17 @@ export class AuthenticationService {
    */
   refreshToken(): Observable<RefreshTokenResponse | null> {
     return this.backendService
-      .doPost<RefreshTokenResponse, Record<string, never>>(
-        `${ApiRoutes.get(ApiEndpoint.RefreshJWT)}`,
-        {}
-      )
+      .doPost<
+        RefreshTokenResponse,
+        Record<string, never>
+      >(`${ApiRoutes.get(ApiEndpoint.RefreshJWT)}`, {})
       .pipe(
         first(),
         catchError(() => {
           this._isAuthenticated.set(false);
           localStorage.removeItem('access_token');
           return of(null);
-        })
+        }),
       );
   }
 
@@ -155,7 +166,7 @@ export class AuthenticationService {
     this.backendService
       .doPost<never, Record<string, never>>(
         `${ApiRoutes.get(ApiEndpoint.Logout)}`,
-        {}
+        {},
       )
       .pipe(first())
       .subscribe(() => {

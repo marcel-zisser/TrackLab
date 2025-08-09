@@ -1,18 +1,24 @@
-
-import { Injectable, UnauthorizedException,  } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { JwtTokenInformation, LoginResponse, RefreshTokenResponse } from '@tracklab/models';
+import {
+  JwtTokenInformation,
+  LoginResponse,
+  RefreshTokenResponse,
+} from '@tracklab/models';
 import { Request, Response } from 'express';
 import * as bcrypt from 'bcrypt';
 import { Prisma, User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
-  constructor(private userService: UserService, private jwtService: JwtService) {}
+  constructor(
+    private userService: UserService,
+    private jwtService: JwtService,
+  ) {}
 
   async validateUser(email: string, pass: string): Promise<User> {
-    const user = await this.userService.findOne(email);
+    const user = await this.userService.findOneByEmail(email);
 
     if (!user) {
       return null;
@@ -28,7 +34,7 @@ export class AuthService {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      password: ''
+      password: '',
     };
   }
 

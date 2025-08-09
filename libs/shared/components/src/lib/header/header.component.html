@@ -1,4 +1,4 @@
-<p-toast [position]="'top-center'"/>
+<p-toast [position]="'top-center'" />
 
 <p-menubar [model]="items"
            [autoDisplay]="true"
@@ -23,7 +23,8 @@
       </p-toggle-switch>
 
       @if (loggedIn()) {
-        <p-avatar class="cursor-pointer" [class.avatar]="showUserMenu()" label="P" size="normal" shape="circle" (click)="toggleUserMenu()" />
+        <p-avatar class="cursor-pointer" [class.avatar]="showUserMenu()" label="P" size="normal" shape="circle"
+                  (click)="toggleUserMenu()" />
       } @else {
         <p-button [label]="'Sign-in'"
                   [size]="'small'"

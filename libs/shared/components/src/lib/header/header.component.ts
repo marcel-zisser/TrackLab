@@ -4,7 +4,6 @@ import {
   HostListener,
   inject,
   OnInit,
-  signal,
 } from '@angular/core';
 import { Menubar } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
@@ -19,6 +18,7 @@ import { UserMenuComponent } from './user-menu/user-menu.component';
 import { DialogService } from 'primeng/dynamicdialog';
 import { LoginComponent } from '../authentication';
 import { Toast } from 'primeng/toast';
+import { UserMenuService } from './user-menu/user-menu.service';
 
 @Component({
   selector: 'tl-header',
@@ -43,6 +43,7 @@ export class HeaderComponent implements OnInit {
   private readonly themeService = inject(ThemeService);
   private readonly authenticationService = inject(AuthenticationService);
   private readonly dialogService = inject(DialogService);
+  private readonly userMenuService = inject(UserMenuService);
 
   private clickedInsideMenu = false;
 
@@ -50,7 +51,7 @@ export class HeaderComponent implements OnInit {
 
   items: MenuItem[] | undefined;
   theme = this.themeService.theme();
-  showUserMenu = signal(false);
+  showUserMenu = this.userMenuService.userMenuVisible;
 
   ngOnInit() {
     this.items = [
@@ -83,13 +84,13 @@ export class HeaderComponent implements OnInit {
 
   toggleUserMenu() {
     this.clickedInsideMenu = true;
-    this.showUserMenu.update((curr) => !curr);
+    this.userMenuService.toggleUserMenu();
   }
 
   @HostListener('document:click', ['$event'])
   handleClick() {
     if (!this.clickedInsideMenu) {
-      this.showUserMenu.set(false);
+      this.userMenuService.showUserMenu(false);
     }
     this.clickedInsideMenu = false;
   }
