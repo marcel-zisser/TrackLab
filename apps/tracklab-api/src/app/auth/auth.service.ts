@@ -17,16 +17,16 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, pass: string): Promise<User> {
+  async validateUser(email: string, pass: string): Promise<User | undefined> {
     const user = await this.userService.findOneByEmail(email);
 
     if (!user) {
-      return null;
+      return undefined;
     }
 
     const passwordCorrect = await bcrypt.compare(pass, user.password);
     if (!passwordCorrect) {
-      return null;
+      return undefined;
     }
 
     return {

@@ -32,21 +32,21 @@
   <form class="flex flex-col gap-4" [formGroup]="passwordGroup" (ngSubmit)="changePassword()">
     <div class="flex flex-col">
       <label for="firstName">Current Password</label>
-      <input pInputText id="firstName" formControlName="currentPassword" />
+      <input pInputText id="firstName" formControlName="currentPassword" type="password" />
     </div>
 
     <div class="flex flex-row gap-8">
       <div class="flex flex-col flex-1">
         <label for="lastName">New Password</label>
-        <input pInputText id="lastName" formControlName="newPassword" />
+        <input pInputText id="lastName" formControlName="newPassword" type="password" />
       </div>
 
       <div class="flex flex-col flex-1">
         <label for="email">Repeat New Password</label>
-        <input pInputText id="email" formControlName="newPasswordRepeat" />
+        <input pInputText id="email" formControlName="newPasswordRepeat" type="password" />
       </div>
     </div>
 
-    <p-button class="text-right" severity="success">Change password</p-button>
+    <p-button class="text-right" type="submit" severity="success">Change password</p-button>
   </form>
 </div>
