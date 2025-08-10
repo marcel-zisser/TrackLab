@@ -6,7 +6,6 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { FastF1Module } from './fast-f1/fast-f1.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
-import { PrismaService } from '../prisma.service';
 
 @Module({
   imports: [

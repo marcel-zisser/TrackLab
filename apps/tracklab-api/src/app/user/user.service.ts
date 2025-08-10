@@ -34,4 +34,16 @@ export class UserService {
   async create(data: Prisma.UserCreateInput): Promise<User> {
     return this.prisma.user.create({ data });
   }
+
+  /**
+   * Updates specific user to new value
+   * @param where identify unique user
+   * @param data the new user data
+   */
+  async updateUser(
+    where: Prisma.UserWhereUniqueInput,
+    data: Prisma.UserUpdateInput,
+  ) {
+    return await this.prisma.user.update({ data, where });
+  }
 }
