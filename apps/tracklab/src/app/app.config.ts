@@ -9,7 +9,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { providePrimeNG } from 'primeng/config';
 import { AppTheme } from './app.theme';
 import { environment } from '../environments/environment';
-import { API_URL_TOKEN } from '@tracklab/services';
+import { API_URL_TOKEN, authenticationInterceptor } from '@tracklab/services';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 import * as echarts from 'echarts/core';
@@ -33,7 +33,6 @@ import {
 import { CanvasRenderer } from 'echarts/renderers';
 import customDark from './echarts-theme.json';
 import { JwtModule } from '@auth0/angular-jwt';
-import { authenticationInterceptor } from '../../../../libs/shared/services/src/lib/authentication/authentication.interceptor';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');

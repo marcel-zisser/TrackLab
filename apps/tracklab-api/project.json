@@ -9,7 +9,9 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "prisma migrate reset",
-        "args": ["--force --schema=apps/tracklab-api/prisma/schema.prisma"]
+        "args": [
+          "--force --schema=apps/tracklab-api/prisma/schema.prisma"
+        ]
       }
     },
     "init-db": {
@@ -17,13 +19,17 @@
       "options": {
         "command": "npx ts-node init-db/init-db"
       },
-      "dependsOn": ["migrate-db"]
+      "dependsOn": [
+        "migrate-db"
+      ]
     },
     "generate-prisma": {
       "executor": "nx:run-commands",
       "options": {
         "command": "prisma generate",
-        "args": ["--schema=apps/tracklab-api/prisma/schema.prisma"]
+        "args": [
+          "--schema=apps/tracklab-api/prisma/schema.prisma"
+        ]
       }
     },
     "build": {

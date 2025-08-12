@@ -8,9 +8,10 @@ datasource db {
 }
 
 model User {
-  uuid      String @id @default(uuid()) @db.Uuid
-  firstName String @db.VarChar(50)
-  lastName  String @db.VarChar(50)
-  email     String @unique @db.VarChar(100)
-  password  String @db.VarChar(100)
+  uuid      String  @id @default(uuid()) @db.Uuid
+  firstName String  @db.VarChar(50)
+  lastName  String  @db.VarChar(50)
+  email     String  @unique @db.VarChar(100)
+  password  String  @db.VarChar(100)
+  avatarUrl String? @db.VarChar(100)
 }

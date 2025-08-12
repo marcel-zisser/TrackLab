@@ -3,12 +3,13 @@ import {
   Component,
   inject,
   signal,
+  viewChild,
 } from '@angular/core';
 import { Avatar } from 'primeng/avatar';
 import { Divider } from 'primeng/divider';
 import { AuthenticationService, BackendService } from '@tracklab/services';
 import { User } from '@tracklab/models';
-import { first, from, of, switchMap } from 'rxjs';
+import { first } from 'rxjs';
 import { InputText } from 'primeng/inputtext';
 import { Button } from 'primeng/button';
 import {
@@ -18,6 +19,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { MessageService } from 'primeng/api';
+import { FileSelectEvent, FileUpload } from 'primeng/fileupload';
 
 @Component({
   selector: 'tl-settings',
@@ -28,12 +30,15 @@ import { MessageService } from 'primeng/api';
     Button,
     FormsModule,
     ReactiveFormsModule,
+    FileUpload,
   ],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsComponent {
+  fileUpload = viewChild.required<FileUpload>('fu');
+
   private readonly authenticationService = inject(AuthenticationService);
   private readonly backendService = inject(BackendService);
   private readonly fb = inject(FormBuilder);
@@ -50,28 +55,24 @@ export class SettingsComponent {
     newPasswordRepeat: ['', Validators.required],
   });
   protected user = signal<User | undefined>(undefined);
+  protected avatar = signal<string | undefined>(undefined);
 
   constructor() {
-    from(this.authenticationService.getDecodedToken())
-      .pipe(
-        first(),
-        switchMap((token) => {
-          if (token) {
-            return this.backendService.doGet<User>(`user/${token.sub}`);
-          } else {
-            return of(undefined);
-          }
-        }),
-      )
-      .subscribe((user: User | undefined) => {
-        this.user.set(user);
+    const token = this.authenticationService.getDecodedToken();
+    if (token) {
+      this.backendService
+        .doGet<User>(`user/${token.sub}`)
+        .pipe(first())
+        .subscribe((user: User | undefined) => {
+          this.user.set(user);
 
-        if (user) {
-          this.userGroup.get('firstName')?.patchValue(user?.firstName);
-          this.userGroup.get('lastName')?.patchValue(user?.lastName);
-          this.userGroup.get('email')?.patchValue(user?.email);
-        }
-      });
+          if (user) {
+            this.userGroup.get('firstName')?.patchValue(user?.firstName);
+            this.userGroup.get('lastName')?.patchValue(user?.lastName);
+            this.userGroup.get('email')?.patchValue(user?.email);
+          }
+        });
+    }
   }
 
   changePassword() {
@@ -101,8 +102,16 @@ export class SettingsComponent {
 
   updateUser() {
     if (this.userGroup.valid) {
+      const formData = new FormData();
+
+      Object.keys(this.userGroup.controls).forEach((key) => {
+        const value = this.userGroup.get(key)?.value;
+        formData.append(key, value);
+      });
+      formData.append('avatar', this.fileUpload().files[0]);
+
       this.backendService
-        .doPut<User, any>(`user/${this.user()?.uuid}`, this.userGroup.value)
+        .doPut<User, any>(`user/${this.user()?.uuid}`, formData)
         .pipe(first())
         .subscribe({
           next: (user) => {
@@ -114,6 +123,13 @@ export class SettingsComponent {
             });
           },
         });
+      this.fileUpload().upload();
     }
   }
+
+  onAvatarSelected(event: FileSelectEvent) {
+    this.avatar.set(URL.createObjectURL(event.files[0]));
+  }
+
+  protected readonly Avatar = Avatar;
 }

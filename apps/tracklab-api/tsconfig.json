@@ -12,6 +12,9 @@
   ],
   "compilerOptions": {
     "esModuleInterop": true,
-    "types": ["node", "@types/express"]
+    "types": [
+      "node",
+      "express"
+    ]
   }
 }

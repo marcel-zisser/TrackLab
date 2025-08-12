@@ -1,14 +1,6 @@
-import { Controller, Get, UseInterceptors } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Controller, UseInterceptors } from '@nestjs/common';
 import { LoggingCacheInterceptor } from './interceptors/cache-logging.interceptor';
 
 @UseInterceptors(LoggingCacheInterceptor)
 @Controller()
-export class AppController {
-  constructor(private readonly appService: AppService) {}
-
-  @Get()
-  getData() {
-    return this.appService.getData();
-  }
-}
+export class AppController {}

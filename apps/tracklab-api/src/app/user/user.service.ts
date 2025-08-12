@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma.service';
 import { Prisma, User } from '@prisma/client';
+import { S3Client } from '@aws-sdk/client-s3';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly s3: S3Client,
+  ) {}
 
   /**
    * Searches for a user based on the email

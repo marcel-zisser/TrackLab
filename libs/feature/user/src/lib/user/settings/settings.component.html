@@ -8,21 +8,33 @@
 
   <div class="text-xl font-bold mb-4">Basic Information</div>
   <form class="flex flex-col gap-4" [formGroup]="userGroup" (ngSubmit)="updateUser()">
-    <div class="flex flex-col">
-      <label for="firstName">First Name</label>
-      <input pInputText id="firstName" formControlName="firstName" />
-    </div>
+    <div class="flex flex-row w-full gap-8 ">
 
-    <div class="flex flex-col">
-      <label for="lastName">Last Name</label>
-      <input pInputText id="lastName" formControlName="lastName" />
-    </div>
+      <div class="flex flex-col flex-1">
+        <div class="flex flex-col">
+          <label for="firstName">First Name</label>
+          <input pInputText id="firstName" formControlName="firstName" />
+        </div>
 
-    <div class="flex flex-col">
-      <label for="email">E-Mail</label>
-      <input pInputText id="email" formControlName="email" />
-    </div>
+        <div class="flex flex-col">
+          <label for="lastName">Last Name</label>
+          <input pInputText id="lastName" formControlName="lastName" />
+        </div>
 
+        <div class="flex flex-col">
+          <label for="email">E-Mail</label>
+          <input pInputText id="email" formControlName="email" />
+        </div>
+      </div>
+
+      <div class="flex flex-col flex-1 gap-4 items-center justify-center overflow-hidden">
+        <img class="max-h-50 max-w-50 p-4" [src]="avatar()" [alt]="'User Avatar'" />
+        <p-fileupload #fu mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload" name="avatar"
+                      accept="image/*"
+                      maxFileSize="1000000"
+                      (onSelect)="onAvatarSelected($event)" />
+      </div>
+    </div>
     <p-button class="text-right" type="submit" severity="success">Save changes</p-button>
   </form>
 

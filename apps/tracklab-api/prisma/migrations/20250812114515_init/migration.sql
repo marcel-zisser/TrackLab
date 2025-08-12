@@ -5,6 +5,7 @@ CREATE TABLE "User" (
     "lastName" VARCHAR(50) NOT NULL,
     "email" VARCHAR(100) NOT NULL,
     "password" VARCHAR(100) NOT NULL,
+    "avatarUrl" VARCHAR(100),
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("uuid")
 );

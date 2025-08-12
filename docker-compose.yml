@@ -16,6 +16,18 @@ services:
       - "5432:5432"
     networks:
       - db_network
+  minio:
+    image: minio/minio
+    container_name: minio
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: admin123
+    ports:
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # Web UI
+    command: server /data --console-address ":9001"
+    volumes:
+      - ./minio_data:/data
 
 networks:
   db_network:

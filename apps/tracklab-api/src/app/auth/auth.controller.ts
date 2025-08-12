@@ -1,9 +1,22 @@
-import { Controller, Post, UseGuards, Res, Request, HttpCode, Req, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  Request,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { LoginResponse, RefreshTokenResponse } from '@tracklab/models';
-import { Request as ExpressRequest, Response as ExpressResponse } from 'express';
+import {
+  Request as ExpressRequest,
+  Response as ExpressResponse,
+} from 'express';
 import { User } from '@prisma/client';
+
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -11,19 +24,20 @@ export class AuthController {
   @Post('register')
   async register(
     @Request() request: ExpressRequest,
-    @Res({ passthrough: true }) response: ExpressResponse
+    @Res({ passthrough: true }) response: ExpressResponse,
   ): Promise<void> {
     const createdUser = await this.authService.register({
       email: request.body.email,
       password: request.body.password,
       firstName: request.body.firstName,
-      lastName: request.body.lastName
+      lastName: request.body.lastName,
+      avatarUrl: null,
     });
 
     if (createdUser) {
-      response.sendStatus(HttpStatus.CREATED)
+      response.sendStatus(HttpStatus.CREATED);
     } else {
-      response.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+      response.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -31,7 +45,7 @@ export class AuthController {
   @Post('login')
   async login(
     @Request() request: ExpressRequest,
-    @Res({ passthrough: true }) response: ExpressResponse
+    @Res({ passthrough: true }) response: ExpressResponse,
   ): Promise<LoginResponse> {
     return this.authService.login(request.user as User, response);
   }
@@ -48,5 +62,4 @@ export class AuthController {
   refresh(@Req() request: ExpressRequest): Promise<RefreshTokenResponse> {
     return this.authService.refresh(request);
   }
-
 }

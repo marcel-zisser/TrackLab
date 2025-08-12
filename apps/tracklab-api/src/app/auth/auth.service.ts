@@ -35,6 +35,7 @@ export class AuthService {
       lastName: user.lastName,
       email: user.email,
       password: '',
+      avatarUrl: null,
     };
   }
 
@@ -93,6 +94,7 @@ export class AuthService {
       lastName: decodedToken.lastName,
       email: '',
       password: '',
+      avatarUrl: null,
     } satisfies User;
 
     return {
