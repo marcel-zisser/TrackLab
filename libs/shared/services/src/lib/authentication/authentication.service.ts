@@ -7,7 +7,7 @@ import {
   RegisterRequest,
 } from '@tracklab/models';
 import { jwtDecode } from 'jwt-decode';
-import { catchError, first, firstValueFrom, map, Observable, of } from 'rxjs';
+import { catchError, first, Observable, of } from 'rxjs';
 import { ApiEndpoint, ApiRoutes, BackendService } from '../backend';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { LocalStorageService } from '../local-storage';
@@ -112,31 +112,28 @@ export class AuthenticationService {
   /**
    * Checks if the user is currently authenticated
    */
-  async checkAuthentication(): Promise<boolean> {
-    const token = await this.getToken();
+  checkAuthentication(): void {
+    const token = this.getToken();
     const isAuthenticated = token
       ? !this.jwtHelper.isTokenExpired(token)
       : false;
 
     if (!isAuthenticated) {
-      return firstValueFrom(
-        this.refreshToken().pipe(
-          map((response) => {
+      this.refreshToken()
+        .pipe(first())
+        .subscribe({
+          next: (response) => {
             if (response?.accessToken) {
               this.saveToken(response.accessToken);
-              return true;
             } else {
               this._isAuthenticated.set(false);
               localStorage.removeItem('access_token');
-              return false;
             }
-          }),
-        ),
-      );
+          },
+        });
     }
 
     this._isAuthenticated.set(true);
-    return true;
   }
 
   /**

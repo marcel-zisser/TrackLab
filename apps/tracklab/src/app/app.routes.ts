@@ -43,16 +43,17 @@ export const appRoutes: Route[] = [
   {
     path: 'user',
     component: UserComponent,
-    canActivateChild: [authenticationGuard],
     children: [
       {
         title: 'Collection',
         path: 'collection',
+        canActivate: [authenticationGuard],
         component: CollectionComponent,
       },
       {
         title: 'Settings',
         path: 'settings',
+        canActivate: [authenticationGuard],
         component: SettingsComponent,
       },
     ],
