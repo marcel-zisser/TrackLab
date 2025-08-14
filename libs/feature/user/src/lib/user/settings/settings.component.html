@@ -1,6 +1,6 @@
 <div class="flex flex-col w-1/2 p-8 bg-white dark:bg-surface-800 rounded-lg">
   <div class="text-2xl font-bold flex flex-row items-center gap-8">
-    <p-avatar shape="circle" size="xlarge"></p-avatar>
+    <p-avatar [shape]="'circle'" [size]="'xlarge'" [image]="userAvatar()"></p-avatar>
     <span>{{ user()?.firstName }} {{ user()?.lastName }}</span>
   </div>
 
@@ -31,7 +31,7 @@
         <img class="max-h-50 max-w-50 p-4" [src]="avatar()" [alt]="'User Avatar'" />
         <p-fileupload #fu mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload" name="avatar"
                       accept="image/*"
-                      maxFileSize="1000000"
+                      [maxFileSize]="10*1024*1024"
                       (onSelect)="onAvatarSelected($event)" />
       </div>
     </div>
@@ -43,19 +43,19 @@
   <div class="text-xl font-bold mb-4">Change Password</div>
   <form class="flex flex-col gap-4" [formGroup]="passwordGroup" (ngSubmit)="changePassword()">
     <div class="flex flex-col">
-      <label for="firstName">Current Password</label>
-      <input pInputText id="firstName" formControlName="currentPassword" type="password" />
+      <label for="currentPassword">Current Password</label>
+      <input pInputText id="currentPassword" formControlName="currentPassword" type="password" />
     </div>
 
     <div class="flex flex-row gap-8">
       <div class="flex flex-col flex-1">
-        <label for="lastName">New Password</label>
-        <input pInputText id="lastName" formControlName="newPassword" type="password" />
+        <label for="newPassword">New Password</label>
+        <input pInputText id="newPassword" formControlName="newPassword" type="password" />
       </div>
 
       <div class="flex flex-col flex-1">
-        <label for="email">Repeat New Password</label>
-        <input pInputText id="email" formControlName="newPasswordRepeat" type="password" />
+        <label for="repeatNewPassword">Repeat New Password</label>
+        <input pInputText id="repeatNewPassword" formControlName="newPasswordRepeat" type="password" />
       </div>
     </div>
 

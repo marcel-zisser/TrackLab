@@ -1,16 +1,19 @@
-INSERT INTO "User" ("uuid", "firstName", "lastName", "email", "password")
+INSERT INTO "User" ("uuid", "firstName", "lastName", "email", "password", "avatarType")
 VALUES ('dacdfcb2-b9f9-4bb1-a61c-9f41637d96c8',
         'Admin',
         'Istrator',
         'admin@tracklab.com',
-        '$2b$10$VmeNNuedxhMVp3joJ43D4.D7zyfNiGpBaQ6GXoCoXwjxdIIZayfoS'),
+        '$2b$10$VmeNNuedxhMVp3joJ43D4.D7zyfNiGpBaQ6GXoCoXwjxdIIZayfoS',
+        'png'),
        ('40ffd4b2-68a4-4309-9610-1c6b4e554d96',
         'Jane',
         'Doe',
         'project@tracklab.com',
-        '$2b$10$VmeNNuedxhMVp3joJ43D4.D7zyfNiGpBaQ6GXoCoXwjxdIIZayfoS'),
+        '$2b$10$VmeNNuedxhMVp3joJ43D4.D7zyfNiGpBaQ6GXoCoXwjxdIIZayfoS',
+        null),
        ('715d2bf3-a1f4-4332-8804-2f313e3dc1a9',
         'John',
         'Doe',
         'review@tracklab.com',
-        '$2b$10$VmeNNuedxhMVp3joJ43D4.D7zyfNiGpBaQ6GXoCoXwjxdIIZayfoS');
+        '$2b$10$VmeNNuedxhMVp3joJ43D4.D7zyfNiGpBaQ6GXoCoXwjxdIIZayfoS',
+        null);

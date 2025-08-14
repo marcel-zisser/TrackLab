@@ -35,6 +35,19 @@ export class BackendService {
   /**
    * Executes a GET request to the backend API to a specific endpoint
    * @param url the endpoint to be targeted
+   * @param params query params to append to the URL
+   * @returns {HttpResourceRef} HttpResourceRef with the result of the request
+   */
+  doGetBlob(url: string | undefined, params?: HttpParams): Observable<Blob> {
+    return this.httpClient.get(this.apiUrl + url, {
+      params: params,
+      responseType: 'blob',
+    });
+  }
+
+  /**
+   * Executes a GET request to the backend API to a specific endpoint
+   * @param url the endpoint to be targeted
    * @returns {HttpResourceRef} HttpResourceRef with the result of the request
    */
   doGetResource<T>(

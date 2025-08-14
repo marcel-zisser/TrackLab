@@ -2,12 +2,17 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
+  linkedSignal,
   signal,
   viewChild,
 } from '@angular/core';
 import { Avatar } from 'primeng/avatar';
 import { Divider } from 'primeng/divider';
-import { AuthenticationService, BackendService } from '@tracklab/services';
+import {
+  AuthenticationService,
+  BackendService,
+  UserService,
+} from '@tracklab/services';
 import { User } from '@tracklab/models';
 import { first } from 'rxjs';
 import { InputText } from 'primeng/inputtext';
@@ -43,6 +48,9 @@ export class SettingsComponent {
   private readonly backendService = inject(BackendService);
   private readonly fb = inject(FormBuilder);
   private readonly messageService = inject(MessageService);
+  private readonly userService = inject(UserService);
+
+  protected userAvatar = this.userService.avatar;
 
   protected userGroup = this.fb.group({
     firstName: ['', Validators.required],
@@ -55,7 +63,7 @@ export class SettingsComponent {
     newPasswordRepeat: ['', Validators.required],
   });
   protected user = signal<User | undefined>(undefined);
-  protected avatar = signal<string | undefined>(undefined);
+  protected avatar = linkedSignal<string | undefined>(this.userAvatar);
 
   constructor() {
     const token = this.authenticationService.getDecodedToken();
@@ -108,13 +116,20 @@ export class SettingsComponent {
         const value = this.userGroup.get(key)?.value;
         formData.append(key, value);
       });
-      formData.append('avatar', this.fileUpload().files[0]);
+
+      if (this.fileUpload().files[0]) {
+        formData.append('avatar', this.fileUpload().files[0]);
+      }
 
       this.backendService
         .doPut<User, any>(`user/${this.user()?.uuid}`, formData)
         .pipe(first())
         .subscribe({
           next: (user) => {
+            if (formData.get('avatar')) {
+              this.userService.updateAvatar();
+            }
+
             this.user.set(user);
             this.messageService.add({
               severity: 'success',
@@ -123,13 +138,10 @@ export class SettingsComponent {
             });
           },
         });
-      this.fileUpload().upload();
     }
   }
 
   onAvatarSelected(event: FileSelectEvent) {
     this.avatar.set(URL.createObjectURL(event.files[0]));
   }
-
-  protected readonly Avatar = Avatar;
 }

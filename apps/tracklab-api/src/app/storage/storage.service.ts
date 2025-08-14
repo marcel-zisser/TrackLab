@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import {
+  GetObjectCommand,
+  HeadObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
 
 @Injectable()
 export class StorageService {
@@ -23,7 +28,36 @@ export class StorageService {
       }),
     );
 
-    const endpoint = await this.s3.config.endpoint();
-    return `${endpoint.protocol}//${endpoint.hostname}:${endpoint.port}/${bucket}/${key}`;
+    return `${bucket}/${key}`;
+  }
+
+  /**
+   * Retrieves a file from persistent storage
+   * @param identifier the identifier of the file on the file system
+   */
+  async getFile(identifier: string) {
+    const [bucket, key] = identifier.split('/');
+    const file = await this.s3.send(
+      new GetObjectCommand({
+        Bucket: bucket,
+        Key: key,
+      }),
+    );
+
+    return file;
+  }
+
+  /**
+   * Retrieves the head of a file from persistent storage
+   * @param identifier the identifier of the file on the file system
+   */
+  async getHead(identifier: string) {
+    const [bucket, key] = identifier.split('/');
+    return await this.s3.send(
+      new HeadObjectCommand({
+        Bucket: bucket,
+        Key: key,
+      }),
+    );
   }
 }

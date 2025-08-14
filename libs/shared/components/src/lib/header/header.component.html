@@ -23,7 +23,11 @@
       </p-toggle-switch>
 
       @if (loggedIn()) {
-        <p-avatar class="cursor-pointer" [class.avatar]="showUserMenu()" label="P" size="normal" shape="circle"
+        <p-avatar class="cursor-pointer"
+                  [class.avatar]="showUserMenu()"
+                  [image]="userAvatar()"
+                  [size]="'normal'"
+                  [shape]="'circle'"
                   (click)="toggleUserMenu()" />
       } @else {
         <p-button [label]="'Sign-in'"

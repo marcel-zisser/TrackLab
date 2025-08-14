@@ -11,7 +11,12 @@ import { RouterLink } from '@angular/router';
 import { Button, ButtonIcon } from 'primeng/button';
 import { ToggleSwitch } from 'primeng/toggleswitch';
 import { NgClass } from '@angular/common';
-import { AuthenticationService, Theme, ThemeService } from '@tracklab/services';
+import {
+  AuthenticationService,
+  Theme,
+  ThemeService,
+  UserService,
+} from '@tracklab/services';
 import { FormsModule } from '@angular/forms';
 import { Avatar } from 'primeng/avatar';
 import { UserMenuComponent } from './user-menu/user-menu.component';
@@ -44,10 +49,12 @@ export class HeaderComponent implements OnInit {
   private readonly authenticationService = inject(AuthenticationService);
   private readonly dialogService = inject(DialogService);
   private readonly userMenuService = inject(UserMenuService);
+  private readonly userService = inject(UserService);
 
   private clickedInsideMenu = false;
 
   protected loggedIn = this.authenticationService.isAuthenticated;
+  protected userAvatar = this.userService.avatar;
 
   items: MenuItem[] | undefined;
   theme = this.themeService.theme();

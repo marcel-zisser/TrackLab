@@ -31,7 +31,7 @@ export class AuthController {
       password: request.body.password,
       firstName: request.body.firstName,
       lastName: request.body.lastName,
-      avatarUrl: null,
+      avatarType: null,
     });
 
     if (createdUser) {

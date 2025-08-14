@@ -9,12 +9,13 @@ import {
   Patch,
   Put,
   Req,
+  Res,
   UnauthorizedException,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { UserService } from './user.service';
 import { User } from '@tracklab/models';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -25,6 +26,7 @@ import * as bcrypt from 'bcrypt';
 import { FileInterceptor } from '@nestjs/platform-express';
 import multer from 'multer';
 import { StorageService } from '../storage/storage.service';
+import { ReadStream } from 'fs';
 
 @UseGuards(JwtAuthGuard)
 @Controller('user')
@@ -35,6 +37,33 @@ export class UserController {
     private jwtService: JwtService,
     private storageService: StorageService,
   ) {}
+
+  @Get('avatar')
+  async getAvatar(@Req() req: Request, @Res() res: Response) {
+    const bearer = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
+    const decodedUser = this.jwtService.decode(bearer);
+    const user = await this.userService.findOneByUuid(decodedUser.sub);
+
+    try {
+      const head = await this.storageService.getHead(
+        `avatar/${decodedUser.sub}.${user.avatarType}`,
+      );
+
+      res.setHeader(
+        'Content-Type',
+        head.ContentType || 'application/octet-stream',
+      );
+      res.setHeader('Content-Length', head.ContentLength?.toString() || '');
+
+      const avatar = await this.storageService.getFile(
+        `avatar/${decodedUser.sub}.${user.avatarType}`,
+      );
+
+      (avatar.Body as unknown as ReadStream).pipe(res);
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   @Get(':uuid')
   async getUser(@Param('uuid') uuid: string): Promise<User> {
@@ -61,19 +90,21 @@ export class UserController {
           fileType: 'png|jpeg',
         })
         .addMaxSizeValidator({
-          maxSize: 10000,
+          maxSize: 10 * 1024 * 1024,
         })
         .build({
           errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+          fileIsRequired: false,
         }),
     )
     avatar: Express.Multer.File,
     @Body() body: User,
   ): Promise<User> {
-    let avatarUrl: string | null = null;
+    let avatarType = null;
 
     if (avatar) {
-      avatarUrl = await this.storageService.saveFile(avatar, 'avatar', uuid);
+      await this.storageService.saveFile(avatar, 'avatar', uuid);
+      avatarType = avatar.mimetype.split('/')[1];
     }
 
     const user = await this.userService.updateUser(
@@ -82,7 +113,7 @@ export class UserController {
         firstName: body.firstName,
         lastName: body.lastName,
         email: body.email,
-        avatarUrl: avatarUrl,
+        avatarType: avatarType,
       },
     );
 
