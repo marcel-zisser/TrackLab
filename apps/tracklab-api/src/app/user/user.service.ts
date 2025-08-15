@@ -1,33 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma.service';
 import { Prisma, User } from '@prisma/client';
-import { S3Client } from '@aws-sdk/client-s3';
 
 @Injectable()
 export class UserService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly s3: S3Client,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   /**
-   * Searches for a user based on the email
-   * @param email the email of the user
+   * Searches for a user based on criterion
+   * @param params params for retrieving a unique user
    */
-  async findOneByEmail(email: string): Promise<User> {
-    return this.prisma.user.findUnique({
-      where: { email: email },
-      omit: { password: false },
-    });
-  }
+  async user(params: {
+    where: Prisma.UserWhereUniqueInput;
+    include?: Prisma.UserInclude;
+    omit?: Prisma.UserOmit;
+  }): Promise<User> {
+    const { where, include, omit } = params;
 
-  /**
-   * Searches for a user based on the uuid
-   * @param uuid the uuid of the user
-   */
-  async findOneByUuid(uuid: string): Promise<User> {
     return this.prisma.user.findUnique({
-      where: { uuid: uuid },
+      where,
+      include,
+      omit,
     });
   }
 

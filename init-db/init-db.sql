@@ -17,3 +17,15 @@ VALUES ('dacdfcb2-b9f9-4bb1-a61c-9f41637d96c8',
         'review@tracklab.com',
         '$2b$10$VmeNNuedxhMVp3joJ43D4.D7zyfNiGpBaQ6GXoCoXwjxdIIZayfoS',
         null);
+
+INSERT INTO "CollectionItem" ("uuid", "title", "description", "url", "userId")
+VALUES ('dd4fe574-11fd-4ef5-8fe5-7411fdaef553',
+        'Test Title',
+        'Test Description',
+        '/test/url',
+        'dacdfcb2-b9f9-4bb1-a61c-9f41637d96c8'),
+       ('5ba99e37-4ad0-4ed0-a99e-374ad0aed0c6',
+        'Test Title 2',
+        'Test Description 2',
+        '/test/url/2',
+        'dacdfcb2-b9f9-4bb1-a61c-9f41637d96c8');

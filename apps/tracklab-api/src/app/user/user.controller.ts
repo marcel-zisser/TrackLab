@@ -42,7 +42,9 @@ export class UserController {
   async getAvatar(@Req() req: Request, @Res() res: Response) {
     const bearer = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
     const decodedUser = this.jwtService.decode(bearer);
-    const user = await this.userService.findOneByUuid(decodedUser.sub);
+    const user = await this.userService.user({
+      where: { uuid: decodedUser.sub },
+    });
 
     try {
       const head = await this.storageService.getHead(
@@ -67,7 +69,7 @@ export class UserController {
 
   @Get(':uuid')
   async getUser(@Param('uuid') uuid: string): Promise<User> {
-    const user = await this.userService.findOneByUuid(uuid);
+    const user = await this.userService.user({ where: { uuid } });
     return {
       uuid: user.uuid,
       firstName: user.firstName,
@@ -128,7 +130,11 @@ export class UserController {
   @Patch(':uuid')
   async updatePassword(@Param('uuid') uuid: string, @Req() req: Request) {
     const bearer = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
-    const user = await this.userService.findOneByUuid(uuid);
+    const user = await this.userService.user({
+      where: {
+        uuid,
+      },
+    });
     const decodedUser = this.jwtService.decode(bearer);
 
     if (

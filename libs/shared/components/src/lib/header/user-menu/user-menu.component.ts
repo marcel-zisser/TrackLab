@@ -17,6 +17,15 @@ export class UserMenuComponent {
   private readonly router = inject(Router);
 
   /**
+   * Opens the collection page
+   * @protected
+   */
+  protected openCollection() {
+    this.router.navigate(['user', 'collection']);
+    this.userMenuService.showUserMenu(false);
+  }
+
+  /**
    * Opens the settings page
    * @protected
    */

@@ -1,1 +1,14 @@
-<p>collection works!</p>
+<div class="flex flex-col w-2/3 p-8 gap-4 bg-white dark:bg-surface-900 rounded-lg">
+  <div class="text-3xl font-bold">My Collection</div>
+  <p-data-view #dv [value]="collection()">
+    <ng-template #list let-items>
+      <div class="grid grid-cols-12 gap-4 grid-nogutter">
+        @for (item of items; track item.name; let first = $first) {
+          <div class="col-span-12">
+            <tl-collection-item [item]="item" [first]="first"></tl-collection-item>
+          </div>
+        }
+      </div>
+    </ng-template>
+  </p-data-view>
+</div>
