@@ -21,35 +21,37 @@
     <tl-source-selection
       [withSessionSelection]="true"
       (raceSelection)="loadSpeedTraces($event)"
-    ></tl-source-selection>
+    >
+      <div additionalOptions>
+        @if (selectedEvent && selectedYear && selectedSession) {
+          <p-floatlabel variant="on">
+            <p-select
+              class="w-full"
+              [inputId]="'selectDrivers'"
+              [options]="drivers()"
+              [filter]="true"
+              [loading]="drivers().length === 0"
+              [ngModel]="selectedDriver()"
+              (ngModelChange)="selectedDriver.set($event)">
+            </p-select>
+            <label [for]="'selectDrivers'">Select Drivers</label>
+          </p-floatlabel>
 
-    @if (selectedEvent && selectedYear && selectedSession) {
-      <p-floatlabel variant="on">
-        <p-select
-          class="w-full"
-          [inputId]="'selectDrivers'"
-          [options]="drivers()"
-          [filter]="true"
-          [loading]="drivers().length === 0"
-          [ngModel]="selectedDriver()"
-          (ngModelChange)="selectedDriver.set($event)">
-        </p-select>
-        <label [for]="'selectDrivers'">Select Drivers</label>
-      </p-floatlabel>
-
-      <div class="card flex flex-col justify-center mt-4 gap-4">
-        <h1>Chart dimension</h1>
-        <p-select-button
-          class="w-full"
-          id="dimension"
-          [styleClass]="'w-full'"
-          [options]="chartDimensionOptions"
-          [size]="'large'"
-          [ngModel]="chartDimension()"
-          (ngModelChange)="chartDimension.set($event)">
-        </p-select-button>
+          <div class="card flex flex-col justify-center mt-4 gap-4">
+            <h1>Chart dimension</h1>
+            <p-select-button
+              class="w-full"
+              id="dimension"
+              [styleClass]="'w-full'"
+              [options]="chartDimensionOptions"
+              [size]="'large'"
+              [ngModel]="chartDimension()"
+              (ngModelChange)="chartDimension.set($event)">
+            </p-select-button>
+          </div>
+        }
       </div>
-    }
+    </tl-source-selection>
   </div>
 
 </tl-analysis-base>

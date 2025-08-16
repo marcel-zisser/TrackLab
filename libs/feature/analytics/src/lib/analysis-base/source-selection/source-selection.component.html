@@ -41,10 +41,12 @@
     </p-floatlabel>
   }
 
+  <ng-content select="[additionalOptions]"></ng-content>
+
   @if (year() && event() && (session() || !withSessionSelection())) {
     <div class="w-full flex justify-end">
       <p-button
-        label="Copy link to chart"
+        [label]="'Copy link to chart'"
         (onClick)="copyChartLink()"
       ></p-button>
     </div>

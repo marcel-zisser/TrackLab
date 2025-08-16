@@ -21,22 +21,24 @@
     <tl-source-selection
       [withSessionSelection]="true"
       (raceSelection)="loadSpeedTraces($event)"
-    ></tl-source-selection>
-
-    @if (selectedEvent && selectedYear && selectedSession) {
-      <p-floatlabel variant="on">
-        <p-multi-select
-          class="w-full"
-          [inputId]="'selectDrivers'"
-          [options]="drivers()"
-          [filter]="true"
-          [loading]="drivers().length === 0"
-          [ngModel]="selectedDrivers()"
-          (ngModelChange)="selectedDrivers.set($event)">
-        </p-multi-select>
-        <label [for]="'selectDrivers'">Select Drivers</label>
-      </p-floatlabel>
-    }
+    >
+      <div additionalOptions>
+        @if (selectedEvent && selectedYear && selectedSession) {
+          <p-floatlabel variant="on">
+            <p-multi-select
+              class="w-full"
+              [inputId]="'selectDrivers'"
+              [options]="drivers()"
+              [filter]="true"
+              [loading]="drivers().length === 0"
+              [ngModel]="selectedDrivers()"
+              (ngModelChange)="selectedDrivers.set($event)">
+            </p-multi-select>
+            <label [for]="'selectDrivers'">Select Drivers</label>
+          </p-floatlabel>
+        }
+      </div>
+    </tl-source-selection>
   </div>
 
 </tl-analysis-base>

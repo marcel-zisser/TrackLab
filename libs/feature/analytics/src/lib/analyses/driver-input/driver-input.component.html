@@ -21,35 +21,37 @@
     <tl-source-selection
       [withSessionSelection]="true"
       (raceSelection)="loadCarTelemetry($event)"
-    ></tl-source-selection>
+    >
+      <div additionalOptions>
+        @if (selectedEvent && selectedYear && selectedSession) {
+          <p-floatlabel variant="on">
+            <p-select
+              class="w-full"
+              [inputId]="'driverOne'"
+              [options]="drivers()"
+              [filter]="true"
+              [loading]="drivers().length === 0"
+              [ngModel]="driverOne()"
+              (ngModelChange)="driverOne.set($event)">
+            </p-select>
+            <label [for]="'driverOne'">Select Driver 1</label>
+          </p-floatlabel>
 
-    @if (selectedEvent && selectedYear && selectedSession) {
-      <p-floatlabel variant="on">
-        <p-select
-          class="w-full"
-          [inputId]="'driverOne'"
-          [options]="drivers()"
-          [filter]="true"
-          [loading]="drivers().length === 0"
-          [ngModel]="driverOne()"
-          (ngModelChange)="driverOne.set($event)">
-        </p-select>
-        <label [for]="'driverOne'">Select Driver 1</label>
-      </p-floatlabel>
-
-      <p-floatlabel variant="on">
-        <p-select
-          class="w-full"
-          [inputId]="'driverTwo'"
-          [options]="drivers()"
-          [filter]="true"
-          [loading]="drivers().length === 0"
-          [ngModel]="driverTwo()"
-          (ngModelChange)="driverTwo.set($event)">
-        </p-select>
-        <label [for]="'driverTwo'">Select Driver 2</label>
-      </p-floatlabel>
-    }
+          <p-floatlabel variant="on">
+            <p-select
+              class="w-full"
+              [inputId]="'driverTwo'"
+              [options]="drivers()"
+              [filter]="true"
+              [loading]="drivers().length === 0"
+              [ngModel]="driverTwo()"
+              (ngModelChange)="driverTwo.set($event)">
+            </p-select>
+            <label [for]="'driverTwo'">Select Driver 2</label>
+          </p-floatlabel>
+        }
+      </div>
+    </tl-source-selection>
   </div>
 
 </tl-analysis-base>
