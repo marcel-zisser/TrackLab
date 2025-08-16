@@ -3,7 +3,6 @@ import {
   Component,
   computed,
   inject,
-  linkedSignal,
   signal,
 } from '@angular/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
@@ -21,9 +20,7 @@ import {
   SourceSelectionComponent,
 } from '../../analysis-base';
 import { combineLatest, first } from 'rxjs';
-import { FloatLabel } from 'primeng/floatlabel';
 import { FormsModule } from '@angular/forms';
-import { Select } from 'primeng/select';
 import { SelectButton } from 'primeng/selectbutton';
 
 @Component({
@@ -32,9 +29,7 @@ import { SelectButton } from 'primeng/selectbutton';
     AnalysisBaseComponent,
     NgxEchartsDirective,
     SourceSelectionComponent,
-    FloatLabel,
     FormsModule,
-    Select,
     NgxEchartsDirective,
     SelectButton,
   ],
@@ -52,12 +47,20 @@ export class SpeedMapComponent {
         ?.get(this.selectedDriver() ?? '')
         ?.map((telemetry) => telemetry?.speed ?? 0) ?? [],
   );
-  private readonly minSpeed = computed<number>(() =>
-    Math.min(...this.speedData()),
-  );
-  private readonly maxSpeed = computed<number>(() =>
-    Math.max(...this.speedData()),
-  );
+  private readonly minSpeed = computed<number>(() => {
+    const speedData = this.speedData();
+    if (speedData.length) {
+      return Math.min(...speedData);
+    }
+    return 0;
+  });
+  private readonly maxSpeed = computed<number>(() => {
+    const speedData = this.speedData();
+    if (speedData.length) {
+      return Math.max(...speedData);
+    }
+    return 350;
+  });
 
   protected selectedYear: string | undefined;
   protected selectedEvent: Event | undefined;
@@ -85,17 +88,7 @@ export class SpeedMapComponent {
     Array.from(this.processedData()?.keys() ?? []),
   );
 
-  protected readonly selectedDriver = linkedSignal<
-    string[],
-    string | undefined
-  >({
-    source: this.drivers,
-    computation: (source, previous) =>
-      source.find((driver) => driver === previous?.value)
-        ? previous?.value
-        : undefined,
-  });
-
+  protected readonly selectedDriver = signal<string | undefined>(undefined);
   protected readonly chartOptions = computed(() => this.createChartOptions());
 
   /**
@@ -108,6 +101,7 @@ export class SpeedMapComponent {
       this.selectedEvent = selectedRace.event;
       this.selectedSession = selectedRace.session;
 
+      this.selectedDriver.set(undefined);
       this.telemetries.set(undefined);
 
       combineLatest([
@@ -123,6 +117,7 @@ export class SpeedMapComponent {
           next: ([telemetryResponse, circuitInfo]) => {
             this.telemetries.set(telemetryResponse?.telemetries ?? []);
             this.circuitInfo.set(circuitInfo);
+            this.selectedDriver.set(selectedRace.drivers?.[0]);
           },
         });
     }

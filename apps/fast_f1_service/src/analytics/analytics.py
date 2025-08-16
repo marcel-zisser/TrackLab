@@ -4,7 +4,7 @@ from pandas import NaT
 
 from generated import analytics_pb2_grpc
 from generated.analytics_pb2 import StrategyResponse, StrategyRequest, QuickLapsResponse, SpeedTracesResponse, \
-  CarTelemetryResponse
+  CarTelemetryResponse, DriversResponse
 from generated.types_pb2 import Strategy, Lap, Duration, SpeedTrace, CarTelemetry, PositionTelemetry
 
 
@@ -181,5 +181,17 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
           ) for data in
             car_data.itertuples()
           ])
+
+    return response
+
+  def GetDrivers(self, request, context):
+    response = DriversResponse()
+
+    session = fastf1.get_session(request.year, request.round, request.session)
+    session.load(laps=False, telemetry=False, weather=False, messages=False)
+
+    for driverNumber in session.drivers:
+      driver = session.get_driver(driverNumber)
+      response.drivers.append(driver.Abbreviation)
 
     return response

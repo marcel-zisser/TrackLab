@@ -3,7 +3,6 @@ import {
   Component,
   computed,
   inject,
-  linkedSignal,
   signal,
 } from '@angular/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
@@ -59,13 +58,7 @@ export class SpeedTracesComponent {
     Array.from(this.processedData()?.keys() ?? []),
   );
 
-  protected readonly selectedDrivers = linkedSignal<
-    string[],
-    string[] | undefined
-  >({
-    source: this.drivers,
-    computation: () => undefined,
-  });
+  protected readonly selectedDrivers = signal<string[]>([]);
 
   protected readonly chartOptions = computed(() => this.createChartOptions());
 
@@ -74,10 +67,16 @@ export class SpeedTracesComponent {
    * @protected
    */
   protected loadSpeedTraces(selectedRace: RaceSelection) {
-    if (selectedRace.year && selectedRace.event && selectedRace.session) {
+    if (
+      selectedRace.year &&
+      selectedRace.event &&
+      selectedRace.session &&
+      selectedRace.drivers
+    ) {
       this.selectedYear = selectedRace.year;
       this.selectedEvent = selectedRace.event;
       this.selectedSession = selectedRace.session;
+      this.selectedDrivers.set(selectedRace.drivers);
 
       this.speedTraces.set(undefined);
 

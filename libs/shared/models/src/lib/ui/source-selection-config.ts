@@ -4,4 +4,5 @@ export interface SourceSelectionConfig {
   year: string;
   event: Event;
   session?: string;
+  selectedDrivers?: string[];
 }

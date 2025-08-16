@@ -8,6 +8,7 @@ import {
 } from '@tracklab/models';
 import {
   CarTelemetryResponse,
+  DriversResponse,
   QuickLapsResponse,
   SpeedTracesResponse,
   StrategyResponse,
@@ -74,6 +75,15 @@ export class FastF1Controller {
     @Query('session') session: string,
   ): Promise<SpeedTracesResponse> {
     return this.fastF1Service.getSpeedTraces(year, round, session);
+  }
+
+  @Get('drivers')
+  getDrivers(
+    @Query('year') year: number,
+    @Query('round') round: number,
+    @Query('session') session: string,
+  ): Promise<DriversResponse> {
+    return this.fastF1Service.getDrivers(year, round, session);
   }
 
   @Get('car-telemetry')

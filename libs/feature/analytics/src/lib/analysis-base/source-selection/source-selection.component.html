@@ -41,9 +41,70 @@
     </p-floatlabel>
   }
 
+  @if (withDriverSelection() && year() && event() && session()) {
+    @switch (driverSelectionType()) {
+
+      @case ('single') {
+        <p-floatlabel variant="on">
+          <p-select
+            class="w-full"
+            [inputId]="'selectDrivers'"
+            [options]="drivers()"
+            [filter]="true"
+            [loading]="drivers().length === 0"
+            [ngModel]="selectedDrivers()?.[0]"
+            (ngModelChange)="selectedDrivers.set([$event])">
+          </p-select>
+          <label [for]="'selectDrivers'">Select Drivers</label>
+        </p-floatlabel>
+      }
+      @case ('double') {
+        <p-floatlabel variant="on">
+          <p-select
+            class="w-full"
+            [inputId]="'driverOne'"
+            [options]="drivers()"
+            [filter]="true"
+            [loading]="drivers().length === 0"
+            [ngModel]="driverOne()"
+            (ngModelChange)="driverOne.set($event)">
+          </p-select>
+          <label [for]="'driverOne'">Select Driver 1</label>
+        </p-floatlabel>
+
+        <p-floatlabel variant="on">
+          <p-select
+            class="w-full"
+            [inputId]="'driverTwo'"
+            [options]="drivers()"
+            [filter]="true"
+            [loading]="drivers().length === 0"
+            [ngModel]="driverTwo()"
+            (ngModelChange)="driverTwo.set($event)">
+          </p-select>
+          <label [for]="'driverTwo'">Select Driver 2</label>
+        </p-floatlabel>
+      }
+      @case ('multiple') {
+        <p-floatlabel variant="on">
+          <p-multi-select
+            class="w-full"
+            [inputId]="'selectDrivers'"
+            [options]="drivers()"
+            [filter]="true"
+            [loading]="drivers().length === 0"
+            [ngModel]="selectedDrivers()"
+            (ngModelChange)="selectedDrivers.set($event)">
+          </p-multi-select>
+          <label [for]="'selectDrivers'">Select Drivers</label>
+        </p-floatlabel>
+      }
+    }
+  }
+
   <ng-content select="[additionalOptions]"></ng-content>
 
-  @if (year() && event() && (session() || !withSessionSelection())) {
+  @if (year() && event() && (session() || !withSessionSelection()) && (drivers().length || !withDriverSelection())) {
     <div class="w-full flex justify-end">
       <p-button
         [label]="'Copy link to chart'"

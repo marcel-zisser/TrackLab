@@ -181,6 +181,22 @@ export class FastF1Service implements OnModuleInit {
   }
 
   /**
+   * Retrieves the speed traces for a given session
+   * @param year the year of the session
+   * @param round the round of the session within the season
+   * @param session the session type
+   */
+  async getDrivers(year: number, round: number, session: string) {
+    return await firstValueFrom(
+      this.analyticsService.getDrivers({
+        year: year,
+        round: round,
+        session: session,
+      }),
+    );
+  }
+
+  /**
    * Retrieves the car telemetry for a given session
    * @param year the year of the session
    * @param round the round of the session within the season

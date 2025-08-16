@@ -3,7 +3,6 @@ import {
   Component,
   computed,
   inject,
-  linkedSignal,
   signal,
 } from '@angular/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
@@ -20,9 +19,7 @@ import {
   SourceSelectionComponent,
 } from '../../analysis-base';
 import { combineLatest, first } from 'rxjs';
-import { FloatLabel } from 'primeng/floatlabel';
 import { FormsModule } from '@angular/forms';
-import { Select } from 'primeng/select';
 
 @Component({
   selector: 'tl-gear-shift',
@@ -30,9 +27,7 @@ import { Select } from 'primeng/select';
     AnalysisBaseComponent,
     NgxEchartsDirective,
     SourceSelectionComponent,
-    FloatLabel,
     FormsModule,
-    Select,
   ],
   templateUrl: './gear-shift.component.html',
   styleUrl: './gear-shift.component.css',
@@ -61,13 +56,7 @@ export class GearShiftComponent {
     Array.from(this.processedData()?.keys() ?? []),
   );
 
-  protected readonly selectedDriver = linkedSignal<
-    string[],
-    string | undefined
-  >({
-    source: this.drivers,
-    computation: () => undefined,
-  });
+  protected readonly selectedDriver = signal<string | undefined>(undefined);
 
   protected readonly chartOptions = computed(() => this.createChartOptions());
 
@@ -76,10 +65,16 @@ export class GearShiftComponent {
    * @protected
    */
   protected loadSpeedTraces(selectedRace: RaceSelection) {
-    if (selectedRace.year && selectedRace.event && selectedRace.session) {
+    if (
+      selectedRace.year &&
+      selectedRace.event &&
+      selectedRace.session &&
+      selectedRace.drivers
+    ) {
       this.selectedYear = selectedRace.year;
       this.selectedEvent = selectedRace.event;
       this.selectedSession = selectedRace.session;
+      this.selectedDriver.set(selectedRace.drivers[0] ?? undefined);
 
       this.telemetries.set(undefined);
 

@@ -9,6 +9,7 @@ service Analytics {
   rpc GetQuickLaps(QuickLapsRequest) returns (QuickLapsResponse) {}
   rpc GetSpeedTraces(SpeedTracesRequest) returns (SpeedTracesResponse) {}
   rpc GetCarTelemetry(CarTelemetryRequest) returns (CarTelemetryResponse) {}
+  rpc GetDrivers(DriversRequest) returns (DriversResponse) {}
 }
 
 message StrategyRequest {
@@ -49,4 +50,14 @@ message CarTelemetryRequest {
 
 message CarTelemetryResponse {
   repeated CarTelemetry telemetries = 1;
+}
+
+message DriversRequest {
+  int32 year = 1;
+  int32 round = 2;
+  string session = 3;
+}
+
+message DriversResponse {
+  repeated string drivers = 1;
 }

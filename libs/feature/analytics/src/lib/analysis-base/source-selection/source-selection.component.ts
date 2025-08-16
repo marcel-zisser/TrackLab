@@ -14,6 +14,7 @@ import {
 import { FloatLabel } from 'primeng/floatlabel';
 import { Select } from 'primeng/select';
 import {
+  DriversResponse,
   Event,
   RaceSelection,
   SelectionOption,
@@ -26,16 +27,20 @@ import { ActivatedRoute } from '@angular/router';
 import { Button } from 'primeng/button';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MessageService } from 'primeng/api';
+import { MultiSelect } from 'primeng/multiselect';
 
 @Component({
   selector: 'tl-source-selection',
-  imports: [FloatLabel, Select, FormsModule, Button],
+  imports: [FloatLabel, Select, FormsModule, Button, MultiSelect],
   templateUrl: './source-selection.component.html',
   styleUrl: './source-selection.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SourceSelectionComponent implements OnInit, AfterViewInit {
   withSessionSelection = input<boolean>(true);
+  withDriverSelection = input<boolean>(true);
+  driverSelectionType = input<'single' | 'double' | 'multiple'>('single');
+
   raceSelection = output<RaceSelection>();
 
   private readonly backendService = inject(BackendService);
@@ -74,8 +79,24 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
         })) ?? [],
   );
 
+  protected drivers = signal<string[]>([]);
+
+  protected readonly driverOne = linkedSignal<string[], string | undefined>({
+    source: this.drivers,
+    computation: () => undefined,
+  });
+  protected readonly driverTwo = linkedSignal<string[], string | undefined>({
+    source: this.drivers,
+    computation: () => undefined,
+  });
+  protected readonly selectedDrivers = linkedSignal<string[], string[]>({
+    source: this.drivers,
+    computation: () => [],
+  });
+
   constructor() {
     effect(() => this.createEventScheduleEffect());
+    effect(() => this.loadDriversEffect());
     effect(() => this.emitRaceSelectionEffect());
   }
 
@@ -113,12 +134,14 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
     const year = this.year();
     const event = this.event();
     const session = this.session();
+    const selectedDrivers = this.selectedDrivers();
 
     if (year && event && (session || !this.withSessionSelection())) {
       const config = {
-        year: year,
-        event: event,
-        session: session,
+        year,
+        event,
+        session,
+        selectedDrivers,
       } satisfies SourceSelectionConfig;
 
       const jsonConfig = JSON.stringify(config);
@@ -161,6 +184,25 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
   }
 
   /**
+   * Effect to load the drivers once a session has been selected
+   * @private
+   */
+  private loadDriversEffect() {
+    const year = this.year();
+    const event = this.event();
+    const session = this.session();
+
+    if (year && event && (session || !this.withSessionSelection())) {
+      this.backendService
+        .doGet<DriversResponse>(
+          `fast-f1/drivers?year=${year}&round=${event.roundNumber}&session=${session}`,
+        )
+        .pipe(first())
+        .subscribe((response) => this.drivers.set(response?.drivers ?? []));
+    }
+  }
+
+  /**
    * Effect to emit the selected values once everything has been selected
    * @private
    */
@@ -168,9 +210,28 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
     const year = this.year();
     const event = this.event();
     const session = this.session();
+    let drivers: string[] = [];
 
-    if (year && event && (session || !this.withSessionSelection())) {
-      this.raceSelection.emit({ year, event, session });
+    if (this.driverSelectionType() === 'double') {
+      const driverOne = this.driverOne();
+      const driverTwo = this.driverTwo();
+      if (driverOne) {
+        drivers.push(driverOne);
+      }
+      if (driverTwo) {
+        drivers.push(driverTwo);
+      }
+    } else {
+      drivers = this.selectedDrivers();
+    }
+
+    if (
+      year &&
+      event &&
+      (session || !this.withSessionSelection()) &&
+      (drivers || !this.withDriverSelection())
+    ) {
+      this.raceSelection.emit({ year, event, session, drivers });
     }
   }
 }
