@@ -20,25 +20,10 @@
     <h1>Options</h1>
     <tl-source-selection
       [withSessionSelection]="true"
+      [withDriverSelection]="true"
+      [driverSelectionType]="'multiple'"
       (raceSelection)="loadSpeedTraces($event)"
-    >
-      <div additionalOptions>
-        @if (selectedEvent && selectedYear && selectedSession) {
-          <p-floatlabel variant="on">
-            <p-multi-select
-              class="w-full"
-              [inputId]="'selectDrivers'"
-              [options]="drivers()"
-              [filter]="true"
-              [loading]="drivers().length === 0"
-              [ngModel]="selectedDrivers()"
-              (ngModelChange)="selectedDrivers.set($event)">
-            </p-multi-select>
-            <label [for]="'selectDrivers'">Select Drivers</label>
-          </p-floatlabel>
-        }
-      </div>
-    </tl-source-selection>
+    ></tl-source-selection>
   </div>
 
 </tl-analysis-base>

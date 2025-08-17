@@ -52,7 +52,7 @@
             [options]="drivers()"
             [filter]="true"
             [loading]="drivers().length === 0"
-            [ngModel]="selectedDrivers()?.[0]"
+            [ngModel]="selectedDrivers()[0]"
             (ngModelChange)="selectedDrivers.set([$event])">
           </p-select>
           <label [for]="'selectDrivers'">Select Drivers</label>

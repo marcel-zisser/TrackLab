@@ -83,15 +83,30 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
 
   protected readonly driverOne = linkedSignal<string[], string | undefined>({
     source: this.drivers,
-    computation: () => undefined,
+    computation: (source, previous) => {
+      if (source.includes(previous?.value ?? '')) {
+        return previous?.value;
+      }
+      return undefined;
+    },
   });
   protected readonly driverTwo = linkedSignal<string[], string | undefined>({
     source: this.drivers,
-    computation: () => undefined,
+    computation: (source, previous) => {
+      if (source.includes(previous?.value ?? '')) {
+        return previous?.value;
+      }
+      return undefined;
+    },
   });
   protected readonly selectedDrivers = linkedSignal<string[], string[]>({
     source: this.drivers,
-    computation: () => [],
+    computation: (source, previous) => {
+      if (previous?.value.every((driver) => source.includes(driver))) {
+        return previous.value;
+      }
+      return [];
+    },
   });
 
   constructor() {
@@ -124,6 +139,17 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
       ]);
       this.event.set(this.initialConfig?.event);
       this.session.set(this.initialConfig?.session);
+
+      if (this.driverSelectionType() === 'double') {
+        if (this.initialConfig?.drivers?.[0]) {
+          this.driverOne.set(this.initialConfig?.drivers[0]);
+        }
+        if (this.initialConfig?.drivers?.[1]) {
+          this.driverTwo.set(this.initialConfig?.drivers[1]);
+        }
+      } else {
+        this.selectedDrivers.set(this.initialConfig?.drivers ?? []);
+      }
     }
   }
 
@@ -134,14 +160,14 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
     const year = this.year();
     const event = this.event();
     const session = this.session();
-    const selectedDrivers = this.selectedDrivers();
+    const drivers = this.getSelectedDrivers();
 
     if (year && event && (session || !this.withSessionSelection())) {
       const config = {
         year,
         event,
         session,
-        selectedDrivers,
+        drivers,
       } satisfies SourceSelectionConfig;
 
       const jsonConfig = JSON.stringify(config);
@@ -210,6 +236,19 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
     const year = this.year();
     const event = this.event();
     const session = this.session();
+    const drivers: string[] = this.getSelectedDrivers();
+
+    if (
+      year &&
+      event &&
+      (session || !this.withSessionSelection()) &&
+      (drivers || !this.withDriverSelection())
+    ) {
+      this.raceSelection.emit({ year, event, session, drivers });
+    }
+  }
+
+  private getSelectedDrivers(): string[] {
     let drivers: string[] = [];
 
     if (this.driverSelectionType() === 'double') {
@@ -225,13 +264,6 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
       drivers = this.selectedDrivers();
     }
 
-    if (
-      year &&
-      event &&
-      (session || !this.withSessionSelection()) &&
-      (drivers || !this.withDriverSelection())
-    ) {
-      this.raceSelection.emit({ year, event, session, drivers });
-    }
+    return drivers;
   }
 }
