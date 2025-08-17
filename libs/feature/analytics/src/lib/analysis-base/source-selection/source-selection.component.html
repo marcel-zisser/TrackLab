@@ -105,10 +105,16 @@
   <ng-content select="[additionalOptions]"></ng-content>
 
   @if (year() && event() && (session() || !withSessionSelection()) && (drivers().length || !withDriverSelection())) {
-    <div class="w-full flex justify-end">
+    <div class="w-full flex justify-between">
       <p-button
-        [label]="'Copy link to chart'"
+        [label]="'Copy link'"
+        [icon]="PrimeIcons.LINK"
         (onClick)="copyChartLink()"
+      ></p-button>
+      <p-button
+        [label]="'Save to collection'"
+        [icon]="PrimeIcons.BOOKMARK"
+        (onClick)="addToCollection()"
       ></p-button>
     </div>
   }

@@ -5,7 +5,6 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { NgxEchartsDirective } from 'ngx-echarts';
 import { BackendService, ThemeService } from '@tracklab/services';
 import {
   CarTelemetry,
@@ -22,16 +21,16 @@ import {
 import { combineLatest, first } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { SelectButton } from 'primeng/selectbutton';
+import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.component';
 
 @Component({
   selector: 'tl-speed-map',
   imports: [
     AnalysisBaseComponent,
-    NgxEchartsDirective,
     SourceSelectionComponent,
     FormsModule,
-    NgxEchartsDirective,
     SelectButton,
+    ChartBaseComponent,
   ],
   templateUrl: './speed-map.component.html',
   styleUrl: './speed-map.component.css',

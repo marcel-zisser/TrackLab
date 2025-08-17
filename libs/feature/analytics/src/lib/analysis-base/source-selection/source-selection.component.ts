@@ -14,20 +14,17 @@ import {
 import { FloatLabel } from 'primeng/floatlabel';
 import { Select } from 'primeng/select';
 import {
-  DriversResponse,
   Event,
   RaceSelection,
   SelectionOption,
   SourceSelectionConfig,
 } from '@tracklab/models';
-import { first, map, retry } from 'rxjs';
-import { BackendService } from '@tracklab/services';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Button } from 'primeng/button';
-import { Clipboard } from '@angular/cdk/clipboard';
-import { MessageService } from 'primeng/api';
+import { PrimeIcons } from 'primeng/api';
 import { MultiSelect } from 'primeng/multiselect';
+import { SourceSelectionService } from './source-selection.service';
 
 @Component({
   selector: 'tl-source-selection',
@@ -43,32 +40,15 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
 
   raceSelection = output<RaceSelection>();
 
-  private readonly backendService = inject(BackendService);
+  private readonly sourceSelectionService = inject(SourceSelectionService);
   private readonly activatedRoute = inject(ActivatedRoute);
-  private readonly clipboard = inject(Clipboard);
-  private readonly messageService = inject(MessageService);
   private initialConfig: SourceSelectionConfig | undefined;
   private isInitialized = false;
 
-  protected readonly years: SelectionOption<string, string>[] = Array.from(
-    { length: new Date().getFullYear() - 2018 + 1 },
-    (_, i) => 2018 + i,
-  )
-    .reverse()
-    .map((year) => ({ label: `${year}`, value: `${year}` }));
+  protected readonly PrimeIcons = PrimeIcons;
 
-  protected readonly year = signal<string | undefined>(undefined);
-  protected readonly event = signal<Event | undefined>(undefined);
-  protected readonly events = signal<SelectionOption<string, Event>[]>([]);
-
-  protected readonly session = linkedSignal<
-    Event | undefined,
-    string | undefined
-  >({
-    source: this.event,
-    computation: () => undefined,
-  });
-
+  protected readonly years = this.sourceSelectionService.years;
+  protected readonly events = this.sourceSelectionService.events;
   protected readonly sessions = computed<SelectionOption<string, string>[]>(
     () =>
       this.event()
@@ -78,8 +58,17 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
           value: session.name,
         })) ?? [],
   );
+  protected readonly drivers = this.sourceSelectionService.drivers;
 
-  protected drivers = signal<string[]>([]);
+  protected readonly year = signal<string | undefined>(undefined);
+  protected readonly event = signal<Event | undefined>(undefined);
+  protected readonly session = linkedSignal<
+    Event | undefined,
+    string | undefined
+  >({
+    source: this.event,
+    computation: () => undefined,
+  });
 
   protected readonly driverOne = linkedSignal<string[], string | undefined>({
     source: this.drivers,
@@ -131,7 +120,7 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
     this.isInitialized = true;
 
     if (this.initialConfig?.event && this.initialConfig?.session) {
-      this.events.set([
+      this.sourceSelectionService.setEvents([
         {
           label: this.initialConfig?.event.name,
           value: this.initialConfig?.event,
@@ -163,24 +152,33 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
     const drivers = this.getSelectedDrivers();
 
     if (year && event && (session || !this.withSessionSelection())) {
-      const config = {
+      this.sourceSelectionService.copySourceSelectionToClipboard(
         year,
         event,
         session,
         drivers,
-      } satisfies SourceSelectionConfig;
-
-      const jsonConfig = JSON.stringify(config);
-      const encodedConfig = btoa(encodeURIComponent(jsonConfig));
-
-      this.clipboard.copy(
-        `${window.location.origin}${window.location.pathname}?config=${encodedConfig}`,
       );
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Success',
-        detail: 'Link copied to clipboard',
-      });
+    }
+  }
+
+  /**
+   * Adds the current chart configuration to the users collection
+   * @protected
+   */
+
+  protected addToCollection() {
+    const year = this.year();
+    const event = this.event();
+    const session = this.session();
+    const drivers = this.getSelectedDrivers();
+
+    if (year && event && (session || !this.withSessionSelection())) {
+      this.sourceSelectionService.addToCollection(
+        year,
+        event,
+        session,
+        drivers,
+      );
     }
   }
 
@@ -188,24 +186,13 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
    * Creates the effect to watch the year, to dynamically load the corresponding races
    * @private
    */
-  private createEventScheduleEffect() {
-    if (this.year() && this.isInitialized) {
+  createEventScheduleEffect() {
+    const year = this.year();
+
+    if (year && this.isInitialized) {
       this.event.set(undefined);
       this.session.set(undefined);
-      this.backendService
-        .doGet<Event[]>(`fast-f1/event-schedule?year=${this.year()}`)
-        .pipe(
-          first((races) => !!races),
-          map((races: Event[]) =>
-            races.map((race) => ({ label: race.name, value: race })),
-          ),
-          retry(5),
-        )
-        .subscribe({
-          next: (races) => {
-            this.events.set(races);
-          },
-        });
+      this.sourceSelectionService.loadEvents(year);
     }
   }
 
@@ -219,12 +206,7 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
     const session = this.session();
 
     if (year && event && (session || !this.withSessionSelection())) {
-      this.backendService
-        .doGet<DriversResponse>(
-          `fast-f1/drivers?year=${year}&round=${event.roundNumber}&session=${session}`,
-        )
-        .pipe(first())
-        .subscribe((response) => this.drivers.set(response?.drivers ?? []));
+      this.sourceSelectionService.loadDrivers(year, event, session);
     }
   }
 

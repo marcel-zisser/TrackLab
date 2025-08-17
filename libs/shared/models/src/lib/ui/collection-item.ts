@@ -1,7 +1,7 @@
 export interface CollectionItem {
+  uuid: string;
   title: string;
   description: string;
   url: string;
-  thumbnail: string;
-  creationDate: string;
+  isFavorite: boolean;
 }

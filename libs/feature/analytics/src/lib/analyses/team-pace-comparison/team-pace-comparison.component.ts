@@ -5,7 +5,6 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { NgxEchartsDirective } from 'ngx-echarts';
 import { BackendService, ThemeService } from '@tracklab/services';
 import {
   Duration,
@@ -21,6 +20,7 @@ import {
 import { first } from 'rxjs';
 import * as echarts from 'echarts/core';
 import 'echarts/extension/dataTool';
+import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.component';
 
 const prepareBoxplotData = (echarts as any).dataTool.prepareBoxplotData;
 
@@ -28,8 +28,8 @@ const prepareBoxplotData = (echarts as any).dataTool.prepareBoxplotData;
   selector: 'tl-team-pace',
   imports: [
     AnalysisBaseComponent,
-    NgxEchartsDirective,
     SourceSelectionComponent,
+    ChartBaseComponent,
   ],
   templateUrl: './team-pace-comparison.component.html',
   styleUrl: './team-pace-comparison.component.css',

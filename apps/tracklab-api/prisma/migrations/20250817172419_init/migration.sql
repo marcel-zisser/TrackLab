@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE "User" (
+CREATE TABLE "public"."User" (
     "uuid" UUID NOT NULL,
     "firstName" VARCHAR(50) NOT NULL,
     "lastName" VARCHAR(50) NOT NULL,
@@ -11,11 +11,12 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
-CREATE TABLE "CollectionItem" (
+CREATE TABLE "public"."CollectionItem" (
     "uuid" UUID NOT NULL,
-    "title" VARCHAR(50) NOT NULL,
-    "description" VARCHAR(50) NOT NULL,
-    "url" VARCHAR(150) NOT NULL,
+    "title" VARCHAR(100) NOT NULL,
+    "description" VARCHAR(500),
+    "url" TEXT NOT NULL,
+    "isFavorite" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "userId" UUID NOT NULL,
 
@@ -23,7 +24,7 @@ CREATE TABLE "CollectionItem" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+CREATE UNIQUE INDEX "User_email_key" ON "public"."User"("email");
 
 -- AddForeignKey
-ALTER TABLE "CollectionItem" ADD CONSTRAINT "CollectionItem_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("uuid") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "public"."CollectionItem" ADD CONSTRAINT "CollectionItem_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."User"("uuid") ON DELETE RESTRICT ON UPDATE CASCADE;

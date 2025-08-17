@@ -5,7 +5,6 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { NgxEchartsDirective } from 'ngx-echarts';
 import { BackendService, ThemeService } from '@tracklab/services';
 import {
   CircuitInformation,
@@ -19,19 +18,16 @@ import {
   SourceSelectionComponent,
 } from '../../analysis-base';
 import { combineLatest, first } from 'rxjs';
-import { FloatLabel } from 'primeng/floatlabel';
 import { FormsModule } from '@angular/forms';
-import { MultiSelect } from 'primeng/multiselect';
+import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.component';
 
 @Component({
   selector: 'tl-speed-traces',
   imports: [
     AnalysisBaseComponent,
-    NgxEchartsDirective,
     SourceSelectionComponent,
-    FloatLabel,
     FormsModule,
-    MultiSelect,
+    ChartBaseComponent,
   ],
   templateUrl: './speed-traces.component.html',
   styleUrl: './speed-traces.component.css',

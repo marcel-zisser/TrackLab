@@ -122,7 +122,7 @@ export class SettingsComponent {
       }
 
       this.backendService
-        .doPut<User, any>(`user/${this.user()?.uuid}`, formData)
+        .doPut<User, FormData>(`user/${this.user()?.uuid}`, formData)
         .pipe(first())
         .subscribe({
           next: (user) => {

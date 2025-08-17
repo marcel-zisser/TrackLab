@@ -5,7 +5,6 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { NgxEchartsDirective } from 'ngx-echarts';
 import { BackendService, ThemeService } from '@tracklab/services';
 import {
   Event,
@@ -21,13 +20,14 @@ import {
 } from '../../analysis-base';
 import { first } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.component';
 
 @Component({
   selector: 'tl-strategy-comparison',
   imports: [
     AnalysisBaseComponent,
-    NgxEchartsDirective,
     SourceSelectionComponent,
+    ChartBaseComponent,
   ],
   templateUrl: './strategy-comparison.component.html',
   styleUrl: './strategy-comparison.component.css',

@@ -5,3 +5,4 @@ export * from './lib/driver-card/driver-card.component';
 export * from './lib/skeleton-table/skeleton-table.component';
 export * from './lib/countdown/countdown.component';
 export * from './lib/authentication';
+export * from './lib/dialogs';

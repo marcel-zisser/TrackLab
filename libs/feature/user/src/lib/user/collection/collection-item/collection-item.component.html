@@ -1,22 +1,28 @@
-<div class="flex flex-col sm:flex-row sm:items-center p-6 gap-4 "
+<div class="flex flex-col sm:flex-row sm:items-center p-6 gap-8 h-full"
      [ngClass]="{'border-t border-solid border-surface-200': !first() }">
   <div class="flex-1">
     <img
-      class="block xl:block mx-auto rounded-border w-full"
-      [src]="item().thumbnail"
+      class="block xl:block max-h-50"
+      [src]="thumbnail()"
       [alt]="item().title"
     />
   </div>
-  <div class="flex flex-col md:flex-row justify-between md:items-center flex-2 gap-6">
-    <div class="flex flex-row md:flex-col justify-between items-start gap-2">
-      <div>
-        <span class="font-medium text-secondary text-sm">{{ item().description }}</span>
-        <div class="text-lg font-medium text-surface-900 dark:text-surface-0 mt-2">{{ item().title }}</div>
-      </div>
+  <div class="flex flex-col md:flex-row justify-between md:items-center flex-2 h-full">
+    <div class="flex flex-row md:flex-col gap-2 h-full">
+      <span class="text-xl font-bold">{{ item().title }}</span>
+      <span>{{ item().description }}</span>
     </div>
     <div class="flex flex-col md:items-end gap-8">
-      <div class="flex flex-row-reverse md:flex-row gap-2">
-        <p-button icon="pi pi-external-link" [outlined]="true" [label]="'Open'" />
+      <div class="flex flex-col gap-2">
+        <p-button [icon]="PrimeIcons.EXTERNAL_LINK"
+                  [label]="'Open'"
+                  (onClick)="openAnalysis(item().url)" />
+        <div class="flex flex-row justify-between gap-2">
+          <p-button [icon]="isFavorite() ? PrimeIcons.STAR_FILL : PrimeIcons.STAR"
+                    [outlined]="!isFavorite()"
+                    (onClick)="favorItem(item().uuid, !item().isFavorite)" />
+          <p-button [icon]="PrimeIcons.TRASH" [outlined]="true" (onClick)="deleteItem($event, item().uuid)" />
+        </div>
       </div>
     </div>
   </div>

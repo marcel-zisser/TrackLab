@@ -1,14 +1,7 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnInit,
-  signal,
-} from '@angular/core';
-import { CollectionItem } from '@tracklab/models';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CollectionItemComponent } from './collection-item/collection-item.component';
 import { DataView } from 'primeng/dataview';
-import { BackendService } from '@tracklab/services';
+import { CollectionService } from './collection.service';
 
 @Component({
   selector: 'tl-collection',
@@ -17,16 +10,8 @@ import { BackendService } from '@tracklab/services';
   styleUrl: './collection.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CollectionComponent implements OnInit {
-  private readonly backendService = inject(BackendService);
+export class CollectionComponent {
+  private readonly collectionService = inject(CollectionService);
 
-  protected readonly collection = signal<CollectionItem[]>([]);
-
-  ngOnInit(): void {
-    this.backendService
-      .doGet<CollectionItem[]>('collection')
-      .subscribe((collectionItems) =>
-        this.collection.set(collectionItems ?? []),
-      );
-  }
+  protected readonly collection = this.collectionService.collection;
 }

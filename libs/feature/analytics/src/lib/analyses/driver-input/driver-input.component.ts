@@ -5,7 +5,6 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { NgxEchartsDirective } from 'ngx-echarts';
 import { BackendService, ThemeService } from '@tracklab/services';
 import {
   CarTelemetry,
@@ -20,14 +19,17 @@ import {
 } from '../../analysis-base';
 import { combineLatest, first } from 'rxjs';
 import { FormsModule } from '@angular/forms';
+import { ECharts } from 'echarts/core';
+import { SourceSelectionService } from '../../analysis-base/source-selection/source-selection.service';
+import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.component';
 
 @Component({
   selector: 'tl-driver-input',
   imports: [
     AnalysisBaseComponent,
-    NgxEchartsDirective,
     SourceSelectionComponent,
     FormsModule,
+    ChartBaseComponent,
   ],
   templateUrl: './driver-input.component.html',
   styleUrl: './driver-input.component.css',
@@ -36,6 +38,7 @@ import { FormsModule } from '@angular/forms';
 export class DriverInputComponent {
   private readonly themeService = inject(ThemeService);
   private readonly backendService = inject(BackendService);
+  private readonly sourceSelectionService = inject(SourceSelectionService);
 
   protected selectedYear: string | undefined;
   protected selectedEvent: Event | undefined;
@@ -60,6 +63,10 @@ export class DriverInputComponent {
   protected readonly driverTwo = signal<string | undefined>(undefined);
 
   protected readonly chartOptions = computed(() => this.createChartOptions());
+
+  protected onChartInit(ec: ECharts) {
+    this.sourceSelectionService.setChartInstance(ec);
+  }
 
   /**
    * Effect to load the pace data, once all inputs have been selected

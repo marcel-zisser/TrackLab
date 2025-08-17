@@ -5,7 +5,6 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { NgxEchartsDirective } from 'ngx-echarts';
 import { BackendService, ThemeService } from '@tracklab/services';
 import {
   CarTelemetry,
@@ -20,14 +19,15 @@ import {
 } from '../../analysis-base';
 import { combineLatest, first } from 'rxjs';
 import { FormsModule } from '@angular/forms';
+import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.component';
 
 @Component({
   selector: 'tl-gear-shift',
   imports: [
     AnalysisBaseComponent,
-    NgxEchartsDirective,
     SourceSelectionComponent,
     FormsModule,
+    ChartBaseComponent,
   ],
   templateUrl: './gear-shift.component.html',
   styleUrl: './gear-shift.component.css',

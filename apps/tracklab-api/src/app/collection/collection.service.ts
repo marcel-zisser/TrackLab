@@ -13,8 +13,8 @@ export class CollectionService {
   /**
    * Saves a new collection item to the database
    */
-  createCollectionItem(data: Prisma.CollectionItemCreateInput) {
-    this.prisma.collectionItem.create({ data });
+  async createCollectionItem(data: Prisma.CollectionItemCreateInput) {
+    return this.prisma.collectionItem.create({ data });
   }
 
   /**
@@ -23,5 +23,25 @@ export class CollectionService {
    */
   async getCollectionItem(uuid: string) {
     return await this.prisma.collectionItem.findUnique({ where: { uuid } });
+  }
+
+  /**
+   * Updates a collection item from the database
+   * @param where the where clause of the item to update
+   * @param data the data clause of the item to update
+   */
+  async updateCollectionItem(
+    where: Prisma.CollectionItemWhereUniqueInput,
+    data: Prisma.CollectionItemUpdateInput,
+  ) {
+    return this.prisma.collectionItem.update({ where, data });
+  }
+
+  /**
+   * Deletes a collection item from the database
+   * @param uuid the uuid of the item to delete
+   */
+  async deleteCollectionItem(uuid: string) {
+    return await this.prisma.collectionItem.delete({ where: { uuid } });
   }
 }

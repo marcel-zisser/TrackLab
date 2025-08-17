@@ -1,4 +1,19 @@
-import { Controller, Get, Param, Post, Req, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpStatus,
+  Param,
+  ParseFilePipeBuilder,
+  Patch,
+  Post,
+  Req,
+  Res,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import {
   CollectionService,
   UserWithCollectionItems,
@@ -9,7 +24,12 @@ import { Request, Response } from 'express';
 import { ExtractJwt } from 'passport-jwt';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
+import multer from 'multer';
+import { UpdateFavoriteRequest } from '@tracklab/models';
 
+@UseGuards(JwtAuthGuard)
 @Controller('collection')
 export class CollectionController {
   constructor(
@@ -41,7 +61,8 @@ export class CollectionController {
     @Res() res: Response,
   ) {
     try {
-      const identifier = `collectionItem/${uuid}.png}`;
+      const identifier = `thumbnails/${uuid}.png`;
+
       const head = await this.storageService.getHead(identifier);
 
       res.setHeader(
@@ -63,17 +84,67 @@ export class CollectionController {
     return this.collectionService.getCollectionItem(uuid);
   }
 
+  @UseInterceptors(
+    FileInterceptor('thumbnail', {
+      storage: multer.memoryStorage(),
+    }),
+  )
   @Post()
-  createCollectionItem(@Req() request: Request) {
+  async createCollectionItem(
+    @Req() request: Request,
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType: 'png',
+        })
+        .addMaxSizeValidator({
+          maxSize: 10 * 1024 * 1024,
+        })
+        .build({
+          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+          fileIsRequired: false,
+        }),
+    )
+    thumbnail: Express.Multer.File,
+  ) {
     const bearer = ExtractJwt.fromAuthHeaderAsBearerToken()(request);
     const decodedUser = this.jwtService.decode(bearer);
 
     const body = request.body;
-    this.collectionService.createCollectionItem({
+    const collectionItem = await this.collectionService.createCollectionItem({
       title: body.title,
       description: body.description,
       url: body.url,
-      user: decodedUser.sub,
+      user: {
+        connect: {
+          uuid: decodedUser.sub,
+        },
+      },
     });
+
+    if (thumbnail) {
+      await this.storageService.saveFile(
+        thumbnail,
+        'thumbnails',
+        collectionItem.uuid,
+      );
+    }
+  }
+
+  @Patch('favorite')
+  async setFavorite(@Body() body: UpdateFavoriteRequest) {
+    return await this.collectionService.updateCollectionItem(
+      { uuid: body.uuid },
+      { isFavorite: body.isFavorite },
+    );
+  }
+
+  @Delete(':uuid')
+  async deleteCollectionItem(@Param('uuid') uuid: string) {
+    const identifier = `thumbnails/${uuid}.png`;
+
+    const retVal = await this.collectionService.deleteCollectionItem(uuid);
+    await this.storageService.deleteFile(identifier);
+    return retVal;
   }
 }

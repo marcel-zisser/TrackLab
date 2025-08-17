@@ -31,7 +31,6 @@ import { AutoFocus } from 'primeng/autofocus';
     Message,
     AutoFocus,
   ],
-  providers: [MessageService],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

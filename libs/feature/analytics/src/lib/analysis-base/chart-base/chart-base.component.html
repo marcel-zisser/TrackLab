@@ -1,0 +1,8 @@
+<div echarts
+     class="chart"
+     [loading]="loading()"
+     [options]="options()"
+     [theme]="chartTheme()"
+     [autoResize]="true"
+     (chartInit)="onChartInit($event)"
+></div>

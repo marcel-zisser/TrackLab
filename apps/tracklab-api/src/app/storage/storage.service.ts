@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
+  DeleteObjectCommand,
   GetObjectCommand,
   HeadObjectCommand,
   PutObjectCommand,
@@ -37,14 +38,12 @@ export class StorageService {
    */
   async getFile(identifier: string) {
     const [bucket, key] = identifier.split('/');
-    const file = await this.s3.send(
+    return await this.s3.send(
       new GetObjectCommand({
         Bucket: bucket,
         Key: key,
       }),
     );
-
-    return file;
   }
 
   /**
@@ -55,6 +54,20 @@ export class StorageService {
     const [bucket, key] = identifier.split('/');
     return await this.s3.send(
       new HeadObjectCommand({
+        Bucket: bucket,
+        Key: key,
+      }),
+    );
+  }
+
+  /**
+   * Deletes a file from persistent storage
+   * @param identifier the identifier of the file on the file system
+   */
+  async deleteFile(identifier: string) {
+    const [bucket, key] = identifier.split('/');
+    return await this.s3.send(
+      new DeleteObjectCommand({
         Bucket: bucket,
         Key: key,
       }),

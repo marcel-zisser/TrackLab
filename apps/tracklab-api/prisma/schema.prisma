@@ -19,9 +19,10 @@ model User {
 
 model CollectionItem {
   uuid        String   @id @default(uuid()) @db.Uuid
-  title       String   @db.VarChar(50)
-  description String   @db.VarChar(50)
-  url         String   @db.VarChar(150)
+  title       String   @db.VarChar(100)
+  description String?  @db.VarChar(500)
+  url         String
+  isFavorite  Boolean  @default(false) @db.Boolean
   createdAt   DateTime @default(now()) @db.Timestamp()
   user        User     @relation(fields: [userId], references: [uuid])
   userId      String   @db.Uuid
