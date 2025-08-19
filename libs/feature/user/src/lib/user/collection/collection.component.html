@@ -1,11 +1,14 @@
-<div class="flex flex-col w-2/3 p-8 gap-4 bg-white dark:bg-surface-900 rounded-lg">
+<div class="flex flex-col h-full w-2/3 p-8 gap-4 bg-white dark:bg-surface-900 rounded-lg">
   <div class="text-3xl font-bold">My Collection</div>
-  <p-data-view #dv [value]="collection()">
+  <p-data-view #dataView
+               [class]="'h-full flex flex-col justify-between'" [value]="collection()" [paginator]="true"
+               [rows]="dataViewRows()"
+               [paginatorStyleClass]="'bottom-0'">
     <ng-template #list let-items>
-      <div class="grid grid-cols-12 gap-4 grid-nogutter">
+      <div class="grid grid-cols-12 h-full gap-4">
         @for (item of items; track item.name; let first = $first) {
           <div class="col-span-12">
-            <tl-collection-item [item]="item" [first]="first"></tl-collection-item>
+            <tl-collection-item #item [item]="item" [first]="first"></tl-collection-item>
           </div>
         }
       </div>

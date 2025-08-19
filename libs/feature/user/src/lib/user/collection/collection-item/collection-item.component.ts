@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  ElementRef,
   inject,
   input,
   OnInit,
@@ -34,6 +35,7 @@ export class CollectionItemComponent implements OnInit {
   private readonly collectionService = inject(CollectionService);
   private readonly confirmationService = inject(ConfirmationService);
   private readonly messageService = inject(MessageService);
+  readonly elementRef = inject(ElementRef);
 
   protected thumbnail = signal<string | undefined>(undefined);
   protected isFavorite = computed<boolean>(() => this.item().isFavorite);
