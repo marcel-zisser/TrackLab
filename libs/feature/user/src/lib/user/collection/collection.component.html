@@ -1,15 +1,32 @@
-<div class="flex flex-col h-full w-2/3 p-8 gap-4 bg-white dark:bg-surface-900 rounded-lg">
+<div class="flex flex-col h-full w-2/3 p-8 bg-white dark:bg-surface-900 rounded-lg">
   <div class="text-3xl font-bold">My Collection</div>
   <p-data-view #dataView
-               [class]="'h-full flex flex-col justify-between'" [value]="collection()" [paginator]="true"
+               [class]="'h-full flex flex-col'"
+               [value]="onlyFavorites() ? favoriteItems() : collection()"
                [rows]="dataViewRows()"
-               [paginatorStyleClass]="'bottom-0'">
-    <ng-template #list let-items>
-      <div class="grid grid-cols-12 h-full gap-4">
-        @for (item of items; track item.name; let first = $first) {
-          <div class="col-span-12">
-            <tl-collection-item #item [item]="item" [first]="first"></tl-collection-item>
-          </div>
+               [filterBy]="'title,description'"
+               [paginator]="true"
+               [paginatorStyleClass]="'flex-0 content-end'">
+
+    <ng-template #header>
+      <div class="flex flex-col md:flex-row justify-center align-middle h-full">
+        <div class="flex-1"></div>
+        <p-iconfield class="flex-2">
+          <p-inputicon class="pi pi-search" />
+          <input pInputText class="w-full" [type]="'search'" [placeholder]="'Search'"
+                 (input)="filterDataView($event.target)" />
+        </p-iconfield>
+        <div class="flex-1 flex justify-end">
+          <p-select-button [ngModel]="onlyFavorites()"
+                           (ngModelChange)="onlyFavorites.set($event)"
+                           [options]="favoriteOptions" />
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #list let-items class="flex-1">
+      <div class="flex flex-col">
+        @for (item of items; track item.uuid; let first = $first) {
+          <tl-collection-item #item class="flex-1" [item]="item" [first]="first"></tl-collection-item>
         }
       </div>
     </ng-template>

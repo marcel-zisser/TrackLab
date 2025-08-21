@@ -4,3 +4,8 @@
   align-items: center;
   height: 100%;
 }
+
+::ng-deep .p-dataview .p-dataview-content {
+  /* extra styles */
+  flex: 1;
+}
