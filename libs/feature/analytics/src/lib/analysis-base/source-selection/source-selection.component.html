@@ -111,11 +111,13 @@
         [icon]="PrimeIcons.LINK"
         (onClick)="copyChartLink()"
       ></p-button>
-      <p-button
-        [label]="'Save to collection'"
-        [icon]="PrimeIcons.BOOKMARK"
-        (onClick)="addToCollection()"
-      ></p-button>
+      @if (isAuthenticated()) {
+        <p-button
+          [label]="'Save to collection'"
+          [icon]="PrimeIcons.BOOKMARK"
+          (onClick)="addToCollection()"
+        ></p-button>
+      }
     </div>
   }
 </div>

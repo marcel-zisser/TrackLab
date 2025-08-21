@@ -89,6 +89,16 @@ export class AnalysisSelectionComponent {
           });
         },
       },
+      {
+        title: 'Position Change Graph',
+        description: 'Visualize the position changes over the course of a race',
+        icon: PrimeIcons.SORT_ALT,
+        callback: () => {
+          this.router.navigate(['position-changes'], {
+            relativeTo: this.activatedRoute,
+          });
+        },
+      },
     ];
   }
 }

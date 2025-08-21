@@ -16,6 +16,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { ConstructionComponent } from '@tracklab/shared/components';
 import { NgComponentOutlet } from '@angular/common';
+import { PositionChangesComponent } from '../analyses/position-changes/position-changes.component';
 
 @Component({
   selector: 'tl-analysis-host',
@@ -33,6 +34,7 @@ export class AnalysisHostComponent implements OnInit {
     ['driver-input', DriverInputComponent],
     ['gear-shift', GearShiftComponent],
     ['speed-map', SpeedMapComponent],
+    ['position-changes', PositionChangesComponent],
   ]);
 
   protected componentToRender: Type<any> | null = null;
