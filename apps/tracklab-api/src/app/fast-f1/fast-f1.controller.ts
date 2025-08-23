@@ -9,6 +9,7 @@ import {
 import {
   CarTelemetryResponse,
   DriversResponse,
+  PositionDataResponse,
   QuickLapsResponse,
   SpeedTracesResponse,
   StrategyResponse,
@@ -99,5 +100,13 @@ export class FastF1Controller {
       session,
       withPosition,
     );
+  }
+
+  @Get('position-data')
+  getPositionData(
+    @Query('year') year: number,
+    @Query('round') round: number,
+  ): Promise<PositionDataResponse> {
+    return this.fastF1Service.getPositionData(year, round);
   }
 }

@@ -1,10 +1,11 @@
 import fastf1
 import fastf1.plotting
+import numpy as np
 from pandas import NaT
 
 from generated import analytics_pb2_grpc
 from generated.analytics_pb2 import StrategyResponse, StrategyRequest, QuickLapsResponse, SpeedTracesResponse, \
-  CarTelemetryResponse, DriversResponse
+  CarTelemetryResponse, DriversResponse, PositionDataResponse, DriverPositionData
 from generated.types_pb2 import Strategy, Lap, Duration, SpeedTrace, CarTelemetry, PositionTelemetry
 
 
@@ -193,5 +194,24 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
     for driverNumber in session.drivers:
       driver = session.get_driver(driverNumber)
       response.drivers.append(driver.Abbreviation)
+
+    return response
+
+  def GetPositionData(self, request, context):
+    response = PositionDataResponse()
+
+    session = fastf1.get_session(request.year, request.round, 'Race')
+    session.load()
+
+    for driverNumber in session.drivers:
+      driver = session.get_driver(driverNumber)
+      laps = session.laps.pick_drivers(driverNumber)
+      positions = [int(lap.Position) for lap in laps.itertuples() if not np.isnan(lap.Position)]
+      positions.insert(0, int(driver.GridPosition))
+      style = fastf1.plotting.get_driver_style(identifier=driver.Abbreviation,
+                                               style=['color', 'linestyle'],
+                                               session=session)
+      response.positions[driver.Abbreviation].CopyFrom(DriverPositionData(positions=positions, color=style['color'],
+                                                                          lineStyle=style['linestyle']))
 
     return response

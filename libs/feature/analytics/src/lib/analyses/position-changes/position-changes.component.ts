@@ -7,17 +7,16 @@ import {
 } from '@angular/core';
 import { BackendService, ThemeService } from '@tracklab/services';
 import {
-  CircuitInformation,
+  DriverPositionPayload,
+  DriverPositionResponse,
   Event,
   RaceSelection,
-  SpeedTrace,
-  SpeedTracesResponse,
 } from '@tracklab/models';
 import {
   AnalysisBaseComponent,
   SourceSelectionComponent,
 } from '../../analysis-base';
-import { combineLatest, first } from 'rxjs';
+import { first } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.component';
 
@@ -39,22 +38,21 @@ export class PositionChangesComponent {
 
   protected selectedYear: string | undefined;
   protected selectedEvent: Event | undefined;
-  protected selectedSession: string | undefined;
 
   protected readonly chartTheme = this.themeService.chartTheme;
-  protected readonly speedTraces = signal<SpeedTrace[] | undefined>(undefined);
-  protected readonly circuitInfo = signal<CircuitInformation | undefined>(
+  protected readonly drivers = signal<string[] | undefined>(undefined);
+  protected readonly positionData = signal<DriverPositionPayload | undefined>(
     undefined,
   );
+  protected readonly laps = computed(() => {
+    const laps: number[] = [];
 
-  protected readonly processedData = computed<
-    Map<string, SpeedTrace[]> | undefined
-  >(() => this.processData(this.speedTraces()));
-  protected drivers = computed(() =>
-    Array.from(this.processedData()?.keys() ?? []),
-  );
+    for (const driver of this.drivers() ?? []) {
+      laps.push(this.positionData()?.[driver]?.positions.length ?? 0);
+    }
 
-  protected readonly selectedDrivers = signal<string[]>([]);
+    return Math.max(...laps);
+  });
 
   protected readonly chartOptions = computed(() => this.createChartOptions());
 
@@ -62,57 +60,25 @@ export class PositionChangesComponent {
    * Effect to load the pace data, once all inputs have been selected
    * @protected
    */
-  protected loadSpeedTraces(selectedRace: RaceSelection) {
-    if (
-      selectedRace.year &&
-      selectedRace.event &&
-      selectedRace.session &&
-      selectedRace.drivers
-    ) {
+  protected loadPositionData(selectedRace: RaceSelection) {
+    if (selectedRace.year && selectedRace.event) {
       this.selectedYear = selectedRace.year;
       this.selectedEvent = selectedRace.event;
-      this.selectedSession = selectedRace.session;
-      this.selectedDrivers.set(selectedRace.drivers);
 
-      this.speedTraces.set(undefined);
+      this.positionData.set(undefined);
 
-      combineLatest([
-        this.backendService.doGet<SpeedTracesResponse>(
-          `fast-f1/speed-traces?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}&session=${selectedRace.session}`,
-        ),
-        this.backendService.doGet<CircuitInformation>(
-          `fast-f1/circuit-info?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}&session=${selectedRace.session}`,
-        ),
-      ])
+      this.backendService
+        .doGet<DriverPositionResponse>(
+          `fast-f1/position-data?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}`,
+        )
         .pipe(first((response) => !!response))
         .subscribe({
-          next: ([speedTraces, circuitInfo]) => {
-            this.speedTraces.set(speedTraces?.speedTraces ?? []);
-            this.circuitInfo.set(circuitInfo);
+          next: (positionData) => {
+            this.drivers.set(Object.keys(positionData.payload));
+            this.positionData.set(positionData.payload);
           },
         });
     }
-  }
-
-  /**
-   * Processes the strategy data retrieved from the backend
-   * @private
-   */
-  private processData(data: SpeedTrace[] | undefined) {
-    if (!data) {
-      return undefined;
-    }
-
-    const groupedTraces = new Map<string, SpeedTrace[]>();
-
-    data.forEach((trace) => {
-      if (!groupedTraces.has(trace.driver)) {
-        groupedTraces.set(trace.driver, []);
-      }
-      groupedTraces.get(trace.driver)?.push(trace);
-    });
-
-    return groupedTraces;
   }
 
   /**
@@ -131,35 +97,29 @@ export class PositionChangesComponent {
       },
       yAxis: {
         type: 'value',
-        name: 'km/h',
-        data: this.drivers(),
+        name: 'Position',
+        inverse: true,
+        interval: 1,
+        startValue: 1,
+        max: this.drivers()?.length,
       },
       xAxis: {
         type: 'value',
-        name: 'Distance in m',
-        max: () => {
-          const max = Math.max(
-            ...Array.from(this.processedData()?.values() ?? [])
-              .flat()
-              .map((trace) => trace.distance),
-          );
-          return max + (max % 100);
-        },
+        name: 'Lap',
+        max: this.laps(),
+      },
+      tooltip: {
+        show: true,
+        trigger: 'axis',
+        order: 'valueAsc',
       },
       legend: {
-        data: [
-          {
-            name: 'Corners',
-            icon: 'path://M0,3 h2 v1 h-2 Z M3,3 h2 v1 h-2 Z M6,3 h2 v1 h-2 Z',
-            itemStyle: { color: 'grey' },
-          },
-          ...(this.selectedDrivers() ?? []),
-        ],
         type: 'scroll',
-        orient: 'horizontal',
-        bottom: 0,
-        wrap: true,
+        orient: 'vertical',
+        top: 'center',
+        right: 0,
         scroll: true,
+        data: [...this.createDriverLegend()],
       },
       dataZoom: [
         {
@@ -168,49 +128,52 @@ export class PositionChangesComponent {
           end: 0,
         },
       ],
-      series: [
-        ...this.createDriverSeries(),
-        {
-          type: 'line',
-          name: 'Corners',
-          data: [[NaN, NaN]],
-          showSymbol: false,
-          markLine: {
-            symbol: 'none',
-            silent: true,
-            data:
-              this.circuitInfo()?.corners?.map((corner) => ({
-                xAxis: corner.distance,
-                name: `${corner.number}${corner.letter ?? ''}`,
-              })) ?? [],
-            label: {
-              formatter: (params: any) => params.name,
-              show: true,
-              position: 'end',
-            },
-            lineStyle: {
-              color: 'grey',
-              type: 'dashed',
-              width: 1,
-            },
-          },
-        },
-      ],
+      series: [...this.createDriverSeries()],
     };
   }
 
   private createDriverSeries() {
     return (
-      this.selectedDrivers()?.map((driver) => ({
+      this.drivers()?.map((driver) => ({
         type: 'line',
         name: driver,
         data:
-          this.processedData()
-            ?.get(driver)
-            ?.map((trace) => [trace.distance, trace.speed]) ?? [],
-        smooth: true,
-        symbol: 'none',
+          this.positionData()?.[driver].positions?.map((position, index) => [
+            index,
+            position,
+          ]) ?? [],
+        showSymbol: false,
+        lineStyle: {
+          color: this.positionData()?.[driver].color,
+          type: this.positionData()?.[driver].lineStyle,
+        },
+        itemStyle: {
+          color: this.positionData()?.[driver].color,
+        },
       })) ?? []
+    );
+  }
+
+  private createDriverLegend() {
+    return (
+      this.drivers()?.map((driver) => {
+        const legend = {
+          name: driver,
+          icon: '',
+          itemStyle: {
+            color: this.positionData()?.[driver]?.color,
+          },
+        };
+
+        if (this.positionData()?.[driver]?.lineStyle === 'solid') {
+          legend.icon = 'path://M0,3 h6 v1 h-6 Z';
+        } else {
+          legend.icon =
+            'path://M0,3 h2 v1 h-2 Z M3,3 h2 v1 h-2 Z M6,3 h2 v1 h-2 Z';
+        }
+
+        return legend;
+      }) ?? []
     );
   }
 }

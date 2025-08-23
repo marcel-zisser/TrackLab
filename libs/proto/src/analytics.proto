@@ -66,9 +66,14 @@ message DriversResponse {
 message PositionDataRequest {
   int32 year = 1;
   int32 round = 2;
-  string session = 3;
 }
 
 message PositionDataResponse {
-  repeated string drivers = 1;
+  map<string, DriverPositionData> payload = 1;
+}
+
+message DriverPositionData {
+  repeated int32 positions = 1;
+  string color = 2;
+  string lineStyle = 3;
 }
