@@ -211,7 +211,7 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
       style = fastf1.plotting.get_driver_style(identifier=driver.Abbreviation,
                                                style=['color', 'linestyle'],
                                                session=session)
-      response.positions[driver.Abbreviation].CopyFrom(DriverPositionData(positions=positions, color=style['color'],
-                                                                          lineStyle=style['linestyle']))
+      response.payload[driver.Abbreviation].CopyFrom(DriverPositionData(positions=positions, color=style['color'],
+                                                                        lineStyle=style['linestyle']))
 
     return response

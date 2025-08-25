@@ -88,7 +88,7 @@ export class PositionChangesComponent {
   private createChartOptions() {
     return {
       title: {
-        text: 'Driver Speed Traces over Fastest Lap',
+        text: 'Driver Positions Over Race Distance',
         left: 'center',
       },
       grid: {
