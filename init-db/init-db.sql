@@ -1,22 +1,16 @@
 INSERT INTO "User" ("uuid", "firstName", "lastName", "email", "password", "avatarType")
-VALUES ('dacdfcb2-b9f9-4bb1-a61c-9f41637d96c8',
+VALUES ('40ffd4b2-68a4-4309-9610-1c6b4e554d96',
         'Admin',
         'Istrator',
         'admin@tracklab.com',
         '$2b$10$VmeNNuedxhMVp3joJ43D4.D7zyfNiGpBaQ6GXoCoXwjxdIIZayfoS',
-        'png'),
-       ('40ffd4b2-68a4-4309-9610-1c6b4e554d96',
-        'Jane',
-        'Doe',
-        'project@tracklab.com',
+        ''),
+       ('dacdfcb2-b9f9-4bb1-a61c-9f41637d96c8',
+        'Marcel',
+        'Zisser',
+        'marcel@tracklab.com',
         '$2b$10$VmeNNuedxhMVp3joJ43D4.D7zyfNiGpBaQ6GXoCoXwjxdIIZayfoS',
-        null),
-       ('715d2bf3-a1f4-4332-8804-2f313e3dc1a9',
-        'John',
-        'Doe',
-        'review@tracklab.com',
-        '$2b$10$VmeNNuedxhMVp3joJ43D4.D7zyfNiGpBaQ6GXoCoXwjxdIIZayfoS',
-        null);
+        'png');
 
 INSERT INTO "CollectionItem" ("uuid", "title", "description", "url", "userId")
 VALUES ('361efb7a-5bbf-4d4e-b13f-14720925cb4a',

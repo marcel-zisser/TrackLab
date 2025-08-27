@@ -5,37 +5,33 @@ package at.tracklab;
 import "types.proto";
 
 service Analytics {
-  rpc GetSessionStrategy(StrategyRequest) returns (StrategyResponse) {}
-  rpc GetQuickLaps(QuickLapsRequest) returns (QuickLapsResponse) {}
-  rpc GetSpeedTraces(SpeedTracesRequest) returns (SpeedTracesResponse) {}
+  rpc GetSessionStrategy(SessionRequest) returns (StrategyResponse) {}
+  rpc GetQuickLaps(EventRequest) returns (QuickLapsResponse) {}
+  rpc GetSpeedTraces(SessionRequest) returns (SpeedTracesResponse) {}
   rpc GetCarTelemetry(CarTelemetryRequest) returns (CarTelemetryResponse) {}
-  rpc GetPositionData(PositionDataRequest) returns (PositionDataResponse) {}
-  rpc GetDrivers(DriversRequest) returns (DriversResponse) {}
+  rpc GetPositionData(EventRequest) returns (PositionDataResponse) {}
+  rpc GetDrivers(SessionRequest) returns (DriversResponse) {}
+  rpc GetChampionshipContenders(EventRequest) returns (ChampionshipContendersResponse) {}
 }
 
-message StrategyRequest {
+message EventRequest {
+  int32 year = 1;
+  int32 round = 2;
+}
+
+message SessionRequest {
   int32 year = 1;
   int32 round = 2;
   string session = 3;
 }
+
 
 message StrategyResponse {
   repeated Strategy strategy = 1;
 }
 
-message QuickLapsRequest {
-  int32 year = 1;
-  int32 round = 2;
-}
-
 message QuickLapsResponse {
   repeated Lap laps = 1;
-}
-
-message SpeedTracesRequest {
-  int32 year = 1;
-  int32 round = 2;
-  string session = 3;
 }
 
 message SpeedTracesResponse {
@@ -53,19 +49,8 @@ message CarTelemetryResponse {
   repeated CarTelemetry telemetries = 1;
 }
 
-message DriversRequest {
-  int32 year = 1;
-  int32 round = 2;
-  string session = 3;
-}
-
 message DriversResponse {
   repeated string drivers = 1;
-}
-
-message PositionDataRequest {
-  int32 year = 1;
-  int32 round = 2;
 }
 
 message PositionDataResponse {
@@ -76,4 +61,13 @@ message DriverPositionData {
   repeated int32 positions = 1;
   string color = 2;
   string lineStyle = 3;
+}
+
+message ChampionshipContenderList {
+  repeated ChampionshipContender contenders = 1;
+  int32 roundNumber = 2;
+}
+
+message ChampionshipContendersResponse {
+  map<string, ChampionshipContenderList> contenders = 1;
 }

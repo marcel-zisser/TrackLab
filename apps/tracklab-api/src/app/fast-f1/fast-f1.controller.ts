@@ -8,6 +8,7 @@ import {
 } from '@tracklab/models';
 import {
   CarTelemetryResponse,
+  ChampionshipContendersResponse,
   DriversResponse,
   PositionDataResponse,
   QuickLapsResponse,
@@ -108,5 +109,13 @@ export class FastF1Controller {
     @Query('round') round: number,
   ): Promise<PositionDataResponse> {
     return this.fastF1Service.getPositionData(year, round);
+  }
+
+  @Get('wdc-contenders')
+  getWDCContenders(
+    @Query('year') year: number,
+    @Query('round') round: number,
+  ): Promise<ChampionshipContendersResponse> {
+    return this.fastF1Service.getWDCContenders(year, round);
   }
 }

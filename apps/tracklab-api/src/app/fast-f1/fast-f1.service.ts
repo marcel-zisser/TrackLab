@@ -232,4 +232,18 @@ export class FastF1Service implements OnModuleInit {
       }),
     );
   }
+
+  /**
+   * Retrieves the WDC contenders for a given year and season progress
+   * @param year the year of the season
+   * @param round the round of the season to calculate from
+   */
+  async getWDCContenders(year: number, round: number) {
+    return await firstValueFrom(
+      this.analyticsService.getChampionshipContenders({
+        year: year,
+        round: round,
+      }),
+    );
+  }
 }

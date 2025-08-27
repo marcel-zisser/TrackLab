@@ -172,3 +172,11 @@ message PositionTelemetry {
   float z = 3;
   string status = 4;
 }
+
+message ChampionshipContender {
+  Driver driver = 1;
+  float currentPoints = 2;
+  float maxPoints = 3;
+  bool canWin = 4;
+  float winChance = 5;
+}
