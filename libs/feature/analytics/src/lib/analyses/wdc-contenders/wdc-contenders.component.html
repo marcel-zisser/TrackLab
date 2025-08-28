@@ -1,0 +1,25 @@
+<tl-analysis-base class="base">
+  <div chart class="chart-container">
+    @if (selectedYear) {
+      <tl-chart-base
+        [loading]="processedData() === undefined"
+        [options]="chartOptions()"
+      ></tl-chart-base>
+    } @else {
+      <div class="flex-1 flex flex-col justify-center items-center h-full w-full">
+        <h1>Please select a session.</h1>
+        <h1>Loading a session can take up to 30 seconds.</h1>
+      </div>
+    }
+
+  </div>
+  <div options class="flex flex-col gap-8">
+    <h1>Options</h1>
+    <tl-source-selection
+      [withEventSelection]="false"
+      [withSessionSelection]="false"
+      (raceSelection)="loadWdcContendersData($event)"
+    ></tl-source-selection>
+  </div>
+
+</tl-analysis-base>

@@ -11,100 +11,102 @@
     <label [for]="'year'">Year</label>
   </p-floatlabel>
 
-  <p-floatlabel variant="on">
-    <p-select
-      class="w-full"
-      [inputId]="'event'"
-      [options]="events()"
-      [filter]="true"
-      [disabled]="!year()"
-      [loading]="year() && !events().length"
-      [ngModel]="event()"
-      (ngModelChange)="event.set($event)">
-    </p-select>
-    <label [for]="'event'">Event</label>
-  </p-floatlabel>
-
-  @if (withSessionSelection()) {
+  @if (withEventSelection()) {
     <p-floatlabel variant="on">
       <p-select
         class="w-full"
-        [inputId]="'session'"
-        [options]="sessions()"
+        [inputId]="'event'"
+        [options]="events()"
         [filter]="true"
-        [disabled]="!event()"
-        [loading]="event() && !sessions().length"
-        [ngModel]="session()"
-        (ngModelChange)="session.set($event)">
+        [disabled]="!year()"
+        [loading]="year() && !events().length"
+        [ngModel]="event()"
+        (ngModelChange)="event.set($event)">
       </p-select>
-      <label [for]="'session'">Session</label>
+      <label [for]="'event'">Event</label>
     </p-floatlabel>
-  }
 
-  @if (withDriverSelection() && year() && event() && session()) {
-    @switch (driverSelectionType()) {
+    @if (withSessionSelection()) {
+      <p-floatlabel variant="on">
+        <p-select
+          class="w-full"
+          [inputId]="'session'"
+          [options]="sessions()"
+          [filter]="true"
+          [disabled]="!event()"
+          [loading]="event() && !sessions().length"
+          [ngModel]="session()"
+          (ngModelChange)="session.set($event)">
+        </p-select>
+        <label [for]="'session'">Session</label>
+      </p-floatlabel>
 
-      @case ('single') {
-        <p-floatlabel variant="on">
-          <p-select
-            class="w-full"
-            [inputId]="'selectDrivers'"
-            [options]="drivers()"
-            [filter]="true"
-            [loading]="drivers().length === 0"
-            [ngModel]="selectedDrivers()[0]"
-            (ngModelChange)="selectedDrivers.set([$event])">
-          </p-select>
-          <label [for]="'selectDrivers'">Select Drivers</label>
-        </p-floatlabel>
-      }
-      @case ('double') {
-        <p-floatlabel variant="on">
-          <p-select
-            class="w-full"
-            [inputId]="'driverOne'"
-            [options]="drivers()"
-            [filter]="true"
-            [loading]="drivers().length === 0"
-            [ngModel]="driverOne()"
-            (ngModelChange)="driverOne.set($event)">
-          </p-select>
-          <label [for]="'driverOne'">Select Driver 1</label>
-        </p-floatlabel>
+      @if (withDriverSelection() && year() && event() && session()) {
+        @switch (driverSelectionType()) {
 
-        <p-floatlabel variant="on">
-          <p-select
-            class="w-full"
-            [inputId]="'driverTwo'"
-            [options]="drivers()"
-            [filter]="true"
-            [loading]="drivers().length === 0"
-            [ngModel]="driverTwo()"
-            (ngModelChange)="driverTwo.set($event)">
-          </p-select>
-          <label [for]="'driverTwo'">Select Driver 2</label>
-        </p-floatlabel>
-      }
-      @case ('multiple') {
-        <p-floatlabel variant="on">
-          <p-multi-select
-            class="w-full"
-            [inputId]="'selectDrivers'"
-            [options]="drivers()"
-            [filter]="true"
-            [loading]="drivers().length === 0"
-            [ngModel]="selectedDrivers()"
-            (ngModelChange)="selectedDrivers.set($event)">
-          </p-multi-select>
-          <label [for]="'selectDrivers'">Select Drivers</label>
-        </p-floatlabel>
+          @case ('single') {
+            <p-floatlabel variant="on">
+              <p-select
+                class="w-full"
+                [inputId]="'selectDrivers'"
+                [options]="drivers()"
+                [filter]="true"
+                [loading]="drivers().length === 0"
+                [ngModel]="selectedDrivers()[0]"
+                (ngModelChange)="selectedDrivers.set([$event])">
+              </p-select>
+              <label [for]="'selectDrivers'">Select Drivers</label>
+            </p-floatlabel>
+          }
+          @case ('double') {
+            <p-floatlabel variant="on">
+              <p-select
+                class="w-full"
+                [inputId]="'driverOne'"
+                [options]="drivers()"
+                [filter]="true"
+                [loading]="drivers().length === 0"
+                [ngModel]="driverOne()"
+                (ngModelChange)="driverOne.set($event)">
+              </p-select>
+              <label [for]="'driverOne'">Select Driver 1</label>
+            </p-floatlabel>
+
+            <p-floatlabel variant="on">
+              <p-select
+                class="w-full"
+                [inputId]="'driverTwo'"
+                [options]="drivers()"
+                [filter]="true"
+                [loading]="drivers().length === 0"
+                [ngModel]="driverTwo()"
+                (ngModelChange)="driverTwo.set($event)">
+              </p-select>
+              <label [for]="'driverTwo'">Select Driver 2</label>
+            </p-floatlabel>
+          }
+          @case ('multiple') {
+            <p-floatlabel variant="on">
+              <p-multi-select
+                class="w-full"
+                [inputId]="'selectDrivers'"
+                [options]="drivers()"
+                [filter]="true"
+                [loading]="drivers().length === 0"
+                [ngModel]="selectedDrivers()"
+                (ngModelChange)="selectedDrivers.set($event)">
+              </p-multi-select>
+              <label [for]="'selectDrivers'">Select Drivers</label>
+            </p-floatlabel>
+          }
+        }
       }
     }
   }
 
   <ng-content select="[additionalOptions]"></ng-content>
 
-  @if (year() && event() && (session() || !withSessionSelection()) && (drivers().length || !withDriverSelection())) {
+  @if (year() && (event() || !withEventSelection()) && (session() || !withSessionSelection()) && (drivers().length || !withDriverSelection())) {
     <div class="w-full flex justify-between">
       <p-button
         [label]="'Copy link'"

@@ -7,3 +7,4 @@ export { DriversResponse } from './drivers.response';
 export { UuidRequest } from './uuid.request';
 export { UpdateFavoriteRequest } from './update-favorite.request';
 export * from './position-data.response';
+export * from './wdc-contenders.response';

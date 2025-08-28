@@ -69,5 +69,5 @@ message ChampionshipContenderList {
 }
 
 message ChampionshipContendersResponse {
-  map<string, ChampionshipContenderList> contenders = 1;
+  map<string, ChampionshipContenderList> payload = 1;
 }

@@ -99,6 +99,16 @@ export class AnalysisSelectionComponent {
           });
         },
       },
+      {
+        title: 'WDC Contenders',
+        description: 'Who is still in the title race?',
+        icon: PrimeIcons.TROPHY,
+        callback: () => {
+          this.router.navigate(['wdc-contenders'], {
+            relativeTo: this.activatedRoute,
+          });
+        },
+      },
     ];
   }
 }

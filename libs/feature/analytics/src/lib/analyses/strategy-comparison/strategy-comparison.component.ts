@@ -59,24 +59,6 @@ export class StrategyComparisonComponent {
     return undefined;
   });
 
-  constructor() {
-    const year = this.activatedRoute.snapshot.queryParamMap.get('year');
-    const eventRound =
-      this.activatedRoute.snapshot.queryParamMap.get('eventRound');
-    const eventName =
-      this.activatedRoute.snapshot.queryParamMap.get('eventName');
-    const session = this.activatedRoute.snapshot.queryParamMap.get('session');
-
-    if (year && eventRound && eventName && session) {
-      this.selectedYear = year;
-      this.selectedEvent = {
-        roundNumber: parseInt(eventRound ?? '0'),
-        name: eventName ?? '',
-      };
-      this.selectedSession = session;
-    }
-  }
-
   /**
    * Effect to load the strategy data, once all inputs have been selected
    * @protected

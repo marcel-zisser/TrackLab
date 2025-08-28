@@ -35,6 +35,7 @@ import { AuthenticationService } from '@tracklab/services';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SourceSelectionComponent implements OnInit, AfterViewInit {
+  withEventSelection = input<boolean>(true);
   withSessionSelection = input<boolean>(true);
   withDriverSelection = input<boolean>(true);
   driverSelectionType = input<'single' | 'double' | 'multiple'>('single');
@@ -226,7 +227,7 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
 
     if (
       year &&
-      event &&
+      (event || !this.withEventSelection()) &&
       (session || !this.withSessionSelection()) &&
       (drivers || !this.withDriverSelection())
     ) {

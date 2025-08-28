@@ -40,9 +40,12 @@ export class PositionChangesComponent {
   protected selectedEvent: Event | undefined;
 
   protected readonly chartTheme = this.themeService.chartTheme;
-  protected readonly drivers = signal<string[] | undefined>(undefined);
   protected readonly positionData = signal<DriverPositionPayload | undefined>(
     undefined,
+  );
+
+  protected readonly drivers = computed<string[]>(() =>
+    Object.keys(this.positionData() ?? []),
   );
   protected readonly laps = computed(() => {
     const laps: number[] = [];
@@ -53,7 +56,6 @@ export class PositionChangesComponent {
 
     return Math.max(...laps);
   });
-
   protected readonly chartOptions = computed(() => this.createChartOptions());
 
   /**
@@ -74,7 +76,6 @@ export class PositionChangesComponent {
         .pipe(first((response) => !!response))
         .subscribe({
           next: (positionData) => {
-            this.drivers.set(Object.keys(positionData.payload));
             this.positionData.set(positionData.payload);
           },
         });

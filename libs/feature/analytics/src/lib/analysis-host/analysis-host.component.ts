@@ -17,6 +17,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ConstructionComponent } from '@tracklab/shared/components';
 import { NgComponentOutlet } from '@angular/common';
 import { PositionChangesComponent } from '../analyses/position-changes/position-changes.component';
+import { WdcContendersComponent } from '../analyses/wdc-contenders/wdc-contenders.component';
 
 @Component({
   selector: 'tl-analysis-host',
@@ -35,6 +36,7 @@ export class AnalysisHostComponent implements OnInit {
     ['gear-shift', GearShiftComponent],
     ['speed-map', SpeedMapComponent],
     ['position-changes', PositionChangesComponent],
+    ['wdc-contenders', WdcContendersComponent],
   ]);
 
   protected componentToRender: Type<any> | null = null;

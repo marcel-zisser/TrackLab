@@ -157,7 +157,7 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
         driver_standings = get_drivers_standings(request.year, event.RoundNumber)
         points = calculate_max_points_for_remaining_season(request.year, event.RoundNumber)
         can_win = calculate_who_can_win(driver_standings, points)
-        response.contenders[event.Location].contenders.extend(can_win)
-        response.contenders[event.Location].roundNumber = event.RoundNumber
+        response.payload[event.Location].contenders.extend(can_win)
+        response.payload[event.Location].roundNumber = event.RoundNumber
 
     return response

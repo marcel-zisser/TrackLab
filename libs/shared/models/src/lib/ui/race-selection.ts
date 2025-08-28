@@ -2,7 +2,7 @@ import { Event } from '../analytics';
 
 export interface RaceSelection {
   year: string;
-  event: Event;
+  event?: Event;
   session?: string;
   drivers?: string[];
 }
