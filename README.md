@@ -1,101 +1,141 @@
-# Tracklab
+# TrackLab
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+<img src="apps/tracklab/public/favicon.ico" width="50">
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+## Requirements
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+- Node: ~22.19.0 (Current LTS)
+- pnpm: ~10.14.0
+- Python: ~3.9
+- uv: ~0.7.3
+- Docker / Docker Compose (development only)
 
-## Run tasks
+## Environment Configuration
 
-To run the dev server for your app, use:
+For the application to work, you need to create a file called `.env` in the root directory.
+The following variables MUST be defined:
 
-```sh
-npx nx serve tracklab
+- DATABASE_URL
+  - The API will use this URL to connect to the database.
+  - The URL should be formatted according to Prisma specifications.
+  - https://www.prisma.io/docs/orm/reference/connection-urls
+- JWT_SECRET
+  - This serves as your JWT encryption key.
+  - Make sure this key is long enough and not guessable. (using something like 'secret' is not a good idea)
+- S3_ENDPOINT
+  - The endpoint of your S3 instance
+- S3_REGION
+  - Region of your S3 instance
+- S3_ACCESS_KEY
+  - Access key to your S3 instance
+- S3_SECRET_KEY
+  - the secret key to your S3 instance
+- PRODUCTION
+  - Determines if we use SSL/TLS for the database connection.
+  - Only important if the demo data should be loaded
+
+In case you want to use the provided Docker file for just trying it out, the following variables must be defined as well:
+
+- POSTGRES_HOST
+  - This is the hostname of the database server (e.g. localhost)
+- POSTGRES_USER
+  - This is the username for the Postgres Database
+- POSTGRES_PASSWORD
+  - The password for the user defined above
+- POSTGRES_DB
+  - The name of the database
+
+**Important**
+
+If another database provider than Postgres is used, this needs to be changed in the `schema.prisma`, which can be found in `apps/tracklab-api/prisma`.
+Change the `provider` property of the `datasource` object to the appropriate provider.
+
+A sample `.env` file for the provided development setup could look like this:
+
+``` dotenv
+# Database provider:  postgresql
+# Database user:      tracklab
+# Database passowrd:  tracklab123!
+# Database host:      localhost
+# Database port:      5432
+# Databse name:       tracklab
+# Schema:             public
+DATABASE_URL="postgresql://tracklab:tracklab123!@localhost:5432/tracklab?schema=public"
+
+POSTGRES_HOST=localhost
+POSTGRES_USER=tracklab
+POSTGRES_PASSWORD=tracklab123!
+POSTGRES_DB=tracklab
+
+JWT_SECRET=<GENERATE-SOME-JWT-SECRET>
+
+S3_ENDPOINT=http://localhost:9000
+S3_REGION=eu-central-1
+S3_ACCESS_KEY=admin
+S3_SECRET_KEY=admin123
+
+PRODUCTION=false
 ```
 
-To create a production bundle:
+## Development Setup
+
+To have a good development experience use the docker-compose file to set up a temporary database:
 
 ```sh
-npx nx build tracklab
+docker compose up
 ```
 
-To see all available targets to run for a project, run:
+### Run tasks
+
+Now we need to start the development-servers for both UI, API and data-service project:
 
 ```sh
-npx nx show project tracklab
+npx nx serve tracklab-ui
 ```
-
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
-
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Add new projects
-
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-Use the plugin's generator to create new projects.
-
-To generate a new application, use:
 
 ```sh
-npx nx g @nx/angular:app demo
+npx nx serve tracklab-api
 ```
-
-To generate a new library, use:
 
 ```sh
-npx nx g @nx/angular:lib mylib
+npx nx serve fast_f1_service
 ```
 
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
+### Development Database
 
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+A pre-build script for the API will populate the database with some sample data.
+There will be 1 user for development out of the box:
 
-## Set up CI!
+- admin@tracklab.com
+  - pw: admin
 
-### Step 1
+## Deployment
 
-To connect to Nx Cloud, run the following command:
+To deploy TrackLab to a server use the following commands in the root directory of the repository.
 
 ```sh
-npx nx connect
+npm install
 ```
-
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
-
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-### Step 2
-
-Use the following command to configure a CI workflow for your workspace:
 
 ```sh
-npx nx g ci-workflow
+npm build:production
 ```
 
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+After these two commands, you can find the built project in the `dist` folder on the root level of the repository.
+To launch TrackLab, simply start the Node.js server using:
 
-## Install Nx Console
+```sh
+node ./dist/apps/tracklab-api/main.js
+```
+
+Optionally, demo data can be generated in the database. This wipes the database clean, so be careful and use backups before doing that.
+
+```sh
+npm generate-demo-data
+```
+
+### Install Nx Console
 
 Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
 
 [Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
