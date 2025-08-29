@@ -99,7 +99,7 @@ export class SourceSelectionService {
    */
   copySourceSelectionToClipboard(
     year: string,
-    event: Event,
+    event: Event | undefined,
     session: string | undefined,
     drivers: string[],
   ) {
@@ -122,7 +122,7 @@ export class SourceSelectionService {
    */
   async addToCollection(
     year: string,
-    event: Event,
+    event: Event | undefined,
     session: string | undefined,
     drivers: string[],
   ) {
@@ -158,7 +158,22 @@ export class SourceSelectionService {
     this.backendService
       .doPost<never, FormData>('collection', formData)
       .pipe(first())
-      .subscribe();
+      .subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Successfully saved to collection.',
+          });
+        },
+        error: () => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Something went wrong. Please try again.',
+          });
+        },
+      });
   }
 
   /**
@@ -171,7 +186,7 @@ export class SourceSelectionService {
    */
   private createUrl(
     year: string,
-    event: Event,
+    event: Event | undefined,
     session: string | undefined,
     drivers: string[],
   ) {

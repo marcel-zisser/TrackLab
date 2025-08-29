@@ -147,6 +147,9 @@ export class WdcContendersComponent {
       xAxis: {
         type: 'category',
         name: 'Race',
+        axisLabel: {
+          interval: 0,
+        },
       },
       yAxis: {
         type: 'category',

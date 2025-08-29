@@ -106,7 +106,7 @@
 
   <ng-content select="[additionalOptions]"></ng-content>
 
-  @if (year() && (event() || !withEventSelection()) && (session() || !withSessionSelection()) && (drivers().length || !withDriverSelection())) {
+  @if (isSourceSelectionValid()) {
     <div class="w-full flex justify-between">
       <p-button
         [label]="'Copy link'"

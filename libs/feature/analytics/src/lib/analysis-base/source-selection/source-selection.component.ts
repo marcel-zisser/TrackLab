@@ -156,7 +156,7 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
     const session = this.session();
     const drivers = this.getSelectedDrivers();
 
-    if (year && event && (session || !this.withSessionSelection())) {
+    if (year && this.isSourceSelectionValid()) {
       this.sourceSelectionService.copySourceSelectionToClipboard(
         year,
         event,
@@ -171,14 +171,14 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
    * @protected
    */
 
-  protected addToCollection() {
+  protected async addToCollection() {
     const year = this.year();
     const event = this.event();
     const session = this.session();
     const drivers = this.getSelectedDrivers();
 
-    if (year && event && (session || !this.withSessionSelection())) {
-      this.sourceSelectionService.addToCollection(
+    if (year && this.isSourceSelectionValid()) {
+      await this.sourceSelectionService.addToCollection(
         year,
         event,
         session,
@@ -187,11 +187,25 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
     }
   }
 
+  protected isSourceSelectionValid(): boolean {
+    const year = this.year();
+    const event = this.event();
+    const session = this.session();
+    const drivers: string[] = this.getSelectedDrivers();
+
+    return <boolean>(
+      (year &&
+        (event || !this.withEventSelection()) &&
+        (session || !this.withSessionSelection()) &&
+        (drivers || !this.withDriverSelection()))
+    );
+  }
+
   /**
    * Creates the effect to watch the year, to dynamically load the corresponding races
    * @private
    */
-  createEventScheduleEffect() {
+  private createEventScheduleEffect() {
     const year = this.year();
 
     if (year && this.isInitialized) {
@@ -210,7 +224,7 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
     const event = this.event();
     const session = this.session();
 
-    if (year && event && (session || !this.withSessionSelection())) {
+    if (year && event && session) {
       this.sourceSelectionService.loadDrivers(year, event, session);
     }
   }
@@ -225,12 +239,7 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
     const session = this.session();
     const drivers: string[] = this.getSelectedDrivers();
 
-    if (
-      year &&
-      (event || !this.withEventSelection()) &&
-      (session || !this.withSessionSelection()) &&
-      (drivers || !this.withDriverSelection())
-    ) {
+    if (year && this.isSourceSelectionValid()) {
       this.raceSelection.emit({ year, event, session, drivers });
     }
   }
