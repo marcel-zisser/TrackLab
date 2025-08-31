@@ -1,8 +1,8 @@
 <tl-analysis-base class="base">
   <div chart class="chart-container">
-    @if (selectedEvent && selectedYear && selectedSession && selectedDriver()) {
+    @if (selectedEvent && selectedYear && selectedSession && selectedDrivers().length) {
       <tl-chart-base
-        [loading]="processedData() === undefined || circuitInfo() === undefined"
+        [loading]="coordinates() === undefined || domination() === undefined"
         [options]="chartOptions()"
       ></tl-chart-base>
     } @else {
@@ -18,7 +18,8 @@
     <tl-source-selection
       [withSessionSelection]="true"
       [withDriverSelection]="true"
-      (raceSelection)="loadGearShifts($event)">
+      [driverSelectionType]="'double'"
+      (raceSelection)="loadTrackDomination($event)">
     </tl-source-selection>
   </div>
 

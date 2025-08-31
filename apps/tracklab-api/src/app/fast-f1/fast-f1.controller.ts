@@ -14,6 +14,7 @@ import {
   QuickLapsResponse,
   SpeedTracesResponse,
   StrategyResponse,
+  TrackDominationResponse,
 } from '../../generated/analytics';
 import { LoggingCacheInterceptor } from '../interceptors/cache-logging.interceptor';
 
@@ -117,5 +118,15 @@ export class FastF1Controller {
     @Query('round') round: number,
   ): Promise<ChampionshipContendersResponse> {
     return this.fastF1Service.getWDCContenders(year, round);
+  }
+
+  @Get('track-domination')
+  getTrackDomination(
+    @Query('year') year: number,
+    @Query('round') round: number,
+    @Query('session') session: string,
+    @Query('drivers') drivers: string[],
+  ): Promise<TrackDominationResponse> {
+    return this.fastF1Service.getTrackDomination(year, round, session, drivers);
   }
 }

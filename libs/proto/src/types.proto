@@ -13,7 +13,8 @@ message Driver {
   optional string nationality = 8;
   optional string url = 9;
   optional string headshotUrl = 10;
-
+  optional string color = 11;
+  optional string lineStyle = 12;
 }
 
 message Team {
@@ -180,3 +181,5 @@ message ChampionshipContender {
   bool canWin = 4;
   float winChance = 5;
 }
+
+

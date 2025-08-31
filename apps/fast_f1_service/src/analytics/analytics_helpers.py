@@ -1,4 +1,5 @@
 import fastf1
+import fastf1.plotting
 from fastf1.ergast import Ergast
 from pandas import NaT
 
@@ -149,3 +150,15 @@ def calculate_who_can_win(driver_standings, max_points):
     ))
 
   return ret_val
+
+
+def get_driver_plot_style(driver, session):
+  """
+  Retrieves the line style for a driver in a given session. It gets color and line style.
+  :param driver: the identifier for a driver (e.g. NOR, HAM or VER)
+  :param session: the session object to get the color for
+  :return: the styling for the given driver (color and line style)
+  """
+  return fastf1.plotting.get_driver_style(identifier=driver,
+                                          style=['color', 'linestyle'],
+                                          session=session)

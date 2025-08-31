@@ -109,6 +109,16 @@ export class AnalysisSelectionComponent {
           });
         },
       },
+      {
+        title: 'Track Domination',
+        description: 'Who dominates which part of the track?',
+        icon: PrimeIcons.BOLT,
+        callback: () => {
+          this.router.navigate(['track-domination'], {
+            relativeTo: this.activatedRoute,
+          });
+        },
+      },
     ];
   }
 }

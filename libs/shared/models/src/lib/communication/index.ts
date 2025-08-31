@@ -6,5 +6,6 @@ export { CarTelemetryResponse } from './car-telemetry.response';
 export { DriversResponse } from './drivers.response';
 export { UuidRequest } from './uuid.request';
 export { UpdateFavoriteRequest } from './update-favorite.request';
+export { TrackDominationResponse } from './track-domination.response';
 export * from './position-data.response';
 export * from './wdc-contenders.response';

@@ -50,7 +50,7 @@ export class FastF1Service implements OnModuleInit {
     for (const sessionResult of sessionResults.sessionResults) {
       const mappedResults: DriverResult[] = [];
 
-      sessionResult.driverResults.forEach((driverResult) => {
+      sessionResult.driverResults?.forEach((driverResult) => {
         const driver = driverResult.driver;
         const team = driverResult.team;
 
@@ -243,6 +243,29 @@ export class FastF1Service implements OnModuleInit {
       this.analyticsService.getChampionshipContenders({
         year: year,
         round: round,
+      }),
+    );
+  }
+
+  /**
+   * Retrieves the track domination data between two drivers for a given session
+   * @param year the year of the season
+   * @param round the round of the season to calculate from
+   * @param session the session of the event
+   * @param drivers the drivers to compare
+   */
+  async getTrackDomination(
+    year: number,
+    round: number,
+    session: string,
+    drivers: string[],
+  ) {
+    return await firstValueFrom(
+      this.analyticsService.getTrackDomination({
+        year: year,
+        round: round,
+        session: session,
+        drivers: drivers,
       }),
     );
   }

@@ -1,23 +1,18 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnInit,
-  Type,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, Type } from '@angular/core';
 import {
   DriverInputComponent,
   GearShiftComponent,
   SpeedMapComponent,
   SpeedTracesComponent,
   StrategyComparisonComponent,
-  TeamPaceComparisonComponent,
+  TeamPaceComparisonComponent
 } from '../analyses';
 import { ActivatedRoute } from '@angular/router';
 import { ConstructionComponent } from '@tracklab/shared/components';
 import { NgComponentOutlet } from '@angular/common';
 import { PositionChangesComponent } from '../analyses/position-changes/position-changes.component';
 import { WdcContendersComponent } from '../analyses/wdc-contenders/wdc-contenders.component';
+import { TrackDominationComponent } from '../analyses/track-domination/track-domination.component';
 
 @Component({
   selector: 'tl-analysis-host',
@@ -37,6 +32,7 @@ export class AnalysisHostComponent implements OnInit {
     ['speed-map', SpeedMapComponent],
     ['position-changes', PositionChangesComponent],
     ['wdc-contenders', WdcContendersComponent],
+    ['track-domination', TrackDominationComponent],
   ]);
 
   protected componentToRender: Type<any> | null = null;

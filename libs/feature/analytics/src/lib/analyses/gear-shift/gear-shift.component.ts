@@ -64,7 +64,7 @@ export class GearShiftComponent {
    * Effect to load the pace data, once all inputs have been selected
    * @protected
    */
-  protected loadSpeedTraces(selectedRace: RaceSelection) {
+  protected loadGearShifts(selectedRace: RaceSelection) {
     if (
       selectedRace.year &&
       selectedRace.event &&

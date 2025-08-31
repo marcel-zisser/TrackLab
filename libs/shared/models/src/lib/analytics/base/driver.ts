@@ -8,4 +8,6 @@ export interface Driver {
   nationality?: string;
   countryCode?: string;
   headshotUrl?: string;
+  color?: string;
+  lineStyle?: string;
 }

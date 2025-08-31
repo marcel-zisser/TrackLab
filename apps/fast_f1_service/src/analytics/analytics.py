@@ -5,12 +5,12 @@ import fastf1.plotting
 import numpy as np
 
 from analytics.analytics_helpers import map_row_to_lap, get_drivers_standings, \
-  calculate_max_points_for_remaining_season, calculate_who_can_win
+  calculate_max_points_for_remaining_season, calculate_who_can_win, get_driver_plot_style
 from generated import analytics_pb2_grpc
 from generated.analytics_pb2 import StrategyResponse, QuickLapsResponse, SpeedTracesResponse, \
   CarTelemetryResponse, DriversResponse, PositionDataResponse, DriverPositionData, SessionRequest, \
-  ChampionshipContendersResponse
-from generated.types_pb2 import Strategy, SpeedTrace, CarTelemetry, PositionTelemetry
+  ChampionshipContendersResponse, TrackDominationResponse
+from generated.types_pb2 import Strategy, SpeedTrace, CarTelemetry, PositionTelemetry, Driver
 
 
 class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
@@ -159,5 +159,62 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
         can_win = calculate_who_can_win(driver_standings, points)
         response.payload[event.Location].contenders.extend(can_win)
         response.payload[event.Location].roundNumber = event.RoundNumber
+
+    return response
+
+  def GetTrackDomination(self, request, context):
+    response = TrackDominationResponse()
+
+    session = fastf1.get_session(request.year, request.round, request.session)
+    session.load()
+    driver_1 = session.get_driver(request.drivers[0])
+    driver_2 = session.get_driver(request.drivers[1])
+
+    laps_driver_1 = session.laps.pick_drivers(driver_1.Abbreviation)
+    laps_driver_2 = session.laps.pick_drivers(driver_2.Abbreviation)
+
+    telemetry_driver_1 = laps_driver_1.pick_fastest().get_telemetry().add_distance()
+    telemetry_driver_2 = laps_driver_2.pick_fastest().get_telemetry().add_distance()
+
+    dist = np.arange(0, min(telemetry_driver_1['Distance'].max(), telemetry_driver_2['Distance'].max()), 1)
+
+    speed1 = np.interp(dist, telemetry_driver_1['Distance'], telemetry_driver_1['Speed'])
+    speed2 = np.interp(dist, telemetry_driver_2['Distance'], telemetry_driver_2['Speed'])
+
+    x = np.interp(dist, telemetry_driver_1['Distance'], telemetry_driver_1['X'])
+    y = np.interp(dist, telemetry_driver_1['Distance'], telemetry_driver_1['Y'])
+
+    dt1 = 1 / speed1 * np.gradient(dist)  # time for each segment
+    dt2 = 1 / speed2 * np.gradient(dist)
+
+    t1 = np.cumsum(dt1)
+    t2 = np.cumsum(dt2)
+
+    delta = t1 - t2
+
+    dominance = np.where(delta < 0, driver_1.Abbreviation, driver_2.Abbreviation)
+
+    for index in range(len(dominance)):
+      response.coordinates.append(PositionTelemetry(x=x[index], y=y[index]))
+      response.domination.append(dominance[index])
+
+    line_style_1 = get_driver_plot_style(driver_1.Abbreviation, session)
+    line_style_2 = get_driver_plot_style(driver_2.Abbreviation, session)
+
+    response.drivers.append(Driver(
+      code=driver_1.Abbreviation,
+      givenName=driver_1.FirstName,
+      familyName=driver_1.LastName,
+      color=line_style_1['color'],
+      lineStyle=line_style_1['linestyle']
+    ))
+
+    response.drivers.append(Driver(
+      code=driver_2.Abbreviation,
+      givenName=driver_2.FirstName,
+      familyName=driver_2.LastName,
+      color=line_style_2['color'],
+      lineStyle=line_style_2['linestyle']
+    ))
 
     return response

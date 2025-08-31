@@ -12,6 +12,7 @@ service Analytics {
   rpc GetPositionData(EventRequest) returns (PositionDataResponse) {}
   rpc GetDrivers(SessionRequest) returns (DriversResponse) {}
   rpc GetChampionshipContenders(EventRequest) returns (ChampionshipContendersResponse) {}
+  rpc GetTrackDomination(DriverRequest) returns (TrackDominationResponse) {}
 }
 
 message EventRequest {
@@ -25,6 +26,12 @@ message SessionRequest {
   string session = 3;
 }
 
+message DriverRequest {
+  int32 year = 1;
+  int32 round = 2;
+  string session = 3;
+  repeated string drivers = 4;
+}
 
 message StrategyResponse {
   repeated Strategy strategy = 1;
@@ -70,4 +77,10 @@ message ChampionshipContenderList {
 
 message ChampionshipContendersResponse {
   map<string, ChampionshipContenderList> payload = 1;
+}
+
+message TrackDominationResponse {
+  repeated PositionTelemetry coordinates = 1;
+  repeated string domination = 2;
+  repeated Driver drivers = 3;
 }
