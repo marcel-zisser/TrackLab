@@ -41,7 +41,6 @@ export class GearShiftComponent {
   protected selectedEvent: Event | undefined;
   protected selectedSession: string | undefined;
 
-  protected readonly chartTheme = this.themeService.chartTheme;
   protected readonly telemetries = signal<CarTelemetry[] | undefined>(
     undefined,
   );

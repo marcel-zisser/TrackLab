@@ -39,7 +39,6 @@ export class PositionChangesComponent {
   protected selectedYear: string | undefined;
   protected selectedEvent: Event | undefined;
 
-  protected readonly chartTheme = this.themeService.chartTheme;
   protected readonly positionData = signal<DriverPositionPayload | undefined>(
     undefined,
   );

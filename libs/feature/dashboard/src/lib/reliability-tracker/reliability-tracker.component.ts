@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+} from '@angular/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import { ThemeService } from '@tracklab/services';
 import { ReliabilityTrackerService } from './reliability-tracker.service';
@@ -8,11 +14,13 @@ import { ReliabilityTrackerService } from './reliability-tracker.service';
   imports: [NgxEchartsDirective],
   templateUrl: './reliability-tracker.component.html',
   styleUrl: './reliability-tracker.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReliabilityTrackerComponent {
   private readonly themeService = inject(ThemeService);
-  private readonly reliabilityTrackerService = inject(ReliabilityTrackerService);
+  private readonly reliabilityTrackerService = inject(
+    ReliabilityTrackerService,
+  );
 
   dataSelector = input.required<string>();
 
@@ -33,7 +41,7 @@ export class ReliabilityTrackerComponent {
       order: 'valueDesc',
       confine: false,
       appendTo: 'body',
-      className: 'tl-tooltip'
+      className: 'tl-tooltip',
     },
     legend: {
       data: Array.from(this.reliabilityData().keys()),
@@ -41,12 +49,12 @@ export class ReliabilityTrackerComponent {
       orient: 'horizontal',
       top: 0,
       wrap: true,
-      scroll: true
+      scroll: true,
     },
     toolbox: {
       feature: {
         // saveAsImage: {},
-      }
+      },
     },
     series: {
       name: this.dataSelector(),
@@ -55,18 +63,20 @@ export class ReliabilityTrackerComponent {
       top: 30,
       radius: [0, '75%'],
       label: {
-        position: 'outside'
+        position: 'outside',
       },
       labelLine: {
-        show: true
+        show: true,
       },
-      data: Array.from(this.reliabilityData().entries()).map(([key, value]) => ({
-        name: key,
-        value: value.fails,
-        itemStyle: {
-          color: value.color
-        }
-      })).sort((a, b) => b.value - a.value)
-    }
+      data: Array.from(this.reliabilityData().entries())
+        .map(([key, value]) => ({
+          name: key,
+          value: value.fails,
+          itemStyle: {
+            color: value.color,
+          },
+        }))
+        .sort((a, b) => b.value - a.value),
+    },
   }));
 }

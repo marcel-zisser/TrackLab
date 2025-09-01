@@ -1,20 +1,7 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { BackendService, ThemeService } from '@tracklab/services';
-import {
-  RaceSelection,
-  WdcContendersPayload,
-  WdcContendersResponse,
-} from '@tracklab/models';
-import {
-  AnalysisBaseComponent,
-  SourceSelectionComponent,
-} from '../../analysis-base';
+import { RaceSelection, WdcContendersPayload, WdcContendersResponse } from '@tracklab/models';
+import { AnalysisBaseComponent, SourceSelectionComponent } from '../../analysis-base';
 import { first } from 'rxjs';
 import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.component';
 
@@ -35,7 +22,6 @@ export class WdcContendersComponent {
 
   protected selectedYear: string | undefined;
 
-  protected readonly chartTheme = this.themeService.chartTheme;
   protected readonly chartOptions = computed(() => this.createChartOptions());
   protected readonly processedData = computed(() =>
     this.processData(this.wdcContendersData()),

@@ -41,7 +41,6 @@ export class SpeedTracesComponent {
   protected selectedEvent: Event | undefined;
   protected selectedSession: string | undefined;
 
-  protected readonly chartTheme = this.themeService.chartTheme;
   protected readonly speedTraces = signal<SpeedTrace[] | undefined>(undefined);
   protected readonly circuitInfo = signal<CircuitInformation | undefined>(
     undefined,

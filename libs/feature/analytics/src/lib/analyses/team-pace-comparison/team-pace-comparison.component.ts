@@ -42,7 +42,6 @@ export class TeamPaceComparisonComponent {
   protected selectedYear: string | undefined;
   protected selectedEvent: Event | undefined;
 
-  protected readonly chartTheme = this.themeService.chartTheme;
   protected readonly paceData = signal<Lap[] | undefined>(undefined);
   protected readonly processedData = computed(() =>
     this.processData(this.paceData()),

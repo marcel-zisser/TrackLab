@@ -42,7 +42,6 @@ export class StrategyComparisonComponent {
   protected selectedEvent: Event | undefined;
   protected selectedSession: string | undefined;
 
-  protected readonly chartTheme = this.themeService.chartTheme;
   protected readonly strategyData = signal<Strategy[] | undefined>(undefined);
   protected readonly processedData = computed(() =>
     this.processData(this.strategyData()),

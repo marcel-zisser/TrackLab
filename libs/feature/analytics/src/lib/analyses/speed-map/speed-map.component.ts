@@ -65,7 +65,6 @@ export class SpeedMapComponent {
   protected selectedEvent: Event | undefined;
   protected selectedSession: string | undefined;
 
-  protected readonly chartTheme = this.themeService.chartTheme;
   protected readonly chartDimensionOptions = [
     { label: '2D', value: ChartDimensions.TwoDimensional },
     { label: '3D', value: ChartDimensions.ThreeDimensional },

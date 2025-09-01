@@ -44,7 +44,6 @@ export class DriverInputComponent {
   protected selectedEvent: Event | undefined;
   protected selectedSession: string | undefined;
 
-  protected readonly chartTheme = this.themeService.chartTheme;
   protected readonly carTelemetries = signal<CarTelemetry[] | undefined>(
     undefined,
   );

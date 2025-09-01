@@ -1,7 +1,22 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { BackendService, ThemeService } from '@tracklab/services';
-import { Driver, Event, PositionTelemetry, RaceSelection, TrackDominationResponse } from '@tracklab/models';
-import { AnalysisBaseComponent, SourceSelectionComponent } from '../../analysis-base';
+import {
+  Driver,
+  Event,
+  PositionTelemetry,
+  RaceSelection,
+  TrackDominationResponse,
+} from '@tracklab/models';
+import {
+  AnalysisBaseComponent,
+  SourceSelectionComponent,
+} from '../../analysis-base';
 import { first } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.component';
@@ -26,7 +41,6 @@ export class TrackDominationComponent {
   protected selectedEvent: Event | undefined;
   protected selectedSession: string | undefined;
 
-  protected readonly chartTheme = this.themeService.chartTheme;
   protected readonly coordinates = signal<PositionTelemetry[] | undefined>(
     undefined,
   );
