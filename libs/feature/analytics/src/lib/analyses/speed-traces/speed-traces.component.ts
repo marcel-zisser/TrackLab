@@ -5,7 +5,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { BackendService, ThemeService } from '@tracklab/services';
+import { BackendService } from '@tracklab/services';
 import {
   CircuitInformation,
   Event,
@@ -34,14 +34,12 @@ import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.co
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SpeedTracesComponent {
-  private readonly themeService = inject(ThemeService);
   private readonly backendService = inject(BackendService);
 
   protected selectedYear: string | undefined;
   protected selectedEvent: Event | undefined;
   protected selectedSession: string | undefined;
 
-  protected readonly chartTheme = this.themeService.chartTheme;
   protected readonly speedTraces = signal<SpeedTrace[] | undefined>(undefined);
   protected readonly circuitInfo = signal<CircuitInformation | undefined>(
     undefined,

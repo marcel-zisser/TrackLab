@@ -5,7 +5,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { BackendService, ThemeService } from '@tracklab/services';
+import { BackendService } from '@tracklab/services';
 import {
   Event,
   RaceSelection,
@@ -19,7 +19,6 @@ import {
   SourceSelectionComponent,
 } from '../../analysis-base';
 import { first } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
 import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.component';
 
 @Component({
@@ -34,15 +33,12 @@ import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.co
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StrategyComparisonComponent {
-  private readonly themeService = inject(ThemeService);
   private readonly backendService = inject(BackendService);
-  private readonly activatedRoute = inject(ActivatedRoute);
 
   protected selectedYear: string | undefined;
   protected selectedEvent: Event | undefined;
   protected selectedSession: string | undefined;
 
-  protected readonly chartTheme = this.themeService.chartTheme;
   protected readonly strategyData = signal<Strategy[] | undefined>(undefined);
   protected readonly processedData = computed(() =>
     this.processData(this.strategyData()),

@@ -5,7 +5,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { BackendService, ThemeService } from '@tracklab/services';
+import { BackendService } from '@tracklab/services';
 import {
   RaceSelection,
   WdcContendersPayload,
@@ -30,12 +30,10 @@ import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.co
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WdcContendersComponent {
-  private readonly themeService = inject(ThemeService);
   private readonly backendService = inject(BackendService);
 
   protected selectedYear: string | undefined;
 
-  protected readonly chartTheme = this.themeService.chartTheme;
   protected readonly chartOptions = computed(() => this.createChartOptions());
   protected readonly processedData = computed(() =>
     this.processData(this.wdcContendersData()),

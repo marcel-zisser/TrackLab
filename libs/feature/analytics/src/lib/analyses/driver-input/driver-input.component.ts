@@ -5,7 +5,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { BackendService, ThemeService } from '@tracklab/services';
+import { BackendService } from '@tracklab/services';
 import {
   CarTelemetry,
   CarTelemetryResponse,
@@ -36,7 +36,6 @@ import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.co
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DriverInputComponent {
-  private readonly themeService = inject(ThemeService);
   private readonly backendService = inject(BackendService);
   private readonly sourceSelectionService = inject(SourceSelectionService);
 
@@ -44,7 +43,6 @@ export class DriverInputComponent {
   protected selectedEvent: Event | undefined;
   protected selectedSession: string | undefined;
 
-  protected readonly chartTheme = this.themeService.chartTheme;
   protected readonly carTelemetries = signal<CarTelemetry[] | undefined>(
     undefined,
   );

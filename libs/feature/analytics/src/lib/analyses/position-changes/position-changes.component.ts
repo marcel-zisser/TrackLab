@@ -5,7 +5,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { BackendService, ThemeService } from '@tracklab/services';
+import { BackendService } from '@tracklab/services';
 import {
   DriverPositionPayload,
   DriverPositionResponse,
@@ -33,13 +33,11 @@ import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.co
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PositionChangesComponent {
-  private readonly themeService = inject(ThemeService);
   private readonly backendService = inject(BackendService);
 
   protected selectedYear: string | undefined;
   protected selectedEvent: Event | undefined;
 
-  protected readonly chartTheme = this.themeService.chartTheme;
   protected readonly positionData = signal<DriverPositionPayload | undefined>(
     undefined,
   );
