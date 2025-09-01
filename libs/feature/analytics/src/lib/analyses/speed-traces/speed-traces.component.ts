@@ -57,7 +57,7 @@ export class SpeedTracesComponent {
   protected readonly chartOptions = computed(() => this.createChartOptions());
 
   /**
-   * Effect to load the pace data, once all inputs have been selected
+   * Loads the speed trace data
    * @protected
    */
   protected loadSpeedTraces(selectedRace: RaceSelection) {
@@ -93,7 +93,7 @@ export class SpeedTracesComponent {
   }
 
   /**
-   * Processes the strategy data retrieved from the backend
+   * Processes the speed trace data retrieved from the backend
    * @private
    */
   private processData(data: SpeedTrace[] | undefined) {
@@ -114,7 +114,7 @@ export class SpeedTracesComponent {
   }
 
   /**
-   * Create the options for the strategy comparison chart
+   * Create the options for the chart
    * @private
    */
   private createChartOptions() {
@@ -197,6 +197,10 @@ export class SpeedTracesComponent {
     };
   }
 
+  /**
+   * Creates the series config for each driver
+   * @private
+   */
   private createDriverSeries() {
     return (
       this.selectedDrivers()?.map((driver) => ({

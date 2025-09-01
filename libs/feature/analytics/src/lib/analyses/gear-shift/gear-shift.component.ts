@@ -59,7 +59,7 @@ export class GearShiftComponent {
   protected readonly chartOptions = computed(() => this.createChartOptions());
 
   /**
-   * Effect to load the pace data, once all inputs have been selected
+   * Loads the gear shift data from the backend
    * @protected
    */
   protected loadGearShifts(selectedRace: RaceSelection) {
@@ -95,7 +95,7 @@ export class GearShiftComponent {
   }
 
   /**
-   * Processes the strategy data retrieved from the backend
+   * Processes the gear shift data
    * @private
    */
   private processData(data: CarTelemetry[] | undefined) {
@@ -116,7 +116,7 @@ export class GearShiftComponent {
   }
 
   /**
-   * Create the options for the strategy comparison chart
+   * Create the options for the gear shift chart
    * @private
    */
   private createChartOptions() {
@@ -150,11 +150,15 @@ export class GearShiftComponent {
           { value: 8, color: this.mapGearToColor(8) },
         ],
       },
-      series: [...this.createGearShiftData()],
+      series: [...this.createGearShiftSeries()],
     };
   }
 
-  private createGearShiftData() {
+  /**
+   * Creates the gear shift series
+   * @private
+   */
+  private createGearShiftSeries() {
     const segmentConfigs = [];
     const segments: number[][][] = [];
     const positionData = this.processedData()
@@ -212,6 +216,11 @@ export class GearShiftComponent {
     return segmentConfigs;
   }
 
+  /**
+   * Maps a given gear to a color on for rendering
+   * @param gear the desired gear
+   * @private
+   */
   private mapGearToColor(gear: number) {
     switch (gear) {
       case 1:

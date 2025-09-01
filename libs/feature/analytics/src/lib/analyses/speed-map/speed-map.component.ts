@@ -89,10 +89,10 @@ export class SpeedMapComponent {
   protected readonly chartOptions = computed(() => this.createChartOptions());
 
   /**
-   * Effect to load the pace data, once all inputs have been selected
+   * Loads the data for the speed map
    * @protected
    */
-  protected loadSpeedTraces(selectedRace: RaceSelection) {
+  protected loadSpeedMap(selectedRace: RaceSelection) {
     if (selectedRace.year && selectedRace.event && selectedRace.session) {
       this.selectedYear = selectedRace.year;
       this.selectedEvent = selectedRace.event;
@@ -121,7 +121,7 @@ export class SpeedMapComponent {
   }
 
   /**
-   * Processes the strategy data retrieved from the backend
+   * Processes the speed map data retrieved from the backend
    * @private
    */
   private processData(data: CarTelemetry[] | undefined) {
@@ -142,7 +142,7 @@ export class SpeedMapComponent {
   }
 
   /**
-   * Create the options for the strategy comparison chart
+   * Create the options for the speed map chart
    * @private
    */
   private createChartOptions() {
@@ -224,6 +224,10 @@ export class SpeedMapComponent {
     return chartOptions;
   }
 
+  /**
+   * Creates the speed map data for 2D view
+   * @private
+   */
   private createSpeedMapData2D() {
     const positionData =
       this.processedData()
@@ -247,6 +251,10 @@ export class SpeedMapComponent {
     };
   }
 
+  /**
+   * Creates the speed map data for 3D view
+   * @private
+   */
   private createSpeedMapData3D() {
     const positionData =
       this.processedData()

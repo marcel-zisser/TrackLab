@@ -21,7 +21,7 @@ import { FormsModule } from '@angular/forms';
 import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.component';
 
 @Component({
-  selector: 'tl-speed-traces',
+  selector: 'tl-position-changes',
   imports: [
     AnalysisBaseComponent,
     SourceSelectionComponent,
@@ -57,7 +57,7 @@ export class PositionChangesComponent {
   protected readonly chartOptions = computed(() => this.createChartOptions());
 
   /**
-   * Effect to load the pace data, once all inputs have been selected
+   * Effect to load the position data for a given race
    * @protected
    */
   protected loadPositionData(selectedRace: RaceSelection) {
@@ -81,7 +81,7 @@ export class PositionChangesComponent {
   }
 
   /**
-   * Create the options for the strategy comparison chart
+   * Create the options for the position change chart
    * @private
    */
   private createChartOptions() {
@@ -131,6 +131,10 @@ export class PositionChangesComponent {
     };
   }
 
+  /**
+   * Creates the series for each driver
+   * @private
+   */
   private createDriverSeries() {
     return (
       this.drivers()?.map((driver) => ({
@@ -153,6 +157,10 @@ export class PositionChangesComponent {
     );
   }
 
+  /**
+   * Creates the legend configuration for each driver
+   * @private
+   */
   private createDriverLegend() {
     return (
       this.drivers()?.map((driver) => {

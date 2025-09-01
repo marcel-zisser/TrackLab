@@ -49,7 +49,7 @@ export class TrackDominationComponent {
   protected readonly chartOptions = computed(() => this.createChartOptions());
 
   /**
-   * Effect to load the pace data, once all inputs have been selected
+   * Loads the track domination data from the backend
    * @protected
    */
   protected loadTrackDomination(selectedRace: RaceSelection) {
@@ -85,7 +85,7 @@ export class TrackDominationComponent {
   }
 
   /**
-   * Create the options for the strategy comparison chart
+   * Create the options for the track domination chart
    * @private
    */
   private createChartOptions() {
@@ -112,11 +112,15 @@ export class TrackDominationComponent {
         show: true,
         data: [...this.createLegendData()],
       },
-      series: [...this.createGearShiftData()],
+      series: [...this.createTrackDominationSeries()],
     };
   }
 
-  private createGearShiftData() {
+  /**
+   * Creates the series config for track domination
+   * @private
+   */
+  private createTrackDominationSeries() {
     const segmentConfigs = [];
     const segments: [number, number, string][][] = [];
     const domination = this.domination();
@@ -204,6 +208,10 @@ export class TrackDominationComponent {
     };
   }
 
+  /**
+   * Creates the legend data for the track domination chart
+   * @private
+   */
   private createLegendData() {
     return this.selectedDrivers().map((driver) => {
       if (driver.lineStyle === 'solid') {

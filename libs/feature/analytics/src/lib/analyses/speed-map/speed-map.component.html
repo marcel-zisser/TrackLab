@@ -17,7 +17,7 @@
   <div options class="flex flex-col gap-4">
     <tl-source-selection
       [withSessionSelection]="true"
-      (raceSelection)="loadSpeedTraces($event)"
+      (raceSelection)="loadSpeedMap($event)"
     >
       <div additionalOptions>
         @if (selectedEvent && selectedYear && selectedSession && selectedDriver()) {

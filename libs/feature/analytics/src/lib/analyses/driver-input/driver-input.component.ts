@@ -19,8 +19,6 @@ import {
 } from '../../analysis-base';
 import { combineLatest, first } from 'rxjs';
 import { FormsModule } from '@angular/forms';
-import { ECharts } from 'echarts/core';
-import { SourceSelectionService } from '../../analysis-base/source-selection/source-selection.service';
 import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.component';
 
 @Component({
@@ -37,7 +35,6 @@ import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.co
 })
 export class DriverInputComponent {
   private readonly backendService = inject(BackendService);
-  private readonly sourceSelectionService = inject(SourceSelectionService);
 
   protected selectedYear: string | undefined;
   protected selectedEvent: Event | undefined;
@@ -62,15 +59,11 @@ export class DriverInputComponent {
 
   protected readonly chartOptions = computed(() => this.createChartOptions());
 
-  protected onChartInit(ec: ECharts) {
-    this.sourceSelectionService.setChartInstance(ec);
-  }
-
   /**
-   * Effect to load the pace data, once all inputs have been selected
+   * Loads the driver input data from the backend
    * @protected
    */
-  protected loadCarTelemetry(selectedRace: RaceSelection) {
+  protected loadDriverInput(selectedRace: RaceSelection) {
     if (selectedRace.year && selectedRace.event && selectedRace.session) {
       this.selectedYear = selectedRace.year;
       this.selectedEvent = selectedRace.event;
@@ -99,7 +92,7 @@ export class DriverInputComponent {
   }
 
   /**
-   * Processes the strategy data retrieved from the backend
+   * Processes the driver input data retrieved from the backend
    * @private
    */
   private processData(data: CarTelemetry[] | undefined) {
@@ -120,7 +113,7 @@ export class DriverInputComponent {
   }
 
   /**
-   * Create the options for the strategy comparison chart
+   * Create the options for the driver input chart
    * @private
    */
   private createChartOptions() {

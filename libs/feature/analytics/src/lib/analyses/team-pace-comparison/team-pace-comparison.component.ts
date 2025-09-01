@@ -78,7 +78,7 @@ export class TeamPaceComparisonComponent {
   protected readonly chartOptions = computed(() => this.createChartOptions());
 
   /**
-   * Effect to load the pace data, once all inputs have been selected
+   * Effect to load the team pace data
    * @protected
    */
   protected loadPaceData(selectedRace: RaceSelection) {
@@ -99,7 +99,7 @@ export class TeamPaceComparisonComponent {
   }
 
   /**
-   * Processes the strategy data retrieved from the backend
+   * Processes the team pace data retrieved from the backend
    * @private
    */
   private processData(data: Lap[] | undefined) {
@@ -125,7 +125,7 @@ export class TeamPaceComparisonComponent {
   }
 
   /**
-   * Create the options for the strategy comparison chart
+   * Create the options for the team pace comparison chart
    * @private
    */
   private createChartOptions() {

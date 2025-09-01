@@ -6,7 +6,7 @@ import { first } from 'rxjs';
 import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.component';
 
 @Component({
-  selector: 'tl-strategy-comparison',
+  selector: 'tl-wdc-contenders',
   imports: [
     AnalysisBaseComponent,
     SourceSelectionComponent,
@@ -58,10 +58,9 @@ export class WdcContendersComponent {
         )?.currentPoints ?? 0),
     );
   });
-  private maxDifference = 0;
 
   /**
-   * Effect to load the strategy data, once all inputs have been selected
+   * Loads the data for the WDC contenders
    * @protected
    */
   protected loadWdcContendersData(selectedRace: RaceSelection) {
@@ -81,7 +80,7 @@ export class WdcContendersComponent {
   }
 
   /**
-   * Processes the strategy data retrieved from the backend
+   * Processes the WDC contender data retrieved from the backend
    * @private
    */
   private processData(data: WdcContendersPayload | undefined) {
@@ -90,7 +89,6 @@ export class WdcContendersComponent {
     }
     const processedData: [string, string, number][] = [];
     const races = this.races();
-    let maxDifference = 0;
 
     for (const race of races) {
       const contenders = data[race].contenders;
@@ -101,15 +99,10 @@ export class WdcContendersComponent {
       contenders.forEach((contender) => {
         const difference = (contender.maxPoints ?? 0) - leaderPoints;
 
-        if (difference > maxDifference) {
-          maxDifference = difference;
-        }
-
         processedData.push([race, contender.driver.code, difference]);
       });
     }
 
-    this.maxDifference = maxDifference;
     return processedData;
   }
 
@@ -144,8 +137,7 @@ export class WdcContendersComponent {
       tooltip: {
         show: true,
         formatter: (params: any) => {
-          const [race, driver, diff] = params.value;
-          // params contains info about the hovered item
+          const [race, , diff] = params.value;
           return `
             <strong>Points buffer vs. leader</strong><br/>
             <strong>Race: </strong>${race}<br/>
@@ -161,6 +153,11 @@ export class WdcContendersComponent {
     };
   }
 
+  /**
+   * Generates the series config for the WDC contenders
+   * @param processedData the processed data in the format [race, driver, buffer]
+   * @private
+   */
   private generateSeries(processedData: [string, string, number][]) {
     const series: any[] = [];
 
@@ -177,13 +174,17 @@ export class WdcContendersComponent {
     return series;
   }
 
+  /**
+   * Generates the visual map based on the processed data
+   * @param processedData the processed data in the format [race, driver, buffer]
+   * @private
+   */
   private generateVisualMaps(processedData: [string, string, number][]) {
     const visualMaps: any[] = [];
 
     this.races().forEach((race) => {
       const raceData = processedData.filter((data) => data[0] === race);
       const max = Math.max(...raceData.map((data) => data[2]));
-      const min = Math.min(...raceData.map((data) => data[2]));
 
       visualMaps.push({
         type: 'continuous',
