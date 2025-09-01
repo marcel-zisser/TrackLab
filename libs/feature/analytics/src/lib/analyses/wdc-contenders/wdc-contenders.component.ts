@@ -1,20 +1,7 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { BackendService } from '@tracklab/services';
-import {
-  RaceSelection,
-  WdcContendersPayload,
-  WdcContendersResponse,
-} from '@tracklab/models';
-import {
-  AnalysisBaseComponent,
-  SourceSelectionComponent,
-} from '../../analysis-base';
+import { RaceSelection, WdcContendersPayload, WdcContendersResponse } from '@tracklab/models';
+import { AnalysisBaseComponent, SourceSelectionComponent } from '../../analysis-base';
 import { first } from 'rxjs';
 import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.component';
 
