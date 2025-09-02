@@ -6,13 +6,7 @@ import {
   signal,
 } from '@angular/core';
 import { BackendService } from '@tracklab/services';
-import {
-  Duration,
-  Event,
-  Lap,
-  QuickLapsResponse,
-  RaceSelection,
-} from '@tracklab/models';
+import { Event, Lap, LapsResponse, RaceSelection } from '@tracklab/models';
 import {
   AnalysisBaseComponent,
   SourceSelectionComponent,
@@ -21,6 +15,10 @@ import { first } from 'rxjs';
 import * as echarts from 'echarts/core';
 import 'echarts/extension/dataTool';
 import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.component';
+import {
+  convertToMilliseconds,
+  millisecondsToTimingString,
+} from '@tracklab/util';
 
 const prepareBoxplotData = (echarts as any).dataTool.prepareBoxplotData;
 
@@ -88,7 +86,7 @@ export class TeamPaceComparisonComponent {
 
       this.paceData.set(undefined);
       this.backendService
-        .doGet<QuickLapsResponse>(
+        .doGet<LapsResponse>(
           `fast-f1/quick-laps?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}`,
         )
         .pipe(first((response) => !!response))
@@ -118,7 +116,7 @@ export class TeamPaceComparisonComponent {
       }
       groupedLaps
         .get(lap.team)
-        ?.lapTimes.push(this.convertToMilliseconds(lap.lapTime));
+        ?.lapTimes.push(convertToMilliseconds(lap.lapTime));
     });
 
     return groupedLaps;
@@ -138,13 +136,13 @@ export class TeamPaceComparisonComponent {
         trigger: 'item',
         formatter: (params: any) => {
           if (params.value.length === 6) {
-            return `<b>Min</b>: ${this.millisecondsToTimingString(params.value[1])}<br/>
-                    <b>Q1</b>: ${this.millisecondsToTimingString(params.value[2])}<br/>
-                    <b>Median</b>:: ${this.millisecondsToTimingString(params.value[3])}<br/>
-                    <b>Q3</b>:: ${this.millisecondsToTimingString(params.value[4])}<br/>
-                    <b>Max</b>:: ${this.millisecondsToTimingString(params.value[5])}`;
+            return `<b>Min</b>: ${millisecondsToTimingString(params.value[1])}<br/>
+                    <b>Q1</b>: ${millisecondsToTimingString(params.value[2])}<br/>
+                    <b>Median</b>:: ${millisecondsToTimingString(params.value[3])}<br/>
+                    <b>Q3</b>:: ${millisecondsToTimingString(params.value[4])}<br/>
+                    <b>Max</b>:: ${millisecondsToTimingString(params.value[5])}`;
           } else {
-            return `Lap: ${this.millisecondsToTimingString(params.value[1])}`;
+            return `Lap: ${millisecondsToTimingString(params.value[1])}`;
           }
         },
       },
@@ -158,7 +156,7 @@ export class TeamPaceComparisonComponent {
         name: 'Lap Time',
         min: this.yAxisMin(),
         axisLabel: {
-          formatter: (val: number) => this.millisecondsToTimingString(val),
+          formatter: (val: number) => millisecondsToTimingString(val),
         },
       },
       series: [
@@ -173,32 +171,5 @@ export class TeamPaceComparisonComponent {
         },
       ],
     };
-  }
-
-  /**
-   * Converts Duration to milliseconds
-   * @param lapTime the duration to convert
-   * @private
-   */
-  private convertToMilliseconds(lapTime: Duration): number {
-    return (
-      (lapTime.hours * 60 * 60 * 1000 || 0) +
-      (lapTime.minutes * 60 * 1000 || 0) +
-      (lapTime.seconds * 1000 || 0) +
-      (lapTime.milliseconds || 0)
-    );
-  }
-
-  /**
-   * Converts the milliseconds to a string in format mm:ss:mmmm
-   * @param milliseconds the milliseconds to convert
-   * @private
-   */
-  private millisecondsToTimingString(milliseconds: number): string {
-    const totalMs = Math.round(milliseconds);
-    const minutes = Math.floor(totalMs / 60000);
-    const seconds = Math.floor((totalMs % 60000) / 1000);
-    const millis = totalMs % 1000;
-    return `${minutes}:${seconds.toString().padStart(2, '0')}.${millis.toString().padStart(3, '0')}`;
   }
 }

@@ -154,6 +154,24 @@ export class FastF1Service implements OnModuleInit {
   }
 
   /**
+   * Retrieves Laps for a given race and driver
+   * @param year the year of the race
+   * @param round the round of the race
+   * @param session the session of the round
+   * @param driver the driver to retrieve the lap data from
+   */
+  async getLaps(year: number, round: number, session: string, driver: string) {
+    return await firstValueFrom(
+      this.analyticsService.getLaps({
+        year: year,
+        round: round,
+        session: session,
+        drivers: [driver],
+      }),
+    );
+  }
+
+  /**
    * Retrieves Quick Laps for a given race
    * @param year the year of the race
    * @param round the round of the race

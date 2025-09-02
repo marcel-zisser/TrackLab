@@ -10,8 +10,8 @@ import {
   CarTelemetryResponse,
   ChampionshipContendersResponse,
   DriversResponse,
+  LapsResponse,
   PositionDataResponse,
-  QuickLapsResponse,
   SpeedTracesResponse,
   StrategyResponse,
   TrackDominationResponse,
@@ -54,11 +54,21 @@ export class FastF1Controller {
     return this.fastF1Service.getCircuitInfo(year, round, session);
   }
 
+  @Get('laps')
+  getLaps(
+    @Query('year') year: number,
+    @Query('round') round: number,
+    @Query('session') session: string,
+    @Query('driver') driver: string,
+  ): Promise<LapsResponse> {
+    return this.fastF1Service.getLaps(year, round, session, driver);
+  }
+
   @Get('quick-laps')
   getQuickLaps(
     @Query('year') year: number,
     @Query('round') round: number,
-  ): Promise<QuickLapsResponse> {
+  ): Promise<LapsResponse> {
     return this.fastF1Service.getQuickLaps(year, round);
   }
 

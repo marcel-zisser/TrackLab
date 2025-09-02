@@ -1,5 +1,5 @@
 import { Lap } from '../analytics';
 
-export interface QuickLapsResponse {
+export interface LapsResponse {
   laps: Lap[];
 }

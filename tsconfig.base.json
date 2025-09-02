@@ -20,7 +20,8 @@
       "@tracklab/models": ["libs/shared/models/src/index.ts"],
       "@tracklab/services": ["libs/shared/services/src/index.ts"],
       "@tracklab/shared/components": ["libs/shared/components/src/index.ts"],
-      "@tracklab/user": ["libs/feature/user/src/index.ts"]
+      "@tracklab/user": ["libs/feature/user/src/index.ts"],
+      "@tracklab/util": ["libs/shared/util/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"],

@@ -6,7 +6,8 @@ import "types.proto";
 
 service Analytics {
   rpc GetSessionStrategy(SessionRequest) returns (StrategyResponse) {}
-  rpc GetQuickLaps(EventRequest) returns (QuickLapsResponse) {}
+  rpc GetLaps(DriverRequest) returns (LapsResponse) {}
+  rpc GetQuickLaps(EventRequest) returns (LapsResponse) {}
   rpc GetSpeedTraces(SessionRequest) returns (SpeedTracesResponse) {}
   rpc GetCarTelemetry(CarTelemetryRequest) returns (CarTelemetryResponse) {}
   rpc GetPositionData(EventRequest) returns (PositionDataResponse) {}
@@ -37,7 +38,7 @@ message StrategyResponse {
   repeated Strategy strategy = 1;
 }
 
-message QuickLapsResponse {
+message LapsResponse {
   repeated Lap laps = 1;
 }
 
