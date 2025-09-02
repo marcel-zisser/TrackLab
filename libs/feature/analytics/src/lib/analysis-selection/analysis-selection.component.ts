@@ -119,6 +119,16 @@ export class AnalysisSelectionComponent {
           });
         },
       },
+      {
+        title: 'Lap Times Scatter',
+        description: 'Scatter plot of a drivers lap times in a race.',
+        icon: PrimeIcons.CHART_SCATTER,
+        callback: () => {
+          this.router.navigate(['laptime-scatter'], {
+            relativeTo: this.activatedRoute,
+          });
+        },
+      },
     ];
   }
 }

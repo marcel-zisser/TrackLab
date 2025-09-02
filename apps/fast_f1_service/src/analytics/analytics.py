@@ -7,9 +7,9 @@ import numpy as np
 from analytics.analytics_helpers import map_row_to_lap, get_drivers_standings, \
   calculate_max_points_for_remaining_season, calculate_who_can_win, get_driver_plot_style
 from generated import analytics_pb2_grpc
-from generated.analytics_pb2 import StrategyResponse, QuickLapsResponse, SpeedTracesResponse, \
+from generated.analytics_pb2 import StrategyResponse, SpeedTracesResponse, \
   CarTelemetryResponse, DriversResponse, PositionDataResponse, DriverPositionData, SessionRequest, \
-  ChampionshipContendersResponse, TrackDominationResponse
+  ChampionshipContendersResponse, TrackDominationResponse, LapsResponse
 from generated.types_pb2 import Strategy, SpeedTrace, CarTelemetry, PositionTelemetry, Driver
 
 
@@ -41,8 +41,33 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
 
     return response
 
+  def GetLaps(self, request, context):
+    response = LapsResponse()
+
+    session = fastf1.get_session(request.year, request.round, 'Race')
+    session.load()
+    laps = session.laps.pick_drivers([request.drivers[0]])
+    transformed_laps = laps.copy()
+    transformed_laps.loc[:, "LapTime (s)"] = laps["LapTime"].dt.total_seconds()
+
+    # order the team from the fastest (lowest median lap time) tp slower
+    team_order = (
+      transformed_laps[["Team", "LapTime (s)"]]
+      .groupby("Team")
+      .median()["LapTime (s)"]
+      .sort_values()
+      .index
+    )
+    team_palette = {team: fastf1.plotting.get_team_color(team, session=session)
+                    for team in team_order}
+
+    for lap in transformed_laps.itertuples():
+      response.laps.append(map_row_to_lap(lap, team_palette))
+
+    return response
+
   def GetQuickLaps(self, request, context):
-    response = QuickLapsResponse()
+    response = LapsResponse()
 
     session = fastf1.get_session(request.year, request.round, 'Race')
     session.load()
