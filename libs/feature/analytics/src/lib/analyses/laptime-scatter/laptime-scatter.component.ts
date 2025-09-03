@@ -1,11 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { BackendService } from '@tracklab/services';
-import { Event, Lap, LapsResponse, RaceSelection } from '@tracklab/models';
+import { Event, Lap, LapsResponse, RaceSelection, TireColors, TireCompound } from '@tracklab/models';
 import { AnalysisBaseComponent, SourceSelectionComponent } from '../../analysis-base';
 import { first } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.component';
 import { convertToMilliseconds, millisecondsToTimingString } from '@tracklab/util';
+
+type ProcessedLapTime = [number, number, string];
 
 @Component({
   selector: 'tl-laptime-scatter',
@@ -22,6 +24,17 @@ import { convertToMilliseconds, millisecondsToTimingString } from '@tracklab/uti
 export class LaptimeScatterComponent {
   private readonly backendService = inject(BackendService);
 
+  private readonly minLapTime = computed<number>(() =>
+    Math.min(...(this.processedData()?.map((lap) => lap[1]) ?? [])),
+  );
+  private readonly tireCompounds = computed<TireCompound[]>(() => {
+    const compounds = new Set<TireCompound>();
+    this.processedData()?.forEach((lap) =>
+      compounds.add(lap[2] as TireCompound),
+    );
+    return Array.from(compounds.values());
+  });
+
   protected selectedYear: string | undefined;
   protected selectedEvent: Event | undefined;
   protected selectedSession: string | undefined;
@@ -29,11 +42,8 @@ export class LaptimeScatterComponent {
 
   protected readonly laps = signal<Lap[] | undefined>(undefined);
 
-  protected readonly processedData = computed(() =>
-    this.processData(this.laps()),
-  );
-  protected drivers = computed(() =>
-    Array.from(this.processedData()?.keys() ?? []),
+  protected readonly processedData = computed<ProcessedLapTime[] | undefined>(
+    () => this.processData(this.laps()),
   );
 
   protected readonly chartOptions = computed(() => this.createChartOptions());
@@ -73,7 +83,7 @@ export class LaptimeScatterComponent {
    * Processes the laptime data from the backend
    * @private
    */
-  private processData(data: Lap[] | undefined) {
+  private processData(data: Lap[] | undefined): ProcessedLapTime[] | undefined {
     if (!data) {
       return undefined;
     }
@@ -96,12 +106,16 @@ export class LaptimeScatterComponent {
         left: 'center',
       },
       grid: {
+        top: 50,
+        bottom: 50,
         left: 50,
+        right: 50,
         containLabel: true,
       },
       yAxis: {
         type: 'value',
         name: 'Lap Time',
+        min: Math.min(this.minLapTime() - 5000, 0),
         axisLabel: {
           formatter: (val: number) => millisecondsToTimingString(val),
         },
@@ -117,10 +131,29 @@ export class LaptimeScatterComponent {
           end: 0,
         },
       ],
+      visualMap: {
+        pieces: this.generateVisualMapPieces(this.tireCompounds()),
+        formatter: (value: string) => value,
+        backgroundColor: 'lightgrey',
+        borderWidth: 1,
+        right: 100,
+        top: 100,
+      },
       series: {
         type: 'scatter',
         data: this.processedData(),
+        itemStyle: {
+          borderWidth: 1,
+          borderColor: 'black',
+        },
       },
     };
+  }
+
+  private generateVisualMapPieces(compounds: TireCompound[]) {
+    return compounds.map((compound) => ({
+      value: compound,
+      color: TireColors.get(compound),
+    }));
   }
 }

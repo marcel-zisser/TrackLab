@@ -1,5 +1,6 @@
 import fastf1
 import fastf1.plotting
+import numpy as np
 from fastf1.ergast import Ergast
 from pandas import NaT
 
@@ -39,7 +40,7 @@ def map_row_to_lap(row, team_palette):
       milliseconds=lap_time.components.milliseconds
     ) if lap_time is not NaT else Duration(),
     lapNumber=int(row.LapNumber),
-    stint=int(row.Stint),
+    stint=int(row.Stint) if not np.isnan(row.Stint) else 0,
     pitOutTime=Duration(
       hours=pit_out_time.components.hours,
       minutes=pit_out_time.components.minutes,
@@ -76,9 +77,9 @@ def map_row_to_lap(row, team_palette):
     speedST=float(row.SpeedST),
     isPersonalBest=bool(row.IsPersonalBest),
     tireCompound=row.Compound,
-    tireLife=int(row.TyreLife),
+    tireLife=int(row.TyreLife) if not np.isnan(row.TyreLife) else 0,
     freshTire=bool(row.FreshTyre),
-    trackStatus=int(row.TrackStatus),
+    trackStatus=int(row.TrackStatus) if not row.TrackStatus == '' else 0,
     position=int(row.Position),
     deleted=bool(row.Deleted),
     deletedReason=row.DeletedReason
