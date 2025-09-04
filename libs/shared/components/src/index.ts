@@ -6,3 +6,4 @@ export * from './lib/skeleton-table/skeleton-table.component';
 export * from './lib/countdown/countdown.component';
 export * from './lib/authentication';
 export * from './lib/dialogs';
+export { InfoPageComponent } from './lib/info-page/info-page.component';

@@ -1,23 +1,33 @@
 import { Route } from '@angular/router';
 import { ConstructionComponent } from '@tracklab/shared/components';
 import { DashboardComponent } from '@tracklab/dashboard';
-import {
-  AnalysisHostComponent,
-  AnalysisSelectionComponent,
-  AnalyticsComponent,
-} from '@tracklab/analytics';
-import {
-  CollectionComponent,
-  SettingsComponent,
-  UserComponent,
-} from '@tracklab/user';
+import { AnalysisHostComponent, AnalysisSelectionComponent, AnalyticsComponent } from '@tracklab/analytics';
+import { CollectionComponent, SettingsComponent, UserComponent } from '@tracklab/user';
 import { authenticationGuard } from '@tracklab/services';
+import { DisclaimerComponent } from './disclaimer/disclaimer.component';
+import { AboutComponent } from './about/about.component';
+import { AcknowledgementsComponent } from './acknowledgements/acknowledgements.component';
 
 export const appRoutes: Route[] = [
   {
     title: 'TrackLab',
     path: '',
     component: DashboardComponent,
+  },
+  {
+    title: 'About',
+    path: 'about',
+    component: AboutComponent,
+  },
+  {
+    title: 'Acknowledgements',
+    path: 'acknowledgements',
+    component: AcknowledgementsComponent,
+  },
+  {
+    title: 'Disclaimer',
+    path: 'disclaimer',
+    component: DisclaimerComponent,
   },
   {
     path: 'analytics',
