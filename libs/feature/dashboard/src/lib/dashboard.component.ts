@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject, signal
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 
 import { StandingsDevelopmentComponent } from './standings-development/standings-development.component';
 import { DashboardService } from './dashboard.service';
@@ -25,8 +20,8 @@ import { FormsModule } from '@angular/forms';
     SeasonProgressComponent,
     ReliabilityTrackerComponent,
     SelectButton,
-    FormsModule
-],
+    FormsModule,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,7 +29,10 @@ import { FormsModule } from '@angular/forms';
 export class DashboardComponent {
   private readonly dashboardService = inject(DashboardService);
 
-  protected stateOptions = [{ label: 'Driver', value: 'driver' },{ label: 'Team', value: 'team' }];
+  protected stateOptions = [
+    { label: 'Driver', value: 'driver' },
+    { label: 'Team', value: 'team' },
+  ];
 
   statSpotlightData = computed(() => this.computeStatSpotlights());
   seasonResults = this.dashboardService.currentSeason;
@@ -49,7 +47,7 @@ export class DashboardComponent {
         constructor: entry.Constructor.name,
         points: entry.points,
       };
-    })
+    }),
   );
 
   /**
@@ -61,6 +59,27 @@ export class DashboardComponent {
   }
 
   private computeStatSpotlights() {
+    const mostWins = this.getMostWins();
+    const mostPoles = this.getMostPoles();
+    return [
+      {
+        category: 'Most Wins',
+        driver: mostWins.driver,
+        data: mostWins.data,
+      },
+      {
+        category: 'Most Pole Positions',
+        driver: mostPoles.driver,
+        data: mostPoles.data,
+      },
+    ];
+  }
+
+  /**
+   * Retrieves the most wins out of all drivers
+   * @private
+   */
+  private getMostWins() {
     const winsPerDriver =
       this.seasonResults()?.reduce((acc, raceResult) => {
         const winner =
@@ -73,20 +92,42 @@ export class DashboardComponent {
 
     const mostWins = Array.from(winsPerDriver?.entries()).reduce(
       (acc, [driver, numberOfWins]) => {
-        if (numberOfWins > acc.numberOfWins) {
-          return { driver: driver, numberOfWins: numberOfWins };
+        if (numberOfWins > acc.data) {
+          return { driver: driver, data: numberOfWins };
         }
         return acc;
       },
-      { driver: '', numberOfWins: 0 }
+      { driver: '', data: 0 },
     );
 
-    return [
-      {
-        category: 'Most Wins',
-        driver: mostWins.driver,
-        data: mostWins.numberOfWins,
+    return mostWins;
+  }
+
+  /**
+   * Retrieves the most poles out of all drivers
+   * @private
+   */
+  private getMostPoles() {
+    const polesPerDriver =
+      this.seasonResults()?.reduce((acc, raceResult) => {
+        const poleSitter =
+          raceResult.results.find((result) => result.gridPosition === 1)?.driver
+            .code ?? '';
+
+        acc.set(poleSitter, (acc.get(poleSitter) ?? 0) + 1);
+        return acc;
+      }, new Map<string, number>()) ?? new Map<string, number>();
+
+    const mostPoles = Array.from(polesPerDriver?.entries()).reduce(
+      (acc, [driver, numberOfPoles]) => {
+        if (numberOfPoles > acc.data) {
+          return { driver: driver, data: numberOfPoles };
+        }
+        return acc;
       },
-    ];
+      { driver: '', data: 0 },
+    );
+
+    return mostPoles;
   }
 }
