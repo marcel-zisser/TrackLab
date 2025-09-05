@@ -40,7 +40,9 @@ export class DashboardComponent {
     { label: 'Team', value: 'team' },
   ];
 
-  statSpotlightData = computed(() => this.computeStatSpotlights());
+  statSpotlightData = computed(() =>
+    this.dashboardService.computeStatSpotlights(),
+  );
   seasonResults = this.dashboardService.currentSeason;
   driverStandings = this.dashboardService.driverStandings;
 
@@ -62,78 +64,5 @@ export class DashboardComponent {
    */
   changeReliabilitySelector(event: SelectButtonChangeEvent) {
     this.reliabilityDataSelector.set(event.value);
-  }
-
-  private computeStatSpotlights() {
-    const mostWins = this.getMostWins();
-    const mostPoles = this.getMostPoles();
-    return [
-      {
-        category: 'Most Wins',
-        driver: mostWins.driver,
-        data: mostWins.data,
-      },
-      {
-        category: 'Most Pole Positions',
-        driver: mostPoles.driver,
-        data: mostPoles.data,
-      },
-    ];
-  }
-
-  /**
-   * Retrieves the most wins out of all drivers
-   * @private
-   */
-  private getMostWins() {
-    const winsPerDriver =
-      this.seasonResults()?.reduce((acc, raceResult) => {
-        const winner =
-          raceResult.results.find((result) => result.position === 1)?.driver
-            .code ?? '';
-
-        acc.set(winner, (acc.get(winner) ?? 0) + 1);
-        return acc;
-      }, new Map<string, number>()) ?? new Map<string, number>();
-
-    const mostWins = Array.from(winsPerDriver?.entries()).reduce(
-      (acc, [driver, numberOfWins]) => {
-        if (numberOfWins > acc.data) {
-          return { driver: driver, data: numberOfWins };
-        }
-        return acc;
-      },
-      { driver: '', data: 0 },
-    );
-
-    return mostWins;
-  }
-
-  /**
-   * Retrieves the most poles out of all drivers
-   * @private
-   */
-  private getMostPoles() {
-    const polesPerDriver =
-      this.seasonResults()?.reduce((acc, raceResult) => {
-        const poleSitter =
-          raceResult.results.find((result) => result.gridPosition === 1)?.driver
-            .code ?? '';
-
-        acc.set(poleSitter, (acc.get(poleSitter) ?? 0) + 1);
-        return acc;
-      }, new Map<string, number>()) ?? new Map<string, number>();
-
-    const mostPoles = Array.from(polesPerDriver?.entries()).reduce(
-      (acc, [driver, numberOfPoles]) => {
-        if (numberOfPoles > acc.data) {
-          return { driver: driver, data: numberOfPoles };
-        }
-        return acc;
-      },
-      { driver: '', data: 0 },
-    );
-
-    return mostPoles;
   }
 }
