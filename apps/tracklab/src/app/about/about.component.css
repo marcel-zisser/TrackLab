@@ -1,0 +1,69 @@
+:host {
+  text-align: justify;
+}
+
+h1 {
+  font-size: larger;
+  font-weight: bold;
+  font-style: italic;
+}
+
+.avatar {
+  object-fit: cover; /* keeps image filling shape */
+  clip-path: polygon(
+    15% 0%,
+    35% 2%,
+    55% 0%,
+    85% 10%,
+    95% 35%,
+    85% 60%,
+    95% 90%,
+    70% 100%,
+    45% 95%,
+    20% 100%,
+    5% 75%,
+    10% 40%,
+    5% 30%
+  );
+  border-radius: 12px; /* softens sharp edges just a bit */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.4s ease;
+}
+
+.avatar:hover {
+  transform: scale(1.05) rotate(1deg);
+}
+
+.section {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+
+  .title-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 2;
+  }
+
+  .text-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 3;
+  }
+}
+
+.divider {
+  padding: 1rem;
+}
+
+.footer {
+  display: flex;
+  flex-direction: row;
+  gap: .5rem;
+  width: 100%;
+  justify-content: center;
+  margin-top: 4rem;
+}
