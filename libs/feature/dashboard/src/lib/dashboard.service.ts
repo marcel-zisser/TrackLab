@@ -5,7 +5,7 @@ import {
   DriverStandingsEntry,
   Event,
   RaceResult,
-  StandingsResponse
+  StandingsResponse,
 } from '@tracklab/models';
 
 @Injectable({
@@ -73,27 +73,36 @@ export class DashboardService {
 
     this.currentSeason()?.forEach((raceResult) => {
       raceResult.results.forEach((result) => {
+        const driverCode = result.driver.code;
         if (result.position === 1) {
-          const winner = result.driver.code;
-          winsPerDriver.set(winner, (winsPerDriver.get(winner) ?? 0) + 1);
+          winsPerDriver.set(
+            driverCode,
+            (winsPerDriver.get(driverCode) ?? 0) + 1,
+          );
         }
 
         if (result.gridPosition === 1) {
-          const pole = result.driver.code;
-          polesPerDriver.set(pole, (polesPerDriver.get(pole) ?? 0) + 1);
+          polesPerDriver.set(
+            driverCode,
+            (polesPerDriver.get(driverCode) ?? 0) + 1,
+          );
         }
 
-        if (result.status === 'Retired' || result.status === 'Disqualified') {
-          const driver = result.driver.code;
-          dnfsPerDriver.set(driver, (dnfsPerDriver.get(driver) ?? 0) + 1);
+        if (result.status !== 'Finished' && !result.status.includes('Lap')) {
+          dnfsPerDriver.set(
+            driverCode,
+            (dnfsPerDriver.get(driverCode) ?? 0) + 1,
+          );
+        } else {
+          dnfsPerDriver.set(driverCode, dnfsPerDriver.get(driverCode) ?? 0);
         }
 
-        if (!qualiToRaceDiffPerDriver.has(result.driver.code)) {
-          qualiToRaceDiffPerDriver.set(result.driver.code, []);
+        if (!qualiToRaceDiffPerDriver.has(driverCode)) {
+          qualiToRaceDiffPerDriver.set(driverCode, []);
         }
 
         const qualiToRaceDiff = result.gridPosition - result.position;
-        qualiToRaceDiffPerDriver.get(result.driver.code)?.push(qualiToRaceDiff);
+        qualiToRaceDiffPerDriver.get(driverCode)?.push(qualiToRaceDiff);
       });
     });
 
