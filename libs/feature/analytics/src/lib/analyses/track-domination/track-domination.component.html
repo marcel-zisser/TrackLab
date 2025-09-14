@@ -1,6 +1,6 @@
 <tl-analysis-base class="base">
   <div chart class="chart-container">
-    @if (selectedEvent && selectedYear && selectedSession && selectedDrivers().length) {
+    @if (selectedEvent && selectedYear && selectedSession && selectedDriverStrings.length) {
       <tl-chart-base
         [loading]="coordinates() === undefined || domination() === undefined"
         [options]="chartOptions()"

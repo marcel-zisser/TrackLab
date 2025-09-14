@@ -1,22 +1,7 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { BackendService } from '@tracklab/services';
-import {
-  Driver,
-  Event,
-  PositionTelemetry,
-  RaceSelection,
-  TrackDominationResponse,
-} from '@tracklab/models';
-import {
-  AnalysisBaseComponent,
-  SourceSelectionComponent,
-} from '../../analysis-base';
+import { Driver, Event, PositionTelemetry, RaceSelection, TrackDominationResponse } from '@tracklab/models';
+import { AnalysisBaseComponent, SourceSelectionComponent } from '../../analysis-base';
 import { first } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.component';
@@ -39,6 +24,7 @@ export class TrackDominationComponent {
   protected selectedYear: string | undefined;
   protected selectedEvent: Event | undefined;
   protected selectedSession: string | undefined;
+  protected selectedDriverStrings: string[] = [];
 
   protected readonly coordinates = signal<PositionTelemetry[] | undefined>(
     undefined,
@@ -62,6 +48,7 @@ export class TrackDominationComponent {
       this.selectedYear = selectedRace.year;
       this.selectedEvent = selectedRace.event;
       this.selectedSession = selectedRace.session;
+      this.selectedDriverStrings = selectedRace.drivers;
 
       this.coordinates.set(undefined);
       this.domination.set(undefined);
@@ -92,8 +79,8 @@ export class TrackDominationComponent {
     return {
       title: {
         text:
-          `Track Domination ${this.selectedDrivers()[0].givenName} ${this.selectedDrivers()[0].familyName}` +
-          ` vs. ${this.selectedDrivers()[1].givenName} ${this.selectedDrivers()[1].familyName}`,
+          `Track Domination ${this.selectedDrivers()[0]?.givenName} ${this.selectedDrivers()[0]?.familyName}` +
+          ` vs. ${this.selectedDrivers()[1]?.givenName} ${this.selectedDrivers()[1]?.familyName}`,
         left: 'center',
       },
       grid: {
