@@ -46,7 +46,7 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
 
     session = fastf1.get_session(request.year, request.round, 'Race')
     session.load()
-    laps = session.laps.pick_drivers([request.drivers[0]])
+    laps = session.laps.pick_drivers([request.drivers[0]]).pick_quicklaps(threshold=1.15)
     transformed_laps = laps.copy()
     transformed_laps.loc[:, "LapTime (s)"] = laps["LapTime"].dt.total_seconds()
 

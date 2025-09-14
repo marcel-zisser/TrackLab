@@ -2,20 +2,20 @@ import { computed, inject, Injectable } from '@angular/core';
 import { DashboardService } from '../dashboard.service';
 
 export type DriverReliability = {
-  driverCode: string,
-  team: string,
-  color: string,
-  fails: number
-}
+  driverCode: string;
+  team: string;
+  color: string;
+  fails: Map<string, number>;
+};
 
 export type TeamReliability = {
-  team: string,
-  color: string,
-  fails: number
-}
+  team: string;
+  color: string;
+  fails: Map<string, number>;
+};
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ReliabilityTrackerService {
   private readonly dashboardService = inject(DashboardService);
@@ -26,17 +26,25 @@ export class ReliabilityTrackerService {
     const reliabilityMap = new Map<string, DriverReliability>();
 
     for (const race of this.currentSeason() ?? []) {
-      for (const result of race.results) {
-        if (result.status === 'Retired' || result.status === 'Disqualified') {
-          const driverReliability = reliabilityMap.get(result.driver.code) ?? {
-            driverCode: result.driver.code,
-            team: result.team.name,
-            color: result.team.color ?? '#f00',
-            fails: 0
+      for (const driverResult of race.results) {
+        if (
+          driverResult.status !== 'Finished' &&
+          !driverResult.status.includes('Lap')
+        ) {
+          const driverReliability = reliabilityMap.get(
+            driverResult.driver.code,
+          ) ?? {
+            driverCode: driverResult.driver.code,
+            team: driverResult.team.name,
+            color: driverResult.team.color ?? '#777',
+            fails: new Map<string, number>(),
           };
-          driverReliability.fails++;
+          driverReliability.fails.set(
+            driverResult.status,
+            (driverReliability.fails.get(driverResult.status) ?? 0) + 1,
+          );
 
-          reliabilityMap.set(result.driver.code, driverReliability);
+          reliabilityMap.set(driverResult.driver.code, driverReliability);
         }
       }
     }
@@ -47,13 +55,20 @@ export class ReliabilityTrackerService {
   teamReliability = computed(() => {
     const teamReliabilityMap = new Map<string, TeamReliability>();
 
-    this.driverReliability().forEach(driverReliability => {
-      const teamReliability = teamReliabilityMap.get(driverReliability.team) ?? {
+    this.driverReliability().forEach((driverReliability) => {
+      const teamReliability = teamReliabilityMap.get(
+        driverReliability.team,
+      ) ?? {
         team: driverReliability.team,
         color: driverReliability.color,
-        fails: 0
+        fails: new Map<string, number>(),
       };
-      teamReliability.fails += driverReliability.fails;
+      driverReliability.fails.forEach((value, key) =>
+        teamReliability.fails.set(
+          key,
+          (teamReliability.fails.get(key) ?? 0) + value,
+        ),
+      );
 
       teamReliabilityMap.set(driverReliability.team, teamReliability);
     });

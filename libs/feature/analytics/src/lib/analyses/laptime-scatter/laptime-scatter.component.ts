@@ -1,11 +1,30 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { BackendService } from '@tracklab/services';
-import { Event, Lap, LapsResponse, RaceSelection, TireColors, TireCompound } from '@tracklab/models';
-import { AnalysisBaseComponent, SourceSelectionComponent } from '../../analysis-base';
+import {
+  Event,
+  Lap,
+  LapsResponse,
+  RaceSelection,
+  TireColors,
+  TireCompound,
+} from '@tracklab/models';
+import {
+  AnalysisBaseComponent,
+  SourceSelectionComponent,
+} from '../../analysis-base';
 import { first } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.component';
-import { convertToMilliseconds, millisecondsToTimingString } from '@tracklab/util';
+import {
+  convertToMilliseconds,
+  millisecondsToTimingString,
+} from '@tracklab/util';
 
 type ProcessedLapTime = [number, number, string];
 
@@ -112,10 +131,24 @@ export class LaptimeScatterComponent {
         right: 50,
         containLabel: true,
       },
+      tooltip: {
+        show: true,
+        formatter: (val: any) => {
+          const [lap, time, compound] = val.data;
+
+          return `
+            <div class="grid grid-cols-2 gap-x-4">
+              <div class="col-span-1 font-bold">Lap: </div><div class="col-span-1">${lap}</div>
+              <div class="col-span-1 font-bold">Time: </div><div class="col-span-1">${millisecondsToTimingString(time)}</div>
+              <div class="col-span-1 font-bold">Compound: </div><div class="col-span-1">${compound}</div>
+            </div>
+          `;
+        },
+      },
       yAxis: {
         type: 'value',
         name: 'Lap Time',
-        min: Math.min(this.minLapTime() - 5000, 0),
+        min: Math.max(this.minLapTime() - 2000, 0),
         axisLabel: {
           formatter: (val: number) => millisecondsToTimingString(val),
         },

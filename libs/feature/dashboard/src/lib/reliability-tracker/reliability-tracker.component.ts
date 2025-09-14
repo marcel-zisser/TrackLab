@@ -1,13 +1,7 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  input,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import { ThemeService } from '@tracklab/services';
-import { ReliabilityTrackerService } from './reliability-tracker.service';
+import { DriverReliability, ReliabilityTrackerService, TeamReliability } from './reliability-tracker.service';
 
 @Component({
   selector: 'tl-reliability-tracker',
@@ -42,6 +36,10 @@ export class ReliabilityTrackerComponent {
       confine: false,
       appendTo: 'body',
       className: 'tl-tooltip',
+      formatter: (val: any) => {
+        const name = val.data.name;
+        return this.generateTooltip(name);
+      },
     },
     legend: {
       data: Array.from(this.reliabilityData().keys()),
@@ -50,11 +48,6 @@ export class ReliabilityTrackerComponent {
       top: 0,
       wrap: true,
       scroll: true,
-    },
-    toolbox: {
-      feature: {
-        // saveAsImage: {},
-      },
     },
     series: {
       name: this.dataSelector(),
@@ -68,15 +61,60 @@ export class ReliabilityTrackerComponent {
       labelLine: {
         show: true,
       },
-      data: Array.from(this.reliabilityData().entries())
-        .map(([key, value]) => ({
-          name: key,
-          value: value.fails,
-          itemStyle: {
-            color: value.color,
-          },
-        }))
-        .sort((a, b) => b.value - a.value),
+      data: this.mapReliabilityData(this.reliabilityData()),
     },
   }));
+
+  /**
+   * Maps the reliability data from raw format to chart format
+   * @param reliabilityData the reliability data to map
+   * @private
+   */
+  private mapReliabilityData(
+    reliabilityData:
+      | Map<string, DriverReliability>
+      | Map<string, TeamReliability>,
+  ) {
+    return Array.from(reliabilityData.entries())
+      .map(([key, value]) => ({
+        name: key,
+        value: Array.from(value.fails.values()).reduce(
+          (acc, curr) => acc + curr,
+          0,
+        ),
+        itemStyle: {
+          color: value.color,
+        },
+      }))
+      .sort((a, b) => b.value - a.value);
+  }
+
+  /**
+   * Generates the tooltip for hovering an item
+   * @param name the name of the item
+   * @private
+   */
+  private generateTooltip(name: string) {
+    const dnfReasons: string[] = [];
+    const reliabilityData = this.reliabilityData().get(name);
+
+    if (!reliabilityData) {
+      return '';
+    }
+
+    reliabilityData.fails.forEach((value, key) => {
+      dnfReasons.push(
+        `
+        <div class="col-span-2">${key}</div><div class="col-span-1">${value}</div>
+      `,
+      );
+    });
+
+    return `
+      <div class="grid grid-cols-3 gap-x-4">
+        <div class="col-span-3 font-bold mb-2">${name}</div>
+        ${dnfReasons.reduce((acc, curr) => acc + curr, '')}
+      </div>
+    `;
+  }
 }
