@@ -5,7 +5,7 @@ import {
   DriverStandingsEntry,
   Event,
   RaceResult,
-  StandingsResponse,
+  StandingsResponse
 } from '@tracklab/models';
 
 @Injectable({
@@ -139,12 +139,12 @@ export class DashboardService {
         data: leastDnfs?.data,
       },
       {
-        category: 'Most avg. positions Gained during Race',
+        category: 'Most avg. positions gained during Race',
         driver: mostAveragePositionsGained?.driver,
         data: Math.abs(mostAveragePositionsGained?.data),
       },
       {
-        category: 'Most avg. positions Lost during Race',
+        category: 'Most avg. positions lost during Race',
         driver: mostAveragePositionsLost?.driver,
         data: Math.abs(mostAveragePositionsLost?.data),
       },
