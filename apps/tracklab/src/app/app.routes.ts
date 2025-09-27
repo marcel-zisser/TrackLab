@@ -1,8 +1,18 @@
 import { Route } from '@angular/router';
 import { ConstructionComponent } from '@tracklab/shared/components';
 import { DashboardComponent } from '@tracklab/dashboard';
-import { AnalysisHostComponent, AnalysisSelectionComponent, AnalyticsComponent } from '@tracklab/analytics';
-import { CollectionComponent, SettingsComponent, UserComponent } from '@tracklab/user';
+import {
+  AnalysisHostComponent,
+  AnalysisSelectionComponent,
+  AnalyticsComponent,
+  ModeSelectionComponent,
+  RaceAnalysisComponent,
+} from '@tracklab/analytics';
+import {
+  CollectionComponent,
+  SettingsComponent,
+  UserComponent,
+} from '@tracklab/user';
 import { authenticationGuard } from '@tracklab/services';
 import { DisclaimerComponent } from './disclaimer/disclaimer.component';
 import { AboutComponent } from './about/about.component';
@@ -36,11 +46,21 @@ export const appRoutes: Route[] = [
       {
         title: 'Analytics',
         path: '',
+        component: ModeSelectionComponent,
+      },
+      {
+        title: 'Analytics',
+        path: 'race',
+        component: RaceAnalysisComponent,
+      },
+      {
+        title: 'Custom Analytics',
+        path: 'custom',
         component: AnalysisSelectionComponent,
       },
       {
         title: 'Analysis',
-        path: ':type',
+        path: 'custom/:type',
         component: AnalysisHostComponent,
       },
     ],
