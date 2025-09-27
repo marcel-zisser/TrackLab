@@ -5,7 +5,7 @@ import {
   DriverStandingsEntry,
   Event,
   RaceResult,
-  StandingsResponse
+  StandingsResponse,
 } from '@tracklab/models';
 
 @Injectable({

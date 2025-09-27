@@ -54,3 +54,4 @@ Thumbs.db
 .github/instructions/nx.instructions.md
 /apps/fast_f1_service/src/.cache/
 /minio_data/
+/todo.md
