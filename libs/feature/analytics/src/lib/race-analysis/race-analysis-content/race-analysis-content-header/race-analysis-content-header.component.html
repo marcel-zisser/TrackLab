@@ -1,0 +1,32 @@
+<div class="flex flex-row justify-between items-center">
+  <div class="flex flex-row items-center gap-4">
+    <div class="flex h-[4lh] aspect-3/2">
+      <img class="shadow-md rounded"
+           ngSrc="{{ race().country | flag }}"
+           alt="Flag of {{ race().country }}"
+           width="300"
+           height="200"
+      />
+    </div>
+    <div class="">
+      <div class="font-bold">{{ race().name }}</div>
+      <div class="font-bold">{{ race().location }}</div>
+      @let firstTrainingDate = race().sessionInfos?.[0]?.date ?? race().date;
+      @let raceDate = race().sessionInfos?.[4]?.date ?? race().date;
+      @if (firstTrainingDate && raceDate) {
+        <div class="font-light">{{ firstTrainingDate | date : 'dd.MM.yyyy' }}
+          - {{ raceDate | date : 'dd.MM.yyyy' }}
+        </div>
+      }
+      <div class="font-light">{{ race().format | weekendFormat }}</div>
+    </div>
+
+  </div>
+  <div class="flex flex-row items-center gap-4">
+    <div class="font-bold text-lg mr-2">Sessions:</div>
+    @for (session of race().sessionInfos; track session.name) {
+      <p-button [variant]="selectedSession() === session.name ? undefined : 'outlined'" [label]="session.name"
+                (onClick)="selectSession(session.name)" />
+    }
+  </div>
+</div>

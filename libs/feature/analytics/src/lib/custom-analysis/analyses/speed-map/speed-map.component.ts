@@ -11,7 +11,7 @@ import {
   CarTelemetryResponse,
   ChartDimensions,
   CircuitInformation,
-  Event,
+  EventData,
   RaceSelection,
 } from '@tracklab/models';
 import { combineLatest, first } from 'rxjs';
@@ -61,7 +61,7 @@ export class SpeedMapComponent {
   });
 
   protected selectedYear: string | undefined;
-  protected selectedEvent: Event | undefined;
+  protected selectedEvent: EventData | undefined;
   protected selectedSession: string | undefined;
 
   protected readonly chartDimensionOptions = [

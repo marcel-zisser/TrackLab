@@ -1,34 +1,51 @@
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
-import { Event } from '@tracklab/models';
+import { EventData } from '@tracklab/models';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { distinctUntilChanged, pipe, switchMap } from 'rxjs';
+import { inject } from '@angular/core';
+import { BackendService } from '@tracklab/services';
+import { tapResponse } from '@ngrx/operators';
 
 type RaceAnalysisState = {
   year: number;
-  event: string | undefined;
+  race: EventData | undefined;
   session: string | undefined;
-  schedule: Event[];
+  schedule: EventData[] | undefined;
 };
 
 const initialState: RaceAnalysisState = {
   year: new Date().getFullYear(),
-  event: undefined,
+  race: undefined,
   session: undefined,
-  schedule: [],
+  schedule: undefined,
 };
 
 export const RaceAnalysisStore = signalStore(
-  withState(initialState),
-  withMethods((store) => ({
+  withState<RaceAnalysisState>(initialState),
+  withMethods((store, backendService = inject(BackendService)) => ({
     updateYear(year: number): void {
       patchState(store, () => ({ year: year }));
     },
-    updateEvent(event: string): void {
-      patchState(store, () => ({ event: event }));
+    updateEvent(event: EventData): void {
+      patchState(store, () => ({ race: event }));
     },
     updateSession(session: string): void {
       patchState(store, () => ({ session: session }));
     },
-    updateSchedule(schedule: Event[]): void {
-      patchState(store, () => ({ schedule: schedule }));
-    },
+    loadSchedule: rxMethod<number>(
+      pipe(
+        distinctUntilChanged(),
+        switchMap((year) => {
+          return backendService
+            .doGet<EventData[]>(`fast-f1/event-schedule?year=${year}`)
+            .pipe(
+              tapResponse({
+                next: (schedule) => patchState(store, { schedule }),
+                error: console.error,
+              }),
+            );
+        }),
+      ),
+    ),
   })),
 );

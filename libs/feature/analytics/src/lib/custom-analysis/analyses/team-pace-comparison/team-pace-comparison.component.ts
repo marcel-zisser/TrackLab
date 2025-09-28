@@ -6,7 +6,7 @@ import {
   signal,
 } from '@angular/core';
 import { BackendService } from '@tracklab/services';
-import { Event, Lap, LapsResponse, RaceSelection } from '@tracklab/models';
+import { EventData, Lap, LapsResponse, RaceSelection } from '@tracklab/models';
 import { first } from 'rxjs';
 import * as echarts from 'echarts/core';
 import 'echarts/extension/dataTool';
@@ -37,7 +37,7 @@ export class TeamPaceComparisonComponent {
   private readonly backendService = inject(BackendService);
 
   protected selectedYear: string | undefined;
-  protected selectedEvent: Event | undefined;
+  protected selectedEvent: EventData | undefined;
 
   protected readonly paceData = signal<Lap[] | undefined>(undefined);
   protected readonly processedData = computed(() =>

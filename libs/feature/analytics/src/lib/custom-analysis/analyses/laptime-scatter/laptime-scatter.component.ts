@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { BackendService } from '@tracklab/services';
 import {
-  Event,
+  EventData,
   Lap,
   LapsResponse,
   RaceSelection,
@@ -55,7 +55,7 @@ export class LaptimeScatterComponent {
   });
 
   protected selectedYear: string | undefined;
-  protected selectedEvent: Event | undefined;
+  protected selectedEvent: EventData | undefined;
   protected selectedSession: string | undefined;
   protected driver: string | undefined;
 

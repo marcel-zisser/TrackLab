@@ -3,7 +3,7 @@ import { BackendService } from '@tracklab/services';
 import { first, firstValueFrom, map, retry } from 'rxjs';
 import {
   DriversResponse,
-  Event,
+  EventData,
   SelectionOption,
   SourceSelectionConfig,
 } from '@tracklab/models';
@@ -30,14 +30,14 @@ export class SourceSelectionService {
   )
     .reverse()
     .map((year) => ({ label: `${year}`, value: `${year}` }));
-  private readonly _events = signal<SelectionOption<string, Event>[]>([]);
+  private readonly _events = signal<SelectionOption<string, EventData>[]>([]);
   protected _drivers = signal<string[]>([]);
 
   get years(): SelectionOption<string, string>[] {
     return this._years;
   }
 
-  get events(): Signal<SelectionOption<string, Event>[]> {
+  get events(): Signal<SelectionOption<string, EventData>[]> {
     return this._events.asReadonly();
   }
 
@@ -51,10 +51,10 @@ export class SourceSelectionService {
    */
   loadEvents(year: string) {
     this.backendService
-      .doGet<Event[]>(`fast-f1/event-schedule?year=${year}`)
+      .doGet<EventData[]>(`fast-f1/event-schedule?year=${year}`)
       .pipe(
         first((races) => !!races),
-        map((races: Event[]) =>
+        map((races: EventData[]) =>
           races.map((race) => ({ label: race.name, value: race })),
         ),
         retry(5),
@@ -66,7 +66,7 @@ export class SourceSelectionService {
       });
   }
 
-  setEvents(events: SelectionOption<string, Event>[]) {
+  setEvents(events: SelectionOption<string, EventData>[]) {
     this._events.set(events);
   }
 
@@ -81,7 +81,7 @@ export class SourceSelectionService {
    * @param event the event of the source selection
    * @param session the session of the source selection
    */
-  loadDrivers(year: string, event: Event, session: string | undefined) {
+  loadDrivers(year: string, event: EventData, session: string | undefined) {
     this.backendService
       .doGet<DriversResponse>(
         `fast-f1/drivers?year=${year}&round=${event.roundNumber}&session=${session}`,
@@ -99,7 +99,7 @@ export class SourceSelectionService {
    */
   copySourceSelectionToClipboard(
     year: string,
-    event: Event | undefined,
+    event: EventData | undefined,
     session: string | undefined,
     drivers: string[],
   ) {
@@ -122,7 +122,7 @@ export class SourceSelectionService {
    */
   async addToCollection(
     year: string,
-    event: Event | undefined,
+    event: EventData | undefined,
     session: string | undefined,
     drivers: string[],
   ) {
@@ -186,7 +186,7 @@ export class SourceSelectionService {
    */
   private createUrl(
     year: string,
-    event: Event | undefined,
+    event: EventData | undefined,
     session: string | undefined,
     drivers: string[],
   ) {

@@ -68,6 +68,9 @@ importers:
       '@nestjs/platform-express':
         specifier: ^11.1.4
         version: 11.1.4(@nestjs/common@11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.4)
+      '@ngrx/operators':
+        specifier: ^20.0.1
+        version: 20.0.1(rxjs@7.8.2)
       '@ngrx/signals':
         specifier: ^20.0.1
         version: 20.0.1(@angular/core@20.0.7(@angular/compiler@20.0.7)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)
@@ -104,6 +107,9 @@ importers:
       cookie-parser:
         specifier: ^1.4.7
         version: 1.4.7
+      country-list:
+        specifier: ^2.4.1
+        version: 2.4.1
       echarts:
         specifier: ^6.0.0
         version: 6.0.0
@@ -264,6 +270,9 @@ importers:
       '@swc/helpers':
         specifier: ~0.5.17
         version: 0.5.17
+      '@types/country-list':
+        specifier: ^2.1.4
+        version: 2.1.4
       '@types/express':
         specifier: ^5.0.3
         version: 5.0.3
@@ -3353,6 +3362,11 @@ packages:
       '@nestjs/platform-express':
         optional: true
 
+  '@ngrx/operators@20.0.1':
+    resolution: {integrity: sha512-IIaVUlPU2LB1FbZ2m4/4FmAZnTEDCDgC115naods4SHo6U+DU7ZzItfIGDLeEPDaHa8MnjVJwOtrXjy73eJcNg==}
+    peerDependencies:
+      rxjs: ^6.5.3 || ^7.4.0
+
   '@ngrx/signals@20.0.1':
     resolution: {integrity: sha512-7YYPH4nTkmLEgibJnwi527toEm3tsnlCzp5AzT9osS8JxN9cHxkG6iQ7fzhw9N4bTt+8wyUZb7PF0YLFYD2RHA==}
     peerDependencies:
@@ -4498,6 +4512,9 @@ packages:
     resolution: {integrity: sha512-tGZiZ2Gtc4m3wIdLkZ8mkj1T6CEHb35+VApbL2T14Dew8HA7c+04dmKqsKRNC+8RJPm16JEK0tFSwdZqubfc4g==}
     peerDependencies:
       '@types/express': '*'
+
+  '@types/country-list@2.1.4':
+    resolution: {integrity: sha512-c4orjm0wT+BRt6Ynf2/QRRL+iMX4SdLT11jAjKqkJ7mQr/DLOmdz7qR8i04j9Y7wFSoP70cXJc18FN4YGNgGaA==}
 
   '@types/eslint-scope@3.7.7':
     resolution: {integrity: sha512-MzMFlSLBqNF2gcHWO0G1vP/YQyfvrxZ0bF+u7mzUdZ1/xK4A4sru+nraZz5i3iEIk1l1uyicaDVTB4QbbEkAYg==}
@@ -5652,6 +5669,9 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
+
+  country-list@2.4.1:
+    resolution: {integrity: sha512-KhVV/UfUV3dSNpsWIqHTQxLpYDKPKz1UwkRjadt+YbX2PRhyCEihEoS5XgB7J7AMXpkicvl+tRHvkNI5wbji/g==}
 
   create-require@1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
@@ -14346,6 +14366,11 @@ snapshots:
       '@nestjs/microservices': 11.1.4(@grpc/grpc-js@1.13.4)(@nestjs/common@11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.4)(cache-manager@7.0.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/platform-express': 11.1.4(@nestjs/common@11.1.4(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.4)
 
+  '@ngrx/operators@20.0.1(rxjs@7.8.2)':
+    dependencies:
+      rxjs: 7.8.2
+      tslib: 2.8.1
+
   '@ngrx/signals@20.0.1(@angular/core@20.0.7(@angular/compiler@20.0.7)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2)':
     dependencies:
       '@angular/core': 20.0.7(@angular/compiler@20.0.7)(rxjs@7.8.2)(zone.js@0.15.1)
@@ -15906,6 +15931,8 @@ snapshots:
     dependencies:
       '@types/express': 5.0.3
 
+  '@types/country-list@2.1.4': {}
+
   '@types/eslint-scope@3.7.7':
     dependencies:
       '@types/eslint': 9.6.1
@@ -17256,6 +17283,8 @@ snapshots:
       parse-json: 5.2.0
     optionalDependencies:
       typescript: 5.8.3
+
+  country-list@2.4.1: {}
 
   create-require@1.1.1: {}
 

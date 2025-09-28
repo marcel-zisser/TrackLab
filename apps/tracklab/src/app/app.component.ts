@@ -4,6 +4,7 @@ import { FooterComponent, HeaderComponent } from '@tracklab/shared/components';
 import { Theme, ThemeService } from '@tracklab/services';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { ConfirmDialog } from 'primeng/confirmdialog';
+import { overwrite } from 'country-list';
 
 @Component({
   imports: [RouterModule, FooterComponent, HeaderComponent, ConfirmDialog],
@@ -18,6 +19,40 @@ export class AppComponent {
   title = 'tracklab';
 
   constructor() {
+    overwrite([
+      {
+        code: 'GB',
+        name: 'United Kingdom',
+      },
+      {
+        code: 'GB',
+        name: 'Great Britain',
+      },
+      {
+        code: 'US',
+        name: 'United States',
+      },
+      {
+        code: 'NL',
+        name: 'Netherlands',
+      },
+      {
+        code: 'AE',
+        name: 'United Arab Emirates',
+      },
+      {
+        code: 'AE',
+        name: 'Abu Dhabi',
+      },
+      {
+        code: 'TR',
+        name: 'Turkey',
+      },
+      {
+        code: 'RU',
+        name: 'Russia',
+      },
+    ]);
     this.setInitialTheme();
   }
 

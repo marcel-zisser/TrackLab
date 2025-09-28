@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { BackendService } from '@tracklab/services';
 import {
-  Event,
+  EventData,
   RaceSelection,
   Strategy,
   StrategyResponse,
@@ -36,7 +36,7 @@ export class StrategyComparisonComponent {
   private readonly backendService = inject(BackendService);
 
   protected selectedYear: string | undefined;
-  protected selectedEvent: Event | undefined;
+  protected selectedEvent: EventData | undefined;
   protected selectedSession: string | undefined;
 
   protected readonly strategyData = signal<Strategy[] | undefined>(undefined);

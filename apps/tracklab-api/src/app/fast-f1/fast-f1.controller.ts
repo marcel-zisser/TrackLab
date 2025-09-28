@@ -3,7 +3,7 @@ import { FastF1Service } from './fast-f1.service';
 import {
   Circuit,
   CircuitInformation,
-  Event,
+  EventData,
   RaceResult,
 } from '@tracklab/models';
 import {
@@ -33,7 +33,7 @@ export class FastF1Controller {
   }
 
   @Get('event-schedule')
-  getEventSchedule(@Query('year') year: number): Promise<Event[]> {
+  getEventSchedule(@Query('year') year: number): Promise<EventData[]> {
     return this.fastF1Service.getEventSchedule(year);
   }
 

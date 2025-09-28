@@ -11,7 +11,7 @@ import { BackendService } from '@tracklab/services';
 import {
   DriverPositionPayload,
   DriverPositionResponse,
-  Event,
+  EventData,
   RaceSelection,
 } from '@tracklab/models';
 import { first } from 'rxjs';
@@ -31,7 +31,7 @@ export class PositionChangesChartComponent {
   private readonly backendService = inject(BackendService);
 
   protected selectedYear: string | undefined;
-  protected selectedEvent: Event | undefined;
+  protected selectedEvent: EventData | undefined;
 
   protected readonly positionData = signal<DriverPositionPayload | undefined>(
     undefined,

@@ -10,7 +10,7 @@ import {
   CarTelemetry,
   CarTelemetryResponse,
   CircuitInformation,
-  Event,
+  EventData,
   RaceSelection,
 } from '@tracklab/models';
 import { combineLatest, first } from 'rxjs';
@@ -37,7 +37,7 @@ export class DriverInputAnalysisComponent {
   private readonly backendService = inject(BackendService);
 
   protected selectedYear: string | undefined;
-  protected selectedEvent: Event | undefined;
+  protected selectedEvent: EventData | undefined;
   protected selectedSession: string | undefined;
 
   protected readonly carTelemetries = signal<CarTelemetry[] | undefined>(

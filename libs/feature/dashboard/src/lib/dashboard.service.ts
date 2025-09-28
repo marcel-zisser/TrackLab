@@ -3,7 +3,7 @@ import { BackendService } from '@tracklab/services';
 import {
   ConstructorStandingsEntry,
   DriverStandingsEntry,
-  Event,
+  EventData,
   RaceResult,
   StandingsResponse,
 } from '@tracklab/models';
@@ -14,9 +14,9 @@ import {
 export class DashboardService {
   private readonly backendService = inject(BackendService);
 
-  private eventScheduleResource = this.backendService.doGetResource<Event[]>(
-    () => `fast-f1/event-schedule?year=${new Date().getFullYear()}`,
-  );
+  private eventScheduleResource = this.backendService.doGetResource<
+    EventData[]
+  >(() => `fast-f1/event-schedule?year=${new Date().getFullYear()}`);
   private standingsResource =
     this.backendService.doGetResource<StandingsResponse>(
       () => 'dashboard/standings',

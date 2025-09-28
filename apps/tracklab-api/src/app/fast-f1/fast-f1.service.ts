@@ -6,7 +6,7 @@ import {
   Circuit,
   CircuitInformation,
   DriverResult,
-  Event,
+  EventData,
   RaceResult,
 } from '@tracklab/models';
 import { EventScheduleClient } from '../../generated/event-schedule';
@@ -95,7 +95,7 @@ export class FastF1Service implements OnModuleInit {
    * Retrieves the even schedule for a given season
    * @param season the season
    */
-  async getEventSchedule(season: number): Promise<Event[]> {
+  async getEventSchedule(season: number): Promise<EventData[]> {
     const eventSchedule = await firstValueFrom(
       this.eventScheduleService.getEventSchedule({ season: season }),
     );

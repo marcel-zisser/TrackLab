@@ -8,7 +8,7 @@ import {
 import { BackendService } from '@tracklab/services';
 import {
   Driver,
-  Event,
+  EventData,
   PositionTelemetry,
   RaceSelection,
   TrackDominationResponse,
@@ -37,7 +37,7 @@ export class TrackDominationComponent {
   private readonly backendService = inject(BackendService);
 
   protected selectedYear: string | undefined;
-  protected selectedEvent: Event | undefined;
+  protected selectedEvent: EventData | undefined;
   protected selectedSession: string | undefined;
   protected selectedDriverStrings: string[] = [];
 

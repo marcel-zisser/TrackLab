@@ -1,0 +1,17 @@
+@let raceObj = selectedRace();
+@if (raceObj) {
+  <div class="flex flex-col m-6 gap-2 overflow-hidden">
+    <tl-race-analysis-content-header [race]="raceObj"></tl-race-analysis-content-header>
+
+    <p-divider></p-divider>
+
+    <div class="h-full overflow-auto">
+      @if (selectedSession()) {
+      } @else {
+        <div class="w-full text-center text-xl">Please select a session to start.</div>
+      }
+    </div>
+
+
+  </div>
+}

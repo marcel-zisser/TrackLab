@@ -1,0 +1,25 @@
+<div class="flex flex-row justify-between items-center mt-1 mb-1 p-4
+            rounded group hover:bg-surface-100 dark:hover:bg-surface-800"
+     [class.cursor-pointer]="!isFutureRace()"
+     [class.cursor-not-allowed]="isFutureRace()"
+     [class.bg-surface-100]="isSelectedRace()"
+>
+  @let race = raceInput();
+  <div class="flex flex-row gap-4 items-center">
+    <div class="flex flex-row h-[2lh] aspect-3/2">
+      <img class="shadow-md rounded"
+           [class.grayscale]="isFutureRace()"
+           ngSrc="{{ race?.country | flag }}"
+           alt="Flag of {{ race.country }}"
+           width="300"
+           height="200" />
+    </div>
+    <div class="flex flex-col">
+      <div class="w-full font-bold truncate">{{ race.name }}</div>
+      <div class="w-full font-light truncate">{{ race.location }}, {{ race.country }}</div>
+    </div>
+  </div>
+  <i class="group-hover:text-primary {{PrimeIcons.ANGLE_RIGHT}}"
+     [class.text-primary]="isSelectedRace()"
+  ></i>
+</div>

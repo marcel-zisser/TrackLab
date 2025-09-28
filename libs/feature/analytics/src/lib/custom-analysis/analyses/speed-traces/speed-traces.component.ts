@@ -8,7 +8,7 @@ import {
 import { BackendService } from '@tracklab/services';
 import {
   CircuitInformation,
-  Event,
+  EventData,
   RaceSelection,
   SpeedTrace,
   SpeedTracesResponse,
@@ -37,7 +37,7 @@ export class SpeedTracesComponent {
   private readonly backendService = inject(BackendService);
 
   protected selectedYear: string | undefined;
-  protected selectedEvent: Event | undefined;
+  protected selectedEvent: EventData | undefined;
   protected selectedSession: string | undefined;
 
   protected readonly speedTraces = signal<SpeedTrace[] | undefined>(undefined);

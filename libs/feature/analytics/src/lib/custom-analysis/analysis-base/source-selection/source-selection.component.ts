@@ -14,7 +14,7 @@ import {
 import { FloatLabel } from 'primeng/floatlabel';
 import { Select } from 'primeng/select';
 import {
-  Event,
+  EventData,
   RaceSelection,
   SelectionOption,
   SourceSelectionConfig,
@@ -66,9 +66,9 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
   protected readonly drivers = this.sourceSelectionService.drivers;
 
   protected readonly year = signal<string | undefined>(undefined);
-  protected readonly event = signal<Event | undefined>(undefined);
+  protected readonly event = signal<EventData | undefined>(undefined);
   protected readonly session = linkedSignal<
-    Event | undefined,
+    EventData | undefined,
     string | undefined
   >({
     source: this.event,
