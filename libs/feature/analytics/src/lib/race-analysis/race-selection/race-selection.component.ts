@@ -57,6 +57,6 @@ export class RaceSelectionComponent {
       return;
     }
 
-    this.store.updateEvent(race);
+    this.store.updateRace(race);
   }
 }

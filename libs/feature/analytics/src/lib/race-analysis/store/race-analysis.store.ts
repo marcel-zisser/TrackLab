@@ -25,9 +25,12 @@ export const RaceAnalysisStore = signalStore(
   withMethods((store, backendService = inject(BackendService)) => ({
     updateYear(year: number): void {
       patchState(store, () => ({ year: year }));
+      patchState(store, () => ({ race: undefined }));
+      patchState(store, () => ({ session: undefined }));
     },
-    updateEvent(event: EventData): void {
+    updateRace(event: EventData): void {
       patchState(store, () => ({ race: event }));
+      patchState(store, () => ({ session: undefined }));
     },
     updateSession(session: string): void {
       patchState(store, () => ({ session: session }));
