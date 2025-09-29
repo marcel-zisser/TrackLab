@@ -8,13 +8,18 @@ import { RaceAnalysisStore } from '../store/race-analysis.store';
 import { EventData } from '@tracklab/models';
 import { Divider } from 'primeng/divider';
 import { RaceAnalysisContentHeaderComponent } from './race-analysis-content-header/race-analysis-content-header.component';
+import { RaceAnalysisContentChartsComponent } from './race-analysis-content-charts/race-analysis-content-charts.component';
 
 @Component({
   selector: 'tl-race-analysis-content',
   templateUrl: './race-analysis-content.component.html',
   styleUrl: './race-analysis-content.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Divider, RaceAnalysisContentHeaderComponent],
+  imports: [
+    Divider,
+    RaceAnalysisContentHeaderComponent,
+    RaceAnalysisContentChartsComponent,
+  ],
 })
 export class RaceAnalysisContentComponent {
   private readonly store = inject(RaceAnalysisStore);

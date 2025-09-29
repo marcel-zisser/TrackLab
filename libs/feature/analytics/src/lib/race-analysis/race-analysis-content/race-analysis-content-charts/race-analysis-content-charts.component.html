@@ -1,0 +1,18 @@
+@if (raceSelection()) {
+  <div class="grid grid-cols-2 gap-4">
+    <tl-position-changes-chart
+      class="col-span-2 h-[35vh] shadow rounded m-2 p-2"
+      [raceSelection]="raceSelection()">
+    </tl-position-changes-chart>
+
+    <p-skeleton class="col-span-2" height="20rem" />
+    <p-skeleton class="col-span-1" height="20rem" />
+    <p-skeleton class="col-span-1" height="20rem" />
+    <p-skeleton class="col-span-2" height="20rem" />
+    <p-skeleton class="col-span-1" height="20rem" />
+    <p-skeleton class="col-span-1" height="20rem" />
+    <p-skeleton class="col-span-2" height="20rem" />
+  </div>
+} @else {
+  <div class="w-full text-center text-xl">Please select a session to start.</div>
+}

@@ -1,8 +1,10 @@
 <div class="flex flex-row justify-between items-center mt-1 mb-1 p-4
             rounded group hover:bg-surface-100 dark:hover:bg-surface-800"
-     [class.cursor-pointer]="!isFutureRace()"
-     [class.cursor-not-allowed]="isFutureRace()"
-     [class.bg-surface-100]="isSelectedRace()"
+     [ngClass]="{
+     'cursor-pointer': !isFutureRace(),
+     'cursor-not-allowed': isFutureRace(),
+     'bg-surface-100 dark:bg-surface-800': isSelectedRace()
+     }"
 >
   @let race = raceInput();
   <div class="flex flex-row gap-4 items-center">

@@ -9,7 +9,7 @@ import {
 import { EventData } from '@tracklab/models';
 import { PrimeIcons } from 'primeng/api';
 import { FlagPipe } from '@tracklab/shared/components';
-import { NgOptimizedImage } from '@angular/common';
+import { NgClass, NgOptimizedImage } from '@angular/common';
 import { RaceAnalysisStore } from '../../store/race-analysis.store';
 
 @Component({
@@ -17,7 +17,7 @@ import { RaceAnalysisStore } from '../../store/race-analysis.store';
   templateUrl: './race-selection-tile.component.html',
   styleUrl: './race-selection-tile.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FlagPipe, NgOptimizedImage],
+  imports: [FlagPipe, NgOptimizedImage, NgClass],
 })
 export class RaceSelectionTileComponent {
   raceInput = input.required<EventData>();

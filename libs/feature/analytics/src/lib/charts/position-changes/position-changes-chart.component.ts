@@ -95,7 +95,9 @@ export class PositionChangesChartComponent {
         left: 'center',
       },
       grid: {
-        left: 50,
+        left: 0,
+        top: 45,
+        bottom: 10,
         containLabel: true, // ensures labels aren't cut off
       },
       yAxis: {
@@ -114,7 +116,10 @@ export class PositionChangesChartComponent {
       tooltip: {
         show: true,
         trigger: 'axis',
+        enterable: true,
         order: 'valueAsc',
+        appendTo: 'body',
+        className: 'tl-tooltip',
       },
       legend: {
         type: 'scroll',
@@ -123,6 +128,7 @@ export class PositionChangesChartComponent {
         right: 0,
         scroll: true,
         data: [...this.createDriverLegend()],
+        selectedMode: true,
       },
       dataZoom: [
         {
@@ -156,6 +162,15 @@ export class PositionChangesChartComponent {
         },
         itemStyle: {
           color: this.positionData()?.[driver].color,
+        },
+        emphasis: {
+          focus: 'series', // highlight this series on hover (legend or chart)
+        },
+        endLabel: {
+          show: false,
+        },
+        blur: {
+          lineStyle: { opacity: 0.2 }, // dim when not focused
         },
       })) ?? []
     );

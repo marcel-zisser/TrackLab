@@ -1,5 +1,11 @@
-import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
-import { EventData } from '@tracklab/models';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
+import { EventData, RaceSelection } from '@tracklab/models';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { distinctUntilChanged, pipe, switchMap } from 'rxjs';
 import { inject } from '@angular/core';
@@ -22,6 +28,19 @@ const initialState: RaceAnalysisState = {
 
 export const RaceAnalysisStore = signalStore(
   withState<RaceAnalysisState>(initialState),
+  withComputed(({ year, race, session }) => ({
+    raceSelection: (): RaceSelection | undefined => {
+      if (year() && race() && session()) {
+        return {
+          year: `${year()}`,
+          event: race(),
+          session: session(),
+        } satisfies RaceSelection;
+      } else {
+        return undefined;
+      }
+    },
+  })),
   withMethods((store, backendService = inject(BackendService)) => ({
     updateYear(year: number): void {
       patchState(store, () => ({ year: year }));
