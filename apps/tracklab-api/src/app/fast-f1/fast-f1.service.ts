@@ -144,12 +144,16 @@ export class FastF1Service implements OnModuleInit {
    * @param session the session type
    */
   async getSessionStrategy(year: number, round: number, session: string) {
-    return await firstValueFrom(
-      this.analyticsService.getSessionStrategy({
+    const lapsResponse = await firstValueFrom(
+      this.analyticsService.getRaceLaps({
         year: year,
         round: round,
         session: session,
+        threshold: null,
       }),
+    );
+    return await firstValueFrom(
+      this.analyticsService.getSessionStrategy({ laps: lapsResponse.laps }),
     );
   }
 

@@ -159,6 +159,7 @@ export class PositionChangesChartComponent {
         lineStyle: {
           color: this.positionData()?.[driver].color,
           type: this.positionData()?.[driver].lineStyle,
+          width: 2,
         },
         itemStyle: {
           color: this.positionData()?.[driver].color,

@@ -5,7 +5,8 @@ package at.tracklab;
 import "types.proto";
 
 service Analytics {
-  rpc GetSessionStrategy(SessionRequest) returns (StrategyResponse) {}
+  rpc GetSessionStrategy(LapsTransformRequest) returns (StrategyResponse) {}
+  rpc GetRaceLaps(SessionRequest) returns (LapsResponse) {};
   rpc GetLaps(DriverRequest) returns (LapsResponse) {}
   rpc GetQuickLaps(EventRequest) returns (LapsResponse) {}
   rpc GetSpeedTraces(SessionRequest) returns (SpeedTracesResponse) {}
@@ -21,10 +22,15 @@ message EventRequest {
   int32 round = 2;
 }
 
+message LapsTransformRequest {
+  repeated Lap laps = 1;
+}
+
 message SessionRequest {
   int32 year = 1;
   int32 round = 2;
   string session = 3;
+  optional float threshold = 4;
 }
 
 message DriverRequest {
