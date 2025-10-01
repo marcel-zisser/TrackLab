@@ -3,16 +3,14 @@ import datetime
 import fastf1
 import fastf1.plotting
 import numpy as np
-import pandas as pd
-from google.protobuf.json_format import MessageToDict
 
 from analytics.analytics_helpers import map_row_to_lap, get_drivers_standings, \
-  calculate_max_points_for_remaining_season, calculate_who_can_win, get_driver_plot_style
+  calculate_max_points_for_remaining_season, calculate_who_can_win, get_driver_plot_style, load_laps
 from generated import analytics_pb2_grpc
 from generated.analytics_pb2 import StrategyResponse, SpeedTracesResponse, \
   CarTelemetryResponse, DriversResponse, PositionDataResponse, DriverPositionData, ChampionshipContendersResponse, \
-  TrackDominationResponse, LapsResponse, LapsTransformRequest
-from generated.types_pb2 import Strategy, SpeedTrace, CarTelemetry, PositionTelemetry, Driver
+  TrackDominationResponse, LapsResponse, LapsTransformRequest, GapToLeaderResponse
+from generated.types_pb2 import Strategy, SpeedTrace, CarTelemetry, PositionTelemetry, Driver, Duration
 
 
 class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
@@ -20,8 +18,7 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
   def GetSessionStrategy(self, request: LapsTransformRequest, context):
     response = StrategyResponse()
 
-    data = [MessageToDict(lap, preserving_proto_field_name=True) for lap in request.laps]
-    laps = pd.DataFrame(data)
+    laps = load_laps(request)
 
     stints = laps[["driver", "stint", "tireCompound", "lapNumber"]]
     stints = stints.groupby(["driver", "stint", "tireCompound"])
@@ -270,5 +267,23 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
       color=line_style_2['color'],
       lineStyle=line_style_2['linestyle']
     ))
+
+    return response
+
+  def GetGapToLeader(self, request: LapsTransformRequest, context):
+    response = GapToLeaderResponse()
+    loaded_laps = load_laps(request)
+    grouped_by_lap_number = loaded_laps.groupby('lapNumber')
+
+    for lap_number, laps in grouped_by_lap_number:
+      fastest_lap = laps['time'].min()
+      for lap in laps.itertuples():
+        gap = lap.time - fastest_lap
+        response.payload[lap.driver].gaps.append(Duration(
+          hours=gap.components.hours,
+          minutes=gap.components.minutes,
+          seconds=gap.components.seconds,
+          milliseconds=gap.components.milliseconds
+        ))
 
     return response

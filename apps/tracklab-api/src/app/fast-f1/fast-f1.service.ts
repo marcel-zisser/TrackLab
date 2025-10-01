@@ -291,4 +291,19 @@ export class FastF1Service implements OnModuleInit {
       }),
     );
   }
+
+  async getGapToLeader(year: number, round: number, session: string) {
+    const lapsResponse = await firstValueFrom(
+      this.analyticsService.getRaceLaps({
+        year: year,
+        round: round,
+        session: session,
+        threshold: null,
+      }),
+    );
+
+    return await firstValueFrom(
+      this.analyticsService.getGapToLeader({ laps: lapsResponse.laps }),
+    );
+  }
 }

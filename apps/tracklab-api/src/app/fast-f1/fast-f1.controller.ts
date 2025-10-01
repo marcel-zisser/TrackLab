@@ -10,6 +10,7 @@ import {
   CarTelemetryResponse,
   ChampionshipContendersResponse,
   DriversResponse,
+  GapToLeaderResponse,
   LapsResponse,
   PositionDataResponse,
   SpeedTracesResponse,
@@ -138,5 +139,14 @@ export class FastF1Controller {
     @Query('drivers') drivers: string[],
   ): Promise<TrackDominationResponse> {
     return this.fastF1Service.getTrackDomination(year, round, session, drivers);
+  }
+
+  @Get('leader-gap')
+  getGapToLeader(
+    @Query('year') year: number,
+    @Query('round') round: number,
+    @Query('session') session: string,
+  ): Promise<GapToLeaderResponse> {
+    return this.fastF1Service.getGapToLeader(year, round, session);
   }
 }
