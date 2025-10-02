@@ -26,6 +26,7 @@ import { PrimeIcons } from 'primeng/api';
 import { MultiSelect } from 'primeng/multiselect';
 import { SourceSelectionService } from './source-selection.service';
 import { AuthenticationService } from '@tracklab/services';
+import { AnalyticsStore } from '../../../store';
 
 @Component({
   selector: 'tl-source-selection',
@@ -45,6 +46,7 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
   private readonly sourceSelectionService = inject(SourceSelectionService);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly authenticationService = inject(AuthenticationService);
+  private readonly store = inject(AnalyticsStore);
   private initialConfig: SourceSelectionConfig | undefined;
   private isInitialized = false;
 
@@ -241,6 +243,7 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
 
     if (year && this.isSourceSelectionValid()) {
       this.raceSelection.emit({ year, event, session, drivers });
+      this.store.updateRaceSelection({ year, event, session, drivers });
     }
   }
 

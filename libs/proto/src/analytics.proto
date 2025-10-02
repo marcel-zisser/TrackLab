@@ -12,10 +12,11 @@ service Analytics {
   rpc GetQuickLaps(EventRequest) returns (LapsResponse) {}
   rpc GetSpeedTraces(SessionRequest) returns (SpeedTracesResponse) {}
   rpc GetCarTelemetry(CarTelemetryRequest) returns (CarTelemetryResponse) {}
-  rpc GetPositionData(EventRequest) returns (PositionDataResponse) {}
+  rpc GetPositionData(LapsTransformRequest) returns (PositionDataResponse) {}
   rpc GetDrivers(SessionRequest) returns (DriversResponse) {}
   rpc GetChampionshipContenders(EventRequest) returns (ChampionshipContendersResponse) {}
   rpc GetTrackDomination(DriverRequest) returns (TrackDominationResponse) {}
+  rpc GetColors(SessionRequest) returns (ColorResponse) {}
 }
 
 message EventRequest {
@@ -74,8 +75,6 @@ message PositionDataResponse {
 
 message DriverPositionData {
   repeated int32 positions = 1;
-  string color = 2;
-  string lineStyle = 3;
 }
 
 message ChampionshipContenderList {
@@ -93,11 +92,17 @@ message TrackDominationResponse {
   repeated Driver drivers = 3;
 }
 
-
 message GapArray {
   repeated Duration gaps = 1;
 }
 
 message GapToLeaderResponse {
   map<string, GapArray> payload = 1;
+}
+
+message ColorResponse {
+  map<string, string> teamColors = 1;
+  map<string, string> driverColors = 2;
+  map<string, string> driverStyles = 3;
+  map<string, string> compoundColors = 4;
 }

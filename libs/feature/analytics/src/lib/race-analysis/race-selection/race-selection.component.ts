@@ -8,7 +8,7 @@ import { Divider } from 'primeng/divider';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { Select } from 'primeng/select';
 import { RaceAnalysisService } from '../race-analysis.service';
-import { RaceAnalysisStore } from '../store/race-analysis.store';
+import { AnalyticsStore } from '../../store';
 import { EventData } from '@tracklab/models';
 import { FormsModule } from '@angular/forms';
 import { RaceSelectionTileComponent } from './race-selection-tile/race-selection-tile.component';
@@ -29,7 +29,7 @@ import { MessageService } from 'primeng/api';
 })
 export class RaceSelectionComponent {
   private readonly raceAnalysisService = inject(RaceAnalysisService);
-  private readonly store = inject(RaceAnalysisStore);
+  private readonly store = inject(AnalyticsStore);
   private readonly messageService = inject(MessageService);
 
   protected readonly years = this.raceAnalysisService.years;
@@ -40,6 +40,7 @@ export class RaceSelectionComponent {
   constructor() {
     // Dynamically loads the schedule every time the year is changed
     this.store.loadSchedule(this.store.year);
+    this.store.loadColors(this.store.raceSelection);
   }
 
   setYear(year: number) {

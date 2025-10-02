@@ -5,29 +5,31 @@ import {
   withMethods,
   withState,
 } from '@ngrx/signals';
-import { EventData, RaceSelection } from '@tracklab/models';
+import { ColorResponse, EventData, RaceSelection } from '@tracklab/models';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { distinctUntilChanged, pipe, switchMap } from 'rxjs';
+import { distinctUntilChanged, filter, pipe, switchMap } from 'rxjs';
 import { inject } from '@angular/core';
 import { BackendService } from '@tracklab/services';
 import { tapResponse } from '@ngrx/operators';
 
-type RaceAnalysisState = {
+type AnalyticsState = {
   year: number;
   race: EventData | undefined;
   session: string | undefined;
   schedule: EventData[] | undefined;
+  colors: ColorResponse | undefined;
 };
 
-const initialState: RaceAnalysisState = {
+const initialState: AnalyticsState = {
   year: new Date().getFullYear(),
   race: undefined,
   session: undefined,
   schedule: undefined,
+  colors: undefined,
 };
 
-export const RaceAnalysisStore = signalStore(
-  withState<RaceAnalysisState>(initialState),
+export const AnalyticsStore = signalStore(
+  withState<AnalyticsState>(initialState),
   withComputed(({ year, race, session }) => ({
     raceSelection: (): RaceSelection | undefined => {
       if (year() && race() && session()) {
@@ -54,6 +56,13 @@ export const RaceAnalysisStore = signalStore(
     updateSession(session: string): void {
       patchState(store, () => ({ session: session }));
     },
+    updateRaceSelection(selection: RaceSelection): void {
+      patchState(store, () => ({
+        year: Number(selection.year),
+        race: selection.event,
+        session: selection.session,
+      }));
+    },
     loadSchedule: rxMethod<number>(
       pipe(
         distinctUntilChanged(),
@@ -63,6 +72,25 @@ export const RaceAnalysisStore = signalStore(
             .pipe(
               tapResponse({
                 next: (schedule) => patchState(store, { schedule }),
+                error: console.error,
+              }),
+            );
+        }),
+      ),
+    ),
+    loadColors: rxMethod<RaceSelection | undefined>(
+      pipe(
+        filter((raceSelection) => !!raceSelection),
+        distinctUntilChanged(),
+        switchMap((raceSelection) => {
+          return backendService
+            .doGet<ColorResponse>(
+              `fast-f1/colors?year=${raceSelection.year}&round=${raceSelection.event?.roundNumber}&session=${raceSelection.session}`,
+            )
+            .pipe(
+              tapResponse({
+                next: (colorResponse) =>
+                  patchState(store, { colors: colorResponse }),
                 error: console.error,
               }),
             );

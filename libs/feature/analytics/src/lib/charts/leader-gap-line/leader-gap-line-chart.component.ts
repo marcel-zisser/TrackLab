@@ -9,24 +9,28 @@ import {
 } from '@angular/core';
 import { BackendService } from '@tracklab/services';
 import {
-  DriverPositionPayload,
-  DriverPositionResponse,
   EventData,
+  LeaderGapPayload,
+  LeaderGapResponse,
   RaceSelection,
 } from '@tracklab/models';
 import { first } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { ChartBaseComponent } from '../../custom-analysis/analysis-base/chart-base/chart-base.component';
+import {
+  convertToMilliseconds,
+  millisecondsToTimingString,
+} from '@tracklab/util';
 import { AnalyticsStore } from '../../store';
 
 @Component({
-  selector: 'tl-position-changes-chart',
+  selector: 'tl-leader-gap-line-chart',
   imports: [FormsModule, ChartBaseComponent],
-  templateUrl: './position-changes-chart.component.html',
-  styleUrl: './position-changes-chart.component.css',
+  templateUrl: './leader-gap-line-chart.component.html',
+  styleUrl: './leader-gap-line-chart.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PositionChangesChartComponent {
+export class LeaderGapLineChartComponent {
   raceSelection = input.required<RaceSelection | undefined>();
 
   private readonly backendService = inject(BackendService);
@@ -35,29 +39,29 @@ export class PositionChangesChartComponent {
   protected selectedYear: string | undefined;
   protected selectedEvent: EventData | undefined;
 
-  protected readonly positionData = signal<DriverPositionPayload | undefined>(
-    undefined,
-  );
+  protected readonly gapData = signal<LeaderGapPayload | undefined>(undefined);
 
   protected readonly drivers = computed<string[]>(() =>
-    Object.keys(this.positionData() ?? []),
+    Object.keys(this.gapData() ?? []),
   );
+
   protected readonly laps = computed(() => {
     const laps: number[] = [];
 
     for (const driver of this.drivers() ?? []) {
-      laps.push(this.positionData()?.[driver]?.positions.length ?? 0);
+      laps.push(this.gapData()?.[driver]?.gaps.length ?? 0);
     }
 
     return Math.max(...laps);
   });
+
   protected readonly chartOptions = computed(() => this.createChartOptions());
 
   constructor() {
     effect(() => {
       const raceSelection = this.raceSelection();
       if (raceSelection) {
-        this.loadPositionData(raceSelection);
+        this.loadGapData(raceSelection);
       }
     });
   }
@@ -66,21 +70,21 @@ export class PositionChangesChartComponent {
    * Effect to load the position data for a given race
    * @protected
    */
-  protected loadPositionData(selectedRace: RaceSelection) {
+  protected loadGapData(selectedRace: RaceSelection) {
     if (selectedRace.year && selectedRace.event) {
       this.selectedYear = selectedRace.year;
       this.selectedEvent = selectedRace.event;
 
-      this.positionData.set(undefined);
+      this.gapData.set(undefined);
 
       this.backendService
-        .doGet<DriverPositionResponse>(
-          `fast-f1/position-data?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}`,
+        .doGet<LeaderGapResponse>(
+          `fast-f1/leader-gap?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}&session=Race`,
         )
         .pipe(first((response) => !!response))
         .subscribe({
-          next: (positionData) => {
-            this.positionData.set(positionData.payload);
+          next: (gapData) => {
+            this.gapData.set(gapData.payload);
           },
         });
     }
@@ -93,22 +97,23 @@ export class PositionChangesChartComponent {
   private createChartOptions() {
     return {
       title: {
-        text: 'Driver Positions Over Race Distance',
+        text: 'Gap to Leader Over Race Distance',
         left: 'center',
+        top: 0,
       },
       grid: {
-        left: 0,
-        top: 45,
-        bottom: 10,
+        left: 5,
+        top: 40,
+        bottom: 15,
         containLabel: true, // ensures labels aren't cut off
       },
       yAxis: {
         type: 'value',
-        name: 'Position',
+        name: 'Time Difference',
         inverse: true,
-        interval: 1,
-        startValue: 1,
-        max: this.drivers()?.length,
+        axisLabel: {
+          formatter: (val: number) => millisecondsToTimingString(val),
+        },
       },
       xAxis: {
         type: 'value',
@@ -129,7 +134,6 @@ export class PositionChangesChartComponent {
         top: 'center',
         right: 0,
         scroll: true,
-        data: [...this.createDriverLegend()],
         selectedMode: true,
       },
       dataZoom: [
@@ -153,18 +157,18 @@ export class PositionChangesChartComponent {
         type: 'line',
         name: driver,
         data:
-          this.positionData()?.[driver].positions?.map((position, index) => [
+          this.gapData()?.[driver].gaps.map((gap, index) => [
             index,
-            position,
+            convertToMilliseconds(gap),
           ]) ?? [],
         showSymbol: false,
         lineStyle: {
-          color: this.store.colors()?.driverColors?.[driver],
-          type: this.store.colors()?.driverStyles?.[driver],
+          color: this.store.colors()?.driverColors?.[driver] ?? 'black',
+          type: this.store.colors()?.driverStyles?.[driver] ?? 'solid',
           width: 2,
         },
         itemStyle: {
-          color: this.store.colors()?.driverColors?.[driver],
+          color: this.store.colors()?.driverColors?.[driver] ?? 'black',
         },
         emphasis: {
           focus: 'series', // highlight this series on hover (legend or chart)
@@ -176,33 +180,6 @@ export class PositionChangesChartComponent {
           lineStyle: { opacity: 0.2 }, // dim when not focused
         },
       })) ?? []
-    );
-  }
-
-  /**
-   * Creates the legend configuration for each driver
-   * @private
-   */
-  private createDriverLegend() {
-    return (
-      this.drivers()?.map((driver) => {
-        const legend = {
-          name: driver,
-          icon: '',
-          itemStyle: {
-            color: this.store.colors()?.driverColors?.[driver],
-          },
-        };
-
-        if (this.store.colors()?.driverStyles?.[driver] === 'solid') {
-          legend.icon = 'path://M0,3 h6 v1 h-6 Z';
-        } else {
-          legend.icon =
-            'path://M0,3 h2 v1 h-2 Z M3,3 h2 v1 h-2 Z M6,3 h2 v1 h-2 Z';
-        }
-
-        return legend;
-      }) ?? []
     );
   }
 }

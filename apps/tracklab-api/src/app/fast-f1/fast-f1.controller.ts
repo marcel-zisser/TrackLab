@@ -9,6 +9,7 @@ import {
 import {
   CarTelemetryResponse,
   ChampionshipContendersResponse,
+  ColorResponse,
   DriversResponse,
   GapToLeaderResponse,
   LapsResponse,
@@ -23,6 +24,15 @@ import { LoggingCacheInterceptor } from '../interceptors/cache-logging.intercept
 @Controller('fast-f1')
 export class FastF1Controller {
   constructor(private readonly fastF1Service: FastF1Service) {}
+
+  @Get('colors')
+  getColors(
+    @Query('year') year: number,
+    @Query('round') round: number,
+    @Query('session') session: string,
+  ): Promise<ColorResponse> {
+    return this.fastF1Service.getColors(year, round, session);
+  }
 
   @Get('session-results')
   getSeasonResults(

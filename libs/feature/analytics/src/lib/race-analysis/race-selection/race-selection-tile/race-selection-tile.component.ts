@@ -10,7 +10,7 @@ import { EventData } from '@tracklab/models';
 import { PrimeIcons } from 'primeng/api';
 import { FlagPipe } from '@tracklab/shared/components';
 import { NgClass, NgOptimizedImage } from '@angular/common';
-import { RaceAnalysisStore } from '../../store/race-analysis.store';
+import { AnalyticsStore } from '../../../store';
 
 @Component({
   selector: 'tl-race-selection-tile',
@@ -22,7 +22,7 @@ import { RaceAnalysisStore } from '../../store/race-analysis.store';
 export class RaceSelectionTileComponent {
   raceInput = input.required<EventData>();
 
-  private store = inject(RaceAnalysisStore);
+  private store = inject(AnalyticsStore);
 
   protected readonly PrimeIcons = PrimeIcons;
 

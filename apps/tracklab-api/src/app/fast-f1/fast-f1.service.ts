@@ -1,4 +1,4 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { SessionResultsClient } from '../../generated/results';
 import { firstValueFrom } from 'rxjs';
@@ -11,14 +11,21 @@ import {
 } from '@tracklab/models';
 import { EventScheduleClient } from '../../generated/event-schedule';
 import { CircuitInfoClient } from '../../generated/circuit';
-import { AnalyticsClient } from '../../generated/analytics';
+import { AnalyticsClient, LapsResponse } from '../../generated/analytics';
 
 @Injectable()
 export class FastF1Service implements OnModuleInit {
+  private readonly logger = new Logger(FastF1Service.name);
+
   private sessionResultsService: SessionResultsClient;
   private eventScheduleService: EventScheduleClient;
   private circuitService: CircuitInfoClient;
   private analyticsService: AnalyticsClient;
+
+  private readonly raceCache = new Map<
+    number,
+    Map<number, Map<string, LapsResponse>>
+  >();
 
   constructor(@Inject('TRACKLAB_PACKAGE') private client: ClientGrpc) {}
 
@@ -144,14 +151,7 @@ export class FastF1Service implements OnModuleInit {
    * @param session the session type
    */
   async getSessionStrategy(year: number, round: number, session: string) {
-    const lapsResponse = await firstValueFrom(
-      this.analyticsService.getRaceLaps({
-        year: year,
-        round: round,
-        session: session,
-        threshold: null,
-      }),
-    );
+    const lapsResponse = await this.loadLaps(year, round, session);
     return await firstValueFrom(
       this.analyticsService.getSessionStrategy({ laps: lapsResponse.laps }),
     );
@@ -247,11 +247,9 @@ export class FastF1Service implements OnModuleInit {
    * @param round the round of the session within the season
    */
   async getPositionData(year: number, round: number) {
+    const lapsResponse = await this.loadLaps(year, round, 'Race');
     return await firstValueFrom(
-      this.analyticsService.getPositionData({
-        year: year,
-        round: round,
-      }),
+      this.analyticsService.getPositionData({ laps: lapsResponse.laps }),
     );
   }
 
@@ -293,17 +291,63 @@ export class FastF1Service implements OnModuleInit {
   }
 
   async getGapToLeader(year: number, round: number, session: string) {
-    const lapsResponse = await firstValueFrom(
-      this.analyticsService.getRaceLaps({
-        year: year,
-        round: round,
-        session: session,
-        threshold: null,
-      }),
-    );
+    const lapsResponse = await this.loadLaps(year, round, session);
 
     return await firstValueFrom(
       this.analyticsService.getGapToLeader({ laps: lapsResponse.laps }),
     );
+  }
+
+  async getColors(year: number, round: number, session: string) {
+    return await firstValueFrom(
+      this.analyticsService.getColors({
+        year: year,
+        round: round,
+        session: session,
+      }),
+    );
+  }
+
+  /**
+   * Loads the laps of a session either from cache or from server
+   * @param year the year of the session
+   * @param round  the round of the session
+   * @param session the name of the session
+   * @returns {Promise<LapsResponse>} the laps of the requested session
+   */
+  private async loadLaps(
+    year: number,
+    round: number,
+    session: string,
+  ): Promise<LapsResponse> {
+    const laps =
+      this.raceCache.get(year)?.get(round)?.get(session) ?? undefined;
+    if (laps) {
+      this.logger.log('Race Cache hit.');
+      return laps;
+    } else {
+      this.logger.log('Race Cache miss.');
+      const lapsResponse = await firstValueFrom(
+        this.analyticsService.getRaceLaps({
+          year: year,
+          round: round,
+          session: session,
+          threshold: null,
+        }),
+      );
+      if (!this.raceCache.has(year)) {
+        this.raceCache.set(year, new Map());
+      }
+
+      const roundMap = this.raceCache.get(year);
+      if (!roundMap.has(round)) {
+        roundMap.set(round, new Map());
+      }
+
+      const sessionMap = roundMap.get(round);
+      sessionMap.set(session, lapsResponse);
+
+      return lapsResponse;
+    }
   }
 }

@@ -8,8 +8,8 @@ from analytics.analytics_helpers import map_row_to_lap, get_drivers_standings, \
   calculate_max_points_for_remaining_season, calculate_who_can_win, get_driver_plot_style, load_laps
 from generated import analytics_pb2_grpc
 from generated.analytics_pb2 import StrategyResponse, SpeedTracesResponse, \
-  CarTelemetryResponse, DriversResponse, PositionDataResponse, DriverPositionData, ChampionshipContendersResponse, \
-  TrackDominationResponse, LapsResponse, LapsTransformRequest, GapToLeaderResponse
+  CarTelemetryResponse, DriversResponse, PositionDataResponse, ChampionshipContendersResponse, \
+  TrackDominationResponse, LapsResponse, LapsTransformRequest, GapToLeaderResponse, ColorResponse, SessionRequest
 from generated.types_pb2 import Strategy, SpeedTrace, CarTelemetry, PositionTelemetry, Driver, Duration
 
 
@@ -181,20 +181,12 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
 
   def GetPositionData(self, request, context):
     response = PositionDataResponse()
+    loaded_laps = load_laps(request)
+    grouped_by_lap_number = loaded_laps.groupby('lapNumber')
 
-    session = fastf1.get_session(request.year, request.round, 'Race')
-    session.load()
-
-    for driverNumber in session.drivers:
-      driver = session.get_driver(driverNumber)
-      laps = session.laps.pick_drivers(driverNumber)
-      positions = [int(lap.Position) for lap in laps.itertuples() if not np.isnan(lap.Position)]
-      positions.insert(0, int(driver.GridPosition))
-      style = fastf1.plotting.get_driver_style(identifier=driver.Abbreviation,
-                                               style=['color', 'linestyle'],
-                                               session=session)
-      response.payload[driver.Abbreviation].CopyFrom(DriverPositionData(positions=positions, color=style['color'],
-                                                                        lineStyle=style['linestyle']))
+    for lap_number, laps in grouped_by_lap_number:
+      for lap in laps.itertuples():
+        response.payload[lap.driver].positions.append(int(lap.position) if not np.isnan(lap.position) else 0)
 
     return response
 
@@ -287,3 +279,24 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
         ))
 
     return response
+
+  def GetColors(self, request: SessionRequest, context):
+    session = fastf1.get_session(request.year, request.round, request.session)
+
+    driver_colors = fastf1.plotting.get_driver_color_mapping(session)
+
+    driver_style = dict()
+    team_colors = dict()
+    for driver in driver_colors:
+      team_name = fastf1.plotting.get_team_name_by_driver(driver, session)
+      team_colors[team_name] = driver_colors[driver]
+      driver_style[driver] = fastf1.plotting.get_driver_style(driver, ['linestyle'], session)['linestyle']
+
+    compound_colors = fastf1.plotting.get_compound_mapping(session)
+
+    return ColorResponse(
+      teamColors=team_colors,
+      driverColors=driver_colors,
+      driverStyle=driver_style,
+      compoundColors=compound_colors
+    )
