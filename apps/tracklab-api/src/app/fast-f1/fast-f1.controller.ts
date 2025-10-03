@@ -65,14 +65,14 @@ export class FastF1Controller {
     return this.fastF1Service.getCircuitInfo(year, round, session);
   }
 
-  @Get('laps')
-  getLaps(
+  @Get('driver-laps')
+  getDriverLaps(
     @Query('year') year: number,
     @Query('round') round: number,
     @Query('session') session: string,
     @Query('driver') driver: string,
   ): Promise<LapsResponse> {
-    return this.fastF1Service.getLaps(year, round, session, driver);
+    return this.fastF1Service.getDriverLaps(year, round, session, driver);
   }
 
   @Get('quick-laps')
@@ -158,5 +158,14 @@ export class FastF1Controller {
     @Query('session') session: string,
   ): Promise<GapToLeaderResponse> {
     return this.fastF1Service.getGapToLeader(year, round, session);
+  }
+
+  @Get('laps')
+  getLaps(
+    @Query('year') year: number,
+    @Query('round') round: number,
+    @Query('session') session: string,
+  ): Promise<LapsResponse> {
+    return this.fastF1Service.getLaps(year, round, session);
   }
 }

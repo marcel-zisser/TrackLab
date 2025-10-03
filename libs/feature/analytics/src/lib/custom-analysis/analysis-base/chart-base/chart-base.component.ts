@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   inject,
   input,
 } from '@angular/core';
@@ -24,9 +25,18 @@ export class ChartBaseComponent {
   private readonly themeService = inject(ThemeService);
   private readonly sourceSelectionService = inject(SourceSelectionService);
 
-  protected readonly chartTheme = this.themeService.chartTheme;
+  private chart: ECharts | undefined;
+  protected readonly chartTheme = this.themeService.chartTheme();
+
+  constructor() {
+    effect(() => {
+      const chartTheme = this.themeService.chartTheme();
+      this.chart?.setTheme(chartTheme);
+    });
+  }
 
   protected onChartInit(ec: ECharts) {
+    this.chart = ec;
     this.sourceSelectionService.setChartInstance(ec);
   }
 }

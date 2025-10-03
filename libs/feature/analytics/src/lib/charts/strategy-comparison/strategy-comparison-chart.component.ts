@@ -13,11 +13,10 @@ import {
   RaceSelection,
   Strategy,
   StrategyResponse,
-  TireColors,
-  TireCompound,
 } from '@tracklab/models';
 import { first } from 'rxjs';
 import { ChartBaseComponent } from '../../custom-analysis/analysis-base/chart-base/chart-base.component';
+import { AnalyticsStore } from '../../store';
 
 @Component({
   selector: 'tl-strategy-comparison-chart',
@@ -30,6 +29,7 @@ export class StrategyComparisonChartComponent {
   raceSelection = input.required<RaceSelection | undefined>();
 
   private readonly backendService = inject(BackendService);
+  private readonly store = inject(AnalyticsStore);
 
   protected selectedYear: string | undefined;
   protected selectedEvent: EventData | undefined;
@@ -49,6 +49,22 @@ export class StrategyComparisonChartComponent {
       return drivers;
     }
     return undefined;
+  });
+  protected lapAmount = computed(() => {
+    const data = this.strategyData() ?? [];
+    let lapAmount = 0;
+
+    const driverStintSums = new Map<string, number>();
+
+    data.forEach((strategy) => {
+      const key = strategy.driver;
+      const startLap = driverStintSums.get(key) || 0;
+      const endLap = startLap + strategy.stintLength;
+      driverStintSums.set(key, endLap);
+      lapAmount = lapAmount < endLap ? endLap : lapAmount;
+    });
+
+    return lapAmount;
   });
 
   constructor() {
@@ -102,8 +118,10 @@ export class StrategyComparisonChartComponent {
         startLap,
         strategy.stintLength,
         strategy.compound,
+        this.store.colors()?.compoundColors[strategy.compound],
       ]);
-      driverStintSums.set(key, startLap + strategy.stintLength);
+      const endLap = startLap + strategy.stintLength;
+      driverStintSums.set(key, endLap);
     });
 
     return processedData;
@@ -128,7 +146,7 @@ export class StrategyComparisonChartComponent {
         },
       },
       legend: {
-        data: ['SOFT', 'MEDIUM', 'HARD', TireCompound.Inter],
+        data: [...Object.keys(this.store.colors()?.compoundColors ?? {})],
       },
       grid: {
         left: 50,
@@ -139,6 +157,7 @@ export class StrategyComparisonChartComponent {
       xAxis: {
         type: 'value',
         name: 'Laps',
+        max: this.lapAmount(),
       },
       yAxis: {
         type: 'category',
@@ -151,7 +170,7 @@ export class StrategyComparisonChartComponent {
             const driverIndex = api.value(0);
             const start = api.value(1);
             const length = api.value(2);
-            const compound = api.value(3);
+            const color = api.value(4);
             const end = start + length;
 
             const y = api.coord([0, driverIndex])[1];
@@ -167,7 +186,7 @@ export class StrategyComparisonChartComponent {
                 height: 20,
               },
               style: {
-                fill: TireColors.get(compound),
+                fill: color,
                 stroke: '#777',
                 lineWidth: 1.5,
               },

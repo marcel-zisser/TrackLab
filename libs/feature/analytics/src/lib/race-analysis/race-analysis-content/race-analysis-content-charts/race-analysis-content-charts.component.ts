@@ -2,9 +2,10 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { AnalyticsStore } from '../../../store';
 import { Skeleton } from 'primeng/skeleton';
 import {
+  LeaderGapBarChartComponent,
   LeaderGapLineChartComponent,
-  PositionChangesChartComponent,
-  StrategyComparisonChartComponent,
+  PositionChangesChartComponent, SectorComparisonChartComponent,
+  StrategyComparisonChartComponent, WdcContendersChartComponent,
 } from '../../../charts';
 
 @Component({
@@ -17,6 +18,9 @@ import {
     PositionChangesChartComponent,
     LeaderGapLineChartComponent,
     StrategyComparisonChartComponent,
+    LeaderGapBarChartComponent,
+    SectorComparisonChartComponent,
+    WdcContendersChartComponent,
   ],
 })
 export class RaceAnalysisContentChartsComponent {

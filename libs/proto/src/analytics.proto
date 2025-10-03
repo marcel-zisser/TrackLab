@@ -5,10 +5,10 @@ package at.tracklab;
 import "types.proto";
 
 service Analytics {
-  rpc GetRaceLaps(SessionRequest) returns (LapsResponse) {};
+  rpc GetLaps(SessionRequest) returns (LapsResponse) {};
   rpc GetSessionStrategy(LapsTransformRequest) returns (StrategyResponse) {}
   rpc GetGapToLeader(LapsTransformRequest) returns (GapToLeaderResponse) {}
-  rpc GetLaps(DriverRequest) returns (LapsResponse) {}
+  rpc GetDriverLaps(DriverRequest) returns (LapsResponse) {}
   rpc GetQuickLaps(EventRequest) returns (LapsResponse) {}
   rpc GetSpeedTraces(SessionRequest) returns (SpeedTracesResponse) {}
   rpc GetCarTelemetry(CarTelemetryRequest) returns (CarTelemetryResponse) {}

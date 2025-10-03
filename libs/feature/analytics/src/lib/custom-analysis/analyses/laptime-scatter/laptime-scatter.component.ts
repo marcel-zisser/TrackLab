@@ -87,7 +87,7 @@ export class LaptimeScatterComponent {
 
       this.backendService
         .doGet<LapsResponse>(
-          `fast-f1/laps?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}&session=${selectedRace.session}&driver=${selectedRace.drivers[0]}`,
+          `fast-f1/driver-laps?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}&session=${selectedRace.session}&driver=${selectedRace.drivers[0]}`,
         )
         .pipe(first((response) => !!response))
         .subscribe({

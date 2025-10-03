@@ -1,10 +1,7 @@
 <tl-analysis-base class="base">
   <div chart class="chart-container">
-    @if (selectedYear) {
-      <tl-chart-base
-        [loading]="processedData() === undefined"
-        [options]="chartOptions()"
-      ></tl-chart-base>
+    @if (raceSelection()) {
+      <tl-wdc-contenders-chart [raceSelection]="raceSelection()"></tl-wdc-contenders-chart>
     } @else {
       <div class="flex-1 flex flex-col justify-center items-center h-full w-full">
         <h1>Please select a session.</h1>

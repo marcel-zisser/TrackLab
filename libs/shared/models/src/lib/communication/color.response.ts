@@ -4,5 +4,5 @@ export interface ColorResponse {
   teamColors: ColorPayload;
   driverColors: ColorPayload;
   driverStyles: ColorPayload;
-  compoundStyles: ColorPayload;
+  compoundColors: ColorPayload;
 }

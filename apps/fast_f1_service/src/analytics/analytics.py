@@ -38,7 +38,7 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
 
     return response
 
-  def GetRaceLaps(self, request, context):
+  def GetLaps(self, request, context):
     response = LapsResponse()
 
     session = fastf1.get_session(request.year, request.round, request.session)
@@ -67,7 +67,7 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
 
     return response
 
-  def GetLaps(self, request, context):
+  def GetDriverLaps(self, request, context):
     response = LapsResponse()
 
     session = fastf1.get_session(request.year, request.round, 'Race')
@@ -186,7 +186,8 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
 
     for lap_number, laps in grouped_by_lap_number:
       for lap in laps.itertuples():
-        response.payload[lap.driver].positions.append(int(lap.position) if not np.isnan(lap.position) else 0)
+        if not np.isnan(lap.position):
+          response.payload[lap.driver].positions.append(int(lap.position))
 
     return response
 
@@ -196,7 +197,7 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
     events = fastf1.events.get_event_schedule(request.year, include_testing=False)
 
     for event in events.itertuples():
-      if event.EventDate < datetime.datetime.now():
+      if event.EventDate < datetime.datetime.now() and event.RoundNumber <= request.round:
         driver_standings = get_drivers_standings(request.year, event.RoundNumber)
         points = calculate_max_points_for_remaining_season(request.year, event.RoundNumber)
         can_win = calculate_who_can_win(driver_standings, points)
@@ -297,6 +298,6 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
     return ColorResponse(
       teamColors=team_colors,
       driverColors=driver_colors,
-      driverStyle=driver_style,
+      driverStyles=driver_style,
       compoundColors=compound_colors
     )

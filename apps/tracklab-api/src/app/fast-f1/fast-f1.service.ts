@@ -24,7 +24,7 @@ export class FastF1Service implements OnModuleInit {
 
   private readonly raceCache = new Map<
     number,
-    Map<number, Map<string, LapsResponse>>
+    Map<number, Map<string, Promise<LapsResponse>>>
   >();
 
   constructor(@Inject('TRACKLAB_PACKAGE') private client: ClientGrpc) {}
@@ -151,7 +151,7 @@ export class FastF1Service implements OnModuleInit {
    * @param session the session type
    */
   async getSessionStrategy(year: number, round: number, session: string) {
-    const lapsResponse = await this.loadLaps(year, round, session);
+    const lapsResponse = await this.getLaps(year, round, session);
     return await firstValueFrom(
       this.analyticsService.getSessionStrategy({ laps: lapsResponse.laps }),
     );
@@ -164,9 +164,14 @@ export class FastF1Service implements OnModuleInit {
    * @param session the session of the round
    * @param driver the driver to retrieve the lap data from
    */
-  async getLaps(year: number, round: number, session: string, driver: string) {
+  async getDriverLaps(
+    year: number,
+    round: number,
+    session: string,
+    driver: string,
+  ) {
     return await firstValueFrom(
-      this.analyticsService.getLaps({
+      this.analyticsService.getDriverLaps({
         year: year,
         round: round,
         session: session,
@@ -247,7 +252,7 @@ export class FastF1Service implements OnModuleInit {
    * @param round the round of the session within the season
    */
   async getPositionData(year: number, round: number) {
-    const lapsResponse = await this.loadLaps(year, round, 'Race');
+    const lapsResponse = await this.getLaps(year, round, 'Race');
     return await firstValueFrom(
       this.analyticsService.getPositionData({ laps: lapsResponse.laps }),
     );
@@ -291,7 +296,7 @@ export class FastF1Service implements OnModuleInit {
   }
 
   async getGapToLeader(year: number, round: number, session: string) {
-    const lapsResponse = await this.loadLaps(year, round, session);
+    const lapsResponse = await this.getLaps(year, round, session);
 
     return await firstValueFrom(
       this.analyticsService.getGapToLeader({ laps: lapsResponse.laps }),
@@ -315,7 +320,7 @@ export class FastF1Service implements OnModuleInit {
    * @param session the name of the session
    * @returns {Promise<LapsResponse>} the laps of the requested session
    */
-  private async loadLaps(
+  async getLaps(
     year: number,
     round: number,
     session: string,
@@ -327,8 +332,8 @@ export class FastF1Service implements OnModuleInit {
       return laps;
     } else {
       this.logger.log('Race Cache miss.');
-      const lapsResponse = await firstValueFrom(
-        this.analyticsService.getRaceLaps({
+      const lapsResponse = firstValueFrom(
+        this.analyticsService.getLaps({
           year: year,
           round: round,
           session: session,

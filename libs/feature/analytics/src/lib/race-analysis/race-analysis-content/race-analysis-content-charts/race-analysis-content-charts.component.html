@@ -1,28 +1,34 @@
 @if (raceSelection()) {
-  <div class="grid grid-cols-2 gap-4">
+  <div class="grid grid-cols-2 gap-2">
 
-    <tl-strategy-comparison-chart
-      class="col-span-2 h-[33vh] shadow-xl rounded m-2 p-2"
-      [raceSelection]="raceSelection()">
-    </tl-strategy-comparison-chart>
+    <tl-leader-gap-bar-chart
+      class="col-span-1 h-[33vh] shadow rounded m-2 p-2 bg-surface-50 dark:bg-surface-800"
+      [raceSelection]="raceSelection()"
+    ></tl-leader-gap-bar-chart>
+    <tl-sector-comparison-chart
+      class="col-span-1 h-[33vh] shadow rounded m-2 p-2 bg-surface-50 dark:bg-surface-800"
+      [raceSelection]="raceSelection()"
+    ></tl-sector-comparison-chart>
 
     <tl-position-changes-chart
-      class="col-span-2 h-[33vh] shadow-xl rounded m-2 p-2"
+      class="col-span-2 h-[33vh] shadow rounded m-2 p-2 bg-surface-50 dark:bg-surface-800"
       [raceSelection]="raceSelection()">
     </tl-position-changes-chart>
 
-    <p-skeleton class="col-span-1" height="20rem" />
-    <p-skeleton class="col-span-1" height="20rem" />
+    <tl-strategy-comparison-chart
+      class="col-span-2 h-[60vh] shadow rounded m-2 p-2 bg-surface-50 dark:bg-surface-800"
+      [raceSelection]="raceSelection()">
+    </tl-strategy-comparison-chart>
 
     <tl-leader-gap-line-chart
-      class="col-span-2 h-[33vh] shadow-xl rounded m-2 p-2"
+      class="col-span-2 h-[33vh] shadow rounded m-2 p-2 bg-surface-50 dark:bg-surface-800"
       [raceSelection]="raceSelection()">
     </tl-leader-gap-line-chart>
 
-    <p-skeleton class="col-span-1" height="20rem" />
-    <p-skeleton class="col-span-1" height="20rem" />
-    <p-skeleton class="col-span-2" height="20rem" />
-    <p-skeleton class="col-span-1" height="20rem" />
+    <tl-wdc-contenders-chart
+      class="col-span-1 h-[33vh] shadow rounded m-2 p-2 bg-surface-50 dark:bg-surface-800"
+      [raceSelection]="raceSelection()"
+    ></tl-wdc-contenders-chart>
     <p-skeleton class="col-span-1" height="20rem" />
     <p-skeleton class="col-span-2" height="20rem" />
   </div>
