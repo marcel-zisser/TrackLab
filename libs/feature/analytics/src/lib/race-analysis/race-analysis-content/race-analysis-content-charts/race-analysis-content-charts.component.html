@@ -1,36 +1,91 @@
 @if (raceSelection()) {
   <div class="grid grid-cols-2 gap-2">
 
-    <tl-leader-gap-bar-chart
-      class="col-span-1 h-[33vh] shadow rounded m-2 p-2 bg-surface-50 dark:bg-surface-800"
-      [raceSelection]="raceSelection()"
-    ></tl-leader-gap-bar-chart>
-    <tl-sector-comparison-chart
-      class="col-span-1 h-[33vh] shadow rounded m-2 p-2 bg-surface-50 dark:bg-surface-800"
-      [raceSelection]="raceSelection()"
-    ></tl-sector-comparison-chart>
+    <div class="col-span-1 h-[33vh]
+                flex flex-col gap-3
+                shadow rounded m-2 p-2 bg-surface-50 dark:bg-surface-800">
+      <div class="font-bold">Delta to Winner</div>
+      <tl-leader-gap-bar-chart
+        class="h-full"
+        [tlChartTitle]="false"
+        [raceSelection]="raceSelection()"
+      ></tl-leader-gap-bar-chart>
+    </div>
 
-    <tl-position-changes-chart
-      class="col-span-2 h-[33vh] shadow rounded m-2 p-2 bg-surface-50 dark:bg-surface-800"
-      [raceSelection]="raceSelection()">
-    </tl-position-changes-chart>
+    <div class="col-span-1 h-[33vh]
+                flex flex-col gap-3
+                shadow rounded m-2 p-2 bg-surface-50 dark:bg-surface-800"
+    >
+      <div class="flex flex-row justify-between align-middle">
+        <div class="font-bold">Fastest Sectors</div>
+        <div class="flex flex-row gap-2 items-center">
+          @let fastest = fastestSectorTime();
+          @if (fastest !== undefined) {
+            <div class="text-purple-600 dark:text-purple-400 font-extrabold">Fastest
+              Sector Time:
+            </div>
+            <div>{{ millisecondsToTimingString(fastest) }}</div>
+          }
+        </div>
+      </div>
+      <p-select-button [options]="sectors"
+                       [ngModel]="sector()"
+                       (ngModelChange)="sector.set($event)"
+                       [fluid]="true"
+      ></p-select-button>
+      <tl-sector-comparison-chart
+        class="h-full"
+        [tlChartTitle]="false"
+        [raceSelection]="raceSelection()"
+        [sector]="sector()"
+        (fastestSectorTime)="fastestSectorTime.set($event)"
+      ></tl-sector-comparison-chart>
+    </div>
 
-    <tl-strategy-comparison-chart
-      class="col-span-2 h-[60vh] shadow rounded m-2 p-2 bg-surface-50 dark:bg-surface-800"
-      [raceSelection]="raceSelection()">
-    </tl-strategy-comparison-chart>
+    <div class="col-span-2 h-[33vh]
+                flex flex-col gap-3
+                shadow rounded m-2 p-2 bg-surface-50 dark:bg-surface-800">
+      <div class="font-bold">Position Changes</div>
+      <tl-position-changes-chart
+        class="h-full"
+        [tlChartTitle]="false"
+        [raceSelection]="raceSelection()">
+      </tl-position-changes-chart>
+    </div>
 
-    <tl-leader-gap-line-chart
-      class="col-span-2 h-[33vh] shadow rounded m-2 p-2 bg-surface-50 dark:bg-surface-800"
-      [raceSelection]="raceSelection()">
-    </tl-leader-gap-line-chart>
+    <div class="col-span-2 h-[33vh]
+                flex flex-col gap-3
+                shadow rounded m-2 p-2 bg-surface-50 dark:bg-surface-800">
+      <div class="font-bold">Driver Strategies</div>
+      <tl-strategy-comparison-chart
+        class="h-full"
+        [tlChartTitle]="false"
+        [raceSelection]="raceSelection()">
+      </tl-strategy-comparison-chart>
+    </div>
 
-    <tl-wdc-contenders-chart
-      class="col-span-1 h-[33vh] shadow rounded m-2 p-2 bg-surface-50 dark:bg-surface-800"
-      [raceSelection]="raceSelection()"
-    ></tl-wdc-contenders-chart>
-    <p-skeleton class="col-span-1" height="20rem" />
-    <p-skeleton class="col-span-2" height="20rem" />
+    <div class="col-span-2 h-[33vh]
+                flex flex-col gap-3
+                shadow rounded m-2 p-2 bg-surface-50 dark:bg-surface-800">
+      <div class="font-bold">Delta Development</div>
+      <tl-leader-gap-line-chart
+        class="h-full"
+        [tlChartTitle]="false"
+        [raceSelection]="raceSelection()">
+      </tl-leader-gap-line-chart>
+    </div>
+
+
+    <div class="col-span-1 h-[33vh]
+                flex flex-col gap-3
+                shadow rounded m-2 p-2 bg-surface-50 dark:bg-surface-800">
+      <div class="font-bold">Driver Championship Contenders</div>
+      <tl-wdc-contenders-chart
+        class="h-full"
+        [tlChartTitle]="false"
+        [raceSelection]="raceSelection()"
+      ></tl-wdc-contenders-chart>
+    </div>
   </div>
 
 } @else {

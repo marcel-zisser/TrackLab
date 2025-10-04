@@ -5,6 +5,7 @@ import {
   effect,
   inject,
   input,
+  linkedSignal,
   signal,
 } from '@angular/core';
 import { BackendService } from '@tracklab/services';
@@ -21,16 +22,17 @@ import {
   millisecondsToTimingString,
 } from '@tracklab/util';
 import { AnalyticsStore } from '../../store';
-import { ChartConfig } from '../chart-base/models/chart-config.interface';
+import { BaseChart } from '../chart-base/models/base-chart';
 
 @Component({
   selector: 'tl-leader-gap-bar-chart',
   imports: [FormsModule, ChartBaseComponent],
+  providers: [{ provide: BaseChart, useExisting: LeaderGapBarChartComponent }],
   templateUrl: './leader-gap-bar-chart.component.html',
   styleUrl: './leader-gap-bar-chart.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LeaderGapBarChartComponent implements ChartConfig {
+export class LeaderGapBarChartComponent extends BaseChart {
   raceSelection = input.required<RaceSelection | undefined>();
 
   private readonly backendService = inject(BackendService);
@@ -78,13 +80,14 @@ export class LeaderGapBarChartComponent implements ChartConfig {
     return Math.max(...laps);
   });
 
-  readonly chartOptions = computed(() => this.createChartOptions());
+  readonly chartOptions = linkedSignal(() => this.createChartOptions());
 
   constructor() {
+    super();
     effect(() => {
       const raceSelection = this.raceSelection();
       if (raceSelection) {
-        this.loadGapData(raceSelection);
+        this.loadData(raceSelection);
       }
     });
   }
@@ -93,7 +96,7 @@ export class LeaderGapBarChartComponent implements ChartConfig {
    * Effect to load the position data for a given race
    * @protected
    */
-  protected loadGapData(selectedRace: RaceSelection) {
+  protected loadData(selectedRace: RaceSelection) {
     if (selectedRace.year && selectedRace.event) {
       this.gapData.set(undefined);
 

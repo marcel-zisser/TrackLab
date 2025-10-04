@@ -5,6 +5,8 @@ import {
   effect,
   inject,
   input,
+  linkedSignal,
+  output,
   signal,
 } from '@angular/core';
 import { BackendService } from '@tracklab/services';
@@ -14,7 +16,6 @@ import {
   LapsResponse,
   RaceSelection,
   Sector,
-  SelectionOption,
 } from '@tracklab/models';
 import { first } from 'rxjs';
 import { FormsModule } from '@angular/forms';
@@ -24,28 +25,26 @@ import {
   millisecondsToTimingString,
 } from '@tracklab/util';
 import { AnalyticsStore } from '../../store';
-import { SelectButton } from 'primeng/selectbutton';
-import { ChartConfig } from '../chart-base/models/chart-config.interface';
+import { BaseChart } from '../chart-base/models/base-chart';
 
 @Component({
   selector: 'tl-sector-comparison-chart',
-  imports: [FormsModule, ChartBaseComponent, SelectButton],
+  imports: [FormsModule, ChartBaseComponent],
+  providers: [
+    { provide: BaseChart, useExisting: SectorComparisonChartComponent },
+  ],
   templateUrl: './sector-comparison-chart.component.html',
   styleUrl: './sector-comparison-chart.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SectorComparisonChartComponent implements ChartConfig {
+export class SectorComparisonChartComponent extends BaseChart {
   raceSelection = input.required<RaceSelection | undefined>();
+  sector = input.required<Sector | undefined>();
+  fastestSectorTime = output<number | undefined>();
 
   private readonly backendService = inject(BackendService);
   private readonly store = inject(AnalyticsStore);
 
-  protected readonly sectors: SelectionOption<string, Sector>[] = [
-    { label: 'Sector 1', value: Sector.Sector1 },
-    { label: 'Sector 2', value: Sector.Sector2 },
-    { label: 'Sector 3', value: Sector.Sector3 },
-  ];
-  protected readonly sector = signal<number>(1);
   protected readonly laps = signal<Lap[] | undefined>(undefined);
 
   protected readonly fastestSectorTimePerDriver = computed(() => {
@@ -87,14 +86,12 @@ export class SectorComparisonChartComponent implements ChartConfig {
       }
     }
 
-    return Array.from(fastestSectorPerDriver.entries()).sort(
+    const sortedSectorTimes = Array.from(fastestSectorPerDriver.entries()).sort(
       (a, b) => a[1][0] - b[1][0],
     );
+    this.fastestSectorTime.emit(sortedSectorTimes?.[0]?.[1]?.[0] ?? undefined);
+    return sortedSectorTimes;
   });
-
-  protected fastestSectorTime = computed(
-    () => this.fastestSectorTimePerDriver()?.[0]?.[1]?.[0] ?? undefined,
-  );
 
   protected readonly sectorGapData = computed(() => {
     const sortedSectorTimes = this.fastestSectorTimePerDriver();
@@ -107,13 +104,14 @@ export class SectorComparisonChartComponent implements ChartConfig {
     return new Map(sortedSectorTimes);
   });
 
-  readonly chartOptions = computed(() => this.createChartOptions());
+  readonly chartOptions = linkedSignal(() => this.createChartOptions());
 
   constructor() {
+    super();
     effect(() => {
       const raceSelection = this.raceSelection();
       if (raceSelection) {
-        this.loadLapData(raceSelection);
+        this.loadData(raceSelection);
       }
     });
   }
@@ -122,7 +120,7 @@ export class SectorComparisonChartComponent implements ChartConfig {
    * Effect to load the position data for a given race
    * @protected
    */
-  protected loadLapData(selectedRace: RaceSelection) {
+  protected loadData(selectedRace: RaceSelection) {
     if (selectedRace.year && selectedRace.event) {
       this.laps.set(undefined);
 

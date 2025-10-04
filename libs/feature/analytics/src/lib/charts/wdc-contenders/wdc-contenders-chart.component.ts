@@ -5,6 +5,7 @@ import {
   effect,
   inject,
   input,
+  linkedSignal,
   signal,
 } from '@angular/core';
 import { BackendService } from '@tracklab/services';
@@ -15,16 +16,17 @@ import {
 } from '@tracklab/models';
 import { first } from 'rxjs';
 import { ChartBaseComponent } from '../chart-base/chart-base.component';
-import { ChartConfig } from '../chart-base/models/chart-config.interface';
+import { BaseChart } from '../chart-base/models/base-chart';
 
 @Component({
   selector: 'tl-wdc-contenders-chart',
   imports: [ChartBaseComponent, ChartBaseComponent],
+  providers: [{ provide: BaseChart, useExisting: WdcContendersChartComponent }],
   templateUrl: './wdc-contenders-chart.component.html',
   styleUrl: './wdc-contenders-chart.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WdcContendersChartComponent implements ChartConfig {
+export class WdcContendersChartComponent extends BaseChart {
   raceSelection = input.required<RaceSelection | undefined>();
 
   private readonly backendService = inject(BackendService);
@@ -66,14 +68,15 @@ export class WdcContendersChartComponent implements ChartConfig {
     );
   });
 
-  readonly chartOptions = computed(() => this.createChartOptions());
+  readonly chartOptions = linkedSignal(() => this.createChartOptions());
 
   constructor() {
+    super();
     effect(() => {
       const selectedRace = this.raceSelection();
 
       if (selectedRace) {
-        this.loadWdcContendersData(selectedRace);
+        this.loadData(selectedRace);
       }
     });
   }
@@ -82,7 +85,7 @@ export class WdcContendersChartComponent implements ChartConfig {
    * Loads the data for the WDC contenders
    * @protected
    */
-  protected loadWdcContendersData(selectedRace: RaceSelection) {
+  protected loadData(selectedRace: RaceSelection) {
     if (selectedRace.year) {
       this.wdcContendersData.set(undefined);
       let url = `fast-f1/wdc-contenders?year=${selectedRace.year}`;

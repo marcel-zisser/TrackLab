@@ -1,22 +1,6 @@
-<div class="flex flex-col h-full gap-2">
-  <div class="flex flex-row justify-between align-middle">
-    <p-select-button [options]="sectors"
-                     [ngModel]="sector()" (ngModelChange)="sector.set($event)"
-    ></p-select-button>
-    <div class="flex flex-row gap-2 items-center">
-      @if (fastestSectorTime()) {
-        <div class="text-purple-600 dark:text-purple-400 font-extrabold">Fastest
-          Sector Time:
-        </div>
-        <div>{{ millisecondsToTimingString(fastestSectorTime()) }}</div>
-      }
-    </div>
-  </div>
-
-  <div class="chart-container">
-    <tl-chart-base
-      [loading]="sectorGapData() === undefined"
-      [options]="chartOptions()"
-    ></tl-chart-base>
-  </div>
+<div class="chart-container">
+  <tl-chart-base
+    [loading]="sectorGapData() === undefined"
+    [options]="chartOptions()"
+  ></tl-chart-base>
 </div>

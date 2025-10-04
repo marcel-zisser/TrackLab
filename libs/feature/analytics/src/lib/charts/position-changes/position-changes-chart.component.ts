@@ -5,6 +5,7 @@ import {
   effect,
   inject,
   input,
+  linkedSignal,
   signal,
 } from '@angular/core';
 import { BackendService } from '@tracklab/services';
@@ -18,16 +19,19 @@ import { first } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { ChartBaseComponent } from '../chart-base/chart-base.component';
 import { AnalyticsStore } from '../../store';
-import { ChartConfig } from '../chart-base/models/chart-config.interface';
+import { BaseChart } from '../chart-base/models/base-chart';
 
 @Component({
   selector: 'tl-position-changes-chart',
   imports: [FormsModule, ChartBaseComponent],
+  providers: [
+    { provide: BaseChart, useExisting: PositionChangesChartComponent },
+  ],
   templateUrl: './position-changes-chart.component.html',
   styleUrl: './position-changes-chart.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PositionChangesChartComponent implements ChartConfig {
+export class PositionChangesChartComponent extends BaseChart {
   raceSelection = input.required<RaceSelection | undefined>();
 
   private readonly backendService = inject(BackendService);
@@ -53,13 +57,14 @@ export class PositionChangesChartComponent implements ChartConfig {
     return Math.max(...laps);
   });
 
-  readonly chartOptions = computed(() => this.createChartOptions());
+  readonly chartOptions = linkedSignal(() => this.createChartOptions());
 
   constructor() {
+    super();
     effect(() => {
       const raceSelection = this.raceSelection();
       if (raceSelection) {
-        this.loadPositionData(raceSelection);
+        this.loadData(raceSelection);
       }
     });
   }
@@ -68,7 +73,7 @@ export class PositionChangesChartComponent implements ChartConfig {
    * Effect to load the position data for a given race
    * @protected
    */
-  protected loadPositionData(selectedRace: RaceSelection) {
+  protected loadData(selectedRace: RaceSelection) {
     if (selectedRace.year && selectedRace.event) {
       this.selectedYear = selectedRace.year;
       this.selectedEvent = selectedRace.event;
@@ -163,7 +168,7 @@ export class PositionChangesChartComponent implements ChartConfig {
         lineStyle: {
           color: this.store.colors()?.driverColors?.[driver],
           type: this.store.colors()?.driverStyles?.[driver],
-          width: 2,
+          width: 3,
         },
         itemStyle: {
           color: this.store.colors()?.driverColors?.[driver],

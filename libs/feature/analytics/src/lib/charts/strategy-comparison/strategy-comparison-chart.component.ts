@@ -5,6 +5,7 @@ import {
   effect,
   inject,
   input,
+  linkedSignal,
   signal,
 } from '@angular/core';
 import { BackendService } from '@tracklab/services';
@@ -17,16 +18,20 @@ import {
 import { first } from 'rxjs';
 import { ChartBaseComponent } from '../chart-base/chart-base.component';
 import { AnalyticsStore } from '../../store';
-import { ChartConfig } from '../chart-base/models/chart-config.interface';
+import { BaseChart } from '../chart-base/models/base-chart';
+import { EChartsCoreOption } from 'echarts';
 
 @Component({
   selector: 'tl-strategy-comparison-chart',
   imports: [ChartBaseComponent],
+  providers: [
+    { provide: BaseChart, useExisting: StrategyComparisonChartComponent },
+  ],
   templateUrl: './strategy-comparison-chart.component.html',
   styleUrl: './strategy-comparison-chart.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StrategyComparisonChartComponent implements ChartConfig {
+export class StrategyComparisonChartComponent extends BaseChart {
   raceSelection = input.required<RaceSelection | undefined>();
 
   private readonly backendService = inject(BackendService);
@@ -67,13 +72,16 @@ export class StrategyComparisonChartComponent implements ChartConfig {
     return lapAmount;
   });
 
-  readonly chartOptions = computed(() => this.createChartOptions());
+  readonly chartOptions = linkedSignal<EChartsCoreOption>(() =>
+    this.createChartOptions(),
+  );
 
   constructor() {
+    super();
     effect(() => {
       const raceSelection = this.raceSelection();
       if (raceSelection) {
-        this.loadStrategyData(raceSelection);
+        this.loadData(raceSelection);
       }
     });
   }
@@ -82,7 +90,7 @@ export class StrategyComparisonChartComponent implements ChartConfig {
    * Effect to load the strategy data, once all inputs have been selected
    * @protected
    */
-  private loadStrategyData(selectedRace: RaceSelection) {
+  protected loadData(selectedRace: RaceSelection) {
     this.selectedYear = selectedRace.year;
     this.selectedEvent = selectedRace.event;
     this.selectedSession = selectedRace.session;
@@ -133,7 +141,7 @@ export class StrategyComparisonChartComponent implements ChartConfig {
    * Create the options for the strategy comparison chart
    * @private
    */
-  private createChartOptions() {
+  private createChartOptions(): EChartsCoreOption {
     return {
       title: {
         text: `Strategy Comparison ${this.selectedEvent?.name ?? ''} ${this.selectedYear ?? ''}`,
