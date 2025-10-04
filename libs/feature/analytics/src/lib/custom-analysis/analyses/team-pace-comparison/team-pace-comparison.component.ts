@@ -18,7 +18,7 @@ import {
   AnalysisBaseComponent,
   SourceSelectionComponent,
 } from '../../analysis-base';
-import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.component';
+import { ChartBaseComponent } from '../../../charts';
 
 const prepareBoxplotData = (echarts as any).dataTool.prepareBoxplotData;
 

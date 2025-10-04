@@ -19,7 +19,7 @@ import {
   AnalysisBaseComponent,
   SourceSelectionComponent,
 } from '../../analysis-base';
-import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.component';
+import { ChartBaseComponent } from '../../../charts';
 
 @Component({
   selector: 'tl-gear-shift',

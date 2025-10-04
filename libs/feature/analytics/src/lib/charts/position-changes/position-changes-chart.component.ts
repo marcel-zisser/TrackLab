@@ -16,8 +16,9 @@ import {
 } from '@tracklab/models';
 import { first } from 'rxjs';
 import { FormsModule } from '@angular/forms';
-import { ChartBaseComponent } from '../../custom-analysis/analysis-base/chart-base/chart-base.component';
+import { ChartBaseComponent } from '../chart-base/chart-base.component';
 import { AnalyticsStore } from '../../store';
+import { ChartConfig } from '../chart-base/models/chart-config.interface';
 
 @Component({
   selector: 'tl-position-changes-chart',
@@ -26,7 +27,7 @@ import { AnalyticsStore } from '../../store';
   styleUrl: './position-changes-chart.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PositionChangesChartComponent {
+export class PositionChangesChartComponent implements ChartConfig {
   raceSelection = input.required<RaceSelection | undefined>();
 
   private readonly backendService = inject(BackendService);
@@ -51,7 +52,8 @@ export class PositionChangesChartComponent {
 
     return Math.max(...laps);
   });
-  protected readonly chartOptions = computed(() => this.createChartOptions());
+
+  readonly chartOptions = computed(() => this.createChartOptions());
 
   constructor() {
     effect(() => {

@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import { ThemeService } from '@tracklab/services';
 import { ECharts } from 'echarts/core';
-import { SourceSelectionService } from '../source-selection/source-selection.service';
+import { SourceSelectionService } from '../../custom-analysis/analysis-base/source-selection/source-selection.service';
 
 @Component({
   selector: 'tl-chart-base',

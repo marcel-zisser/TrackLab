@@ -1,8 +1,21 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { BackendService } from '@tracklab/services';
-import { RaceSelection, WdcContendersPayload, WdcContendersResponse } from '@tracklab/models';
+import {
+  RaceSelection,
+  WdcContendersPayload,
+  WdcContendersResponse,
+} from '@tracklab/models';
 import { first } from 'rxjs';
-import { ChartBaseComponent } from '../../custom-analysis/analysis-base/chart-base/chart-base.component';
+import { ChartBaseComponent } from '../chart-base/chart-base.component';
+import { ChartConfig } from '../chart-base/models/chart-config.interface';
 
 @Component({
   selector: 'tl-wdc-contenders-chart',
@@ -11,12 +24,11 @@ import { ChartBaseComponent } from '../../custom-analysis/analysis-base/chart-ba
   styleUrl: './wdc-contenders-chart.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WdcContendersChartComponent {
+export class WdcContendersChartComponent implements ChartConfig {
   raceSelection = input.required<RaceSelection | undefined>();
 
   private readonly backendService = inject(BackendService);
 
-  protected readonly chartOptions = computed(() => this.createChartOptions());
   protected readonly processedData = computed(() =>
     this.processData(this.wdcContendersData()),
   );
@@ -53,6 +65,8 @@ export class WdcContendersChartComponent {
         )?.currentPoints ?? 0),
     );
   });
+
+  readonly chartOptions = computed(() => this.createChartOptions());
 
   constructor() {
     effect(() => {

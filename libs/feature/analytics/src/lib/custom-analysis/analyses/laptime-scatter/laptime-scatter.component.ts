@@ -24,7 +24,7 @@ import {
   AnalysisBaseComponent,
   SourceSelectionComponent,
 } from '../../analysis-base';
-import { ChartBaseComponent } from '../../analysis-base/chart-base/chart-base.component';
+import { ChartBaseComponent } from '../../../charts';
 
 type ProcessedLapTime = [number, number, string];
 

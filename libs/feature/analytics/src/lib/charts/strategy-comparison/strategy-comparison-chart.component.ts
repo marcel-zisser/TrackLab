@@ -15,8 +15,9 @@ import {
   StrategyResponse,
 } from '@tracklab/models';
 import { first } from 'rxjs';
-import { ChartBaseComponent } from '../../custom-analysis/analysis-base/chart-base/chart-base.component';
+import { ChartBaseComponent } from '../chart-base/chart-base.component';
 import { AnalyticsStore } from '../../store';
+import { ChartConfig } from '../chart-base/models/chart-config.interface';
 
 @Component({
   selector: 'tl-strategy-comparison-chart',
@@ -25,7 +26,7 @@ import { AnalyticsStore } from '../../store';
   styleUrl: './strategy-comparison-chart.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StrategyComparisonChartComponent {
+export class StrategyComparisonChartComponent implements ChartConfig {
   raceSelection = input.required<RaceSelection | undefined>();
 
   private readonly backendService = inject(BackendService);
@@ -40,7 +41,6 @@ export class StrategyComparisonChartComponent {
     this.processData(this.strategyData()),
   );
 
-  protected readonly chartOptions = computed(() => this.createChartOptions());
   protected drivers = computed(() => {
     const strategyData = this.strategyData();
     if (strategyData) {
@@ -66,6 +66,8 @@ export class StrategyComparisonChartComponent {
 
     return lapAmount;
   });
+
+  readonly chartOptions = computed(() => this.createChartOptions());
 
   constructor() {
     effect(() => {

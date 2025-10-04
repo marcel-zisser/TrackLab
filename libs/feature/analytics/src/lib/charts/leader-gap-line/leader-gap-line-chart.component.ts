@@ -16,12 +16,13 @@ import {
 } from '@tracklab/models';
 import { first } from 'rxjs';
 import { FormsModule } from '@angular/forms';
-import { ChartBaseComponent } from '../../custom-analysis/analysis-base/chart-base/chart-base.component';
+import { ChartBaseComponent } from '../chart-base/chart-base.component';
 import {
   convertToMilliseconds,
   millisecondsToTimingString,
 } from '@tracklab/util';
 import { AnalyticsStore } from '../../store';
+import { ChartConfig } from '../chart-base/models/chart-config.interface';
 
 @Component({
   selector: 'tl-leader-gap-line-chart',
@@ -30,7 +31,7 @@ import { AnalyticsStore } from '../../store';
   styleUrl: './leader-gap-line-chart.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LeaderGapLineChartComponent {
+export class LeaderGapLineChartComponent implements ChartConfig {
   raceSelection = input.required<RaceSelection | undefined>();
 
   private readonly backendService = inject(BackendService);
@@ -55,7 +56,7 @@ export class LeaderGapLineChartComponent {
     return Math.max(...laps);
   });
 
-  protected readonly chartOptions = computed(() => this.createChartOptions());
+  readonly chartOptions = computed(() => this.createChartOptions());
 
   constructor() {
     effect(() => {
