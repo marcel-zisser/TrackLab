@@ -1,10 +1,25 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { BackendService } from '@tracklab/services';
-import { Driver, EventData, PositionTelemetry, RaceSelection, TrackDominationResponse } from '@tracklab/models';
+import {
+  Driver,
+  EventData,
+  PositionTelemetry,
+  RaceSelection,
+  TrackDominationResponse,
+} from '@tracklab/models';
 import { first } from 'rxjs';
 import { FormsModule } from '@angular/forms';
-import { AnalysisBaseComponent, SourceSelectionComponent } from '../../analysis-base';
-import { ChartBaseComponent } from '../../../charts';
+import {
+  AnalysisBaseComponent,
+  SourceSelectionComponent,
+} from '../../analysis-base';
+import { ChartBaseComponent } from '@tracklab/shared/components';
 
 @Component({
   selector: 'tl-track-domination',

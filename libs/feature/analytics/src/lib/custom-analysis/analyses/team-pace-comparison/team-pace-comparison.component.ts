@@ -18,7 +18,7 @@ import {
   AnalysisBaseComponent,
   SourceSelectionComponent,
 } from '../../analysis-base';
-import { ChartBaseComponent } from '../../../charts';
+import { ChartBaseComponent } from '@tracklab/shared/components';
 
 const prepareBoxplotData = (echarts as any).dataTool.prepareBoxplotData;
 

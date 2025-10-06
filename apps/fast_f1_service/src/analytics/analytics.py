@@ -72,7 +72,7 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
 
     session = fastf1.get_session(request.year, request.round, 'Race')
     session.load()
-    laps = session.laps.pick_drivers([request.drivers[0]])
+    laps = session.laps.pick_drivers([request.drivers[0]]).pick_quicklaps(threshold=1.1)
     transformed_laps = laps.copy()
     transformed_laps.loc[:, "LapTime (s)"] = laps["LapTime"].dt.total_seconds()
 
@@ -197,7 +197,7 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
     events = fastf1.events.get_event_schedule(request.year, include_testing=False)
 
     for event in events.itertuples():
-      if event.EventDate < datetime.datetime.now() and event.RoundNumber <= request.round:
+      if event.EventDate < datetime.datetime.now() and (not request.round or event.RoundNumber <= request.round):
         driver_standings = get_drivers_standings(request.year, event.RoundNumber)
         points = calculate_max_points_for_remaining_season(request.year, event.RoundNumber)
         can_win = calculate_who_can_win(driver_standings, points)

@@ -4,4 +4,3 @@ export { LeaderGapBarChartComponent } from './leader-gap-bar/leader-gap-bar-char
 export { StrategyComparisonChartComponent } from './strategy-comparison/strategy-comparison-chart.component';
 export { SectorComparisonChartComponent } from './sector-comparison/sector-comparison-chart.component';
 export { WdcContendersChartComponent } from './wdc-contenders/wdc-contenders-chart.component';
-export { ChartBaseComponent } from './chart-base/chart-base.component';

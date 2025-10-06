@@ -1,0 +1,11 @@
+<div
+  class="h-[33vh] flex flex-col gap-3 shadow rounded m-2 p-2 bg-surface-50 dark:bg-surface-800">
+  <div class="flex flex-row justify-between">
+    <div class="font-bold">{{ title() }}</div>
+    <p-button [icon]="PrimeIcons.WINDOW_MAXIMIZE" [size]="'small'" [variant]="'outlined'"
+              (onClick)="maximizeChart()"></p-button>
+  </div>
+  <div #chartContent class="h-full">
+    <ng-content select="[chart]"></ng-content>
+  </div>
+</div>

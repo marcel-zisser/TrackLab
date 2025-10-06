@@ -24,7 +24,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Button } from 'primeng/button';
 import { PrimeIcons } from 'primeng/api';
 import { MultiSelect } from 'primeng/multiselect';
-import { SourceSelectionService } from './source-selection.service';
+import { SourceSelectionService } from '../../../../../../../shared/services/src/lib/frontend/source-selection/source-selection.service';
 import { AuthenticationService } from '@tracklab/services';
 import { AnalyticsStore } from '../../../store';
 

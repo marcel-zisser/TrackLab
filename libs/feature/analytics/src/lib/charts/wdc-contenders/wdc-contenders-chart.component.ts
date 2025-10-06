@@ -7,6 +7,7 @@ import {
   input,
   linkedSignal,
   signal,
+  viewChild,
 } from '@angular/core';
 import { BackendService } from '@tracklab/services';
 import {
@@ -15,12 +16,11 @@ import {
   WdcContendersResponse,
 } from '@tracklab/models';
 import { first } from 'rxjs';
-import { ChartBaseComponent } from '../chart-base/chart-base.component';
-import { BaseChart } from '../chart-base/models/base-chart';
+import { BaseChart, ChartBaseComponent } from '@tracklab/shared/components';
 
 @Component({
   selector: 'tl-wdc-contenders-chart',
-  imports: [ChartBaseComponent, ChartBaseComponent],
+  imports: [ChartBaseComponent],
   providers: [{ provide: BaseChart, useExisting: WdcContendersChartComponent }],
   templateUrl: './wdc-contenders-chart.component.html',
   styleUrl: './wdc-contenders-chart.component.css',
@@ -28,6 +28,7 @@ import { BaseChart } from '../chart-base/models/base-chart';
 })
 export class WdcContendersChartComponent extends BaseChart {
   raceSelection = input.required<RaceSelection | undefined>();
+  chart = viewChild.required<ChartBaseComponent>('chartBase');
 
   private readonly backendService = inject(BackendService);
 

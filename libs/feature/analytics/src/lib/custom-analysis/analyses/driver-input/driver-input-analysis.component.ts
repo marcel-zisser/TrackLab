@@ -1,25 +1,10 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { BackendService } from '@tracklab/services';
-import {
-  CarTelemetry,
-  CarTelemetryResponse,
-  CircuitInformation,
-  EventData,
-  RaceSelection,
-} from '@tracklab/models';
+import { CarTelemetry, CarTelemetryResponse, CircuitInformation, EventData, RaceSelection } from '@tracklab/models';
 import { combineLatest, first } from 'rxjs';
 import { FormsModule } from '@angular/forms';
-import {
-  AnalysisBaseComponent,
-  SourceSelectionComponent,
-} from '../../analysis-base';
-import { ChartBaseComponent } from '../../../charts';
+import { AnalysisBaseComponent, SourceSelectionComponent } from '../../analysis-base';
+import { ChartBaseComponent } from '@tracklab/shared/components';
 
 @Component({
   selector: 'tl-driver-input',

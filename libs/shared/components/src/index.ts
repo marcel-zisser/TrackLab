@@ -7,4 +7,5 @@ export * from './lib/countdown/countdown.component';
 export * from './lib/authentication';
 export * from './lib/dialogs';
 export * from './lib/pipes';
+export * from './lib/chart-base';
 export { InfoPageComponent } from './lib/info-page/info-page.component';

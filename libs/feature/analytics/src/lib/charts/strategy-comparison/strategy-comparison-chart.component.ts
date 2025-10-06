@@ -7,6 +7,7 @@ import {
   input,
   linkedSignal,
   signal,
+  viewChild,
 } from '@angular/core';
 import { BackendService } from '@tracklab/services';
 import {
@@ -16,10 +17,9 @@ import {
   StrategyResponse,
 } from '@tracklab/models';
 import { first } from 'rxjs';
-import { ChartBaseComponent } from '../chart-base/chart-base.component';
 import { AnalyticsStore } from '../../store';
-import { BaseChart } from '../chart-base/models/base-chart';
 import { EChartsCoreOption } from 'echarts';
+import { BaseChart, ChartBaseComponent } from '@tracklab/shared/components';
 
 @Component({
   selector: 'tl-strategy-comparison-chart',
@@ -33,6 +33,7 @@ import { EChartsCoreOption } from 'echarts';
 })
 export class StrategyComparisonChartComponent extends BaseChart {
   raceSelection = input.required<RaceSelection | undefined>();
+  chart = viewChild.required<ChartBaseComponent>('chartBase');
 
   private readonly backendService = inject(BackendService);
   private readonly store = inject(AnalyticsStore);

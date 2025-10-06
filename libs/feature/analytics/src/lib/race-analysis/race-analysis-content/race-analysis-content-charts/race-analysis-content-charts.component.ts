@@ -5,7 +5,6 @@ import {
   signal,
 } from '@angular/core';
 import { AnalyticsStore } from '../../../store';
-import { Skeleton } from 'primeng/skeleton';
 import {
   LeaderGapBarChartComponent,
   LeaderGapLineChartComponent,
@@ -14,11 +13,12 @@ import {
   StrategyComparisonChartComponent,
   WdcContendersChartComponent,
 } from '../../../charts';
-import { ChartTitleDirective } from '../../../charts/chart-base';
 import { SelectButton } from 'primeng/selectbutton';
 import { millisecondsToTimingString } from '@tracklab/util';
 import { FormsModule } from '@angular/forms';
 import { Sector, SelectionOption } from '@tracklab/models';
+import { RaceAnalysisChartTileComponent } from './race-analysis-chart-tile/race-analysis-chart-tile.component';
+import { ChartTitleDirective } from '@tracklab/shared/components';
 
 @Component({
   selector: 'tl-race-analysis-content-charts',
@@ -26,7 +26,6 @@ import { Sector, SelectionOption } from '@tracklab/models';
   styleUrl: './race-analysis-content-charts.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    Skeleton,
     PositionChangesChartComponent,
     LeaderGapLineChartComponent,
     StrategyComparisonChartComponent,
@@ -36,6 +35,7 @@ import { Sector, SelectionOption } from '@tracklab/models';
     ChartTitleDirective,
     SelectButton,
     FormsModule,
+    RaceAnalysisChartTileComponent,
   ],
 })
 export class RaceAnalysisContentChartsComponent {

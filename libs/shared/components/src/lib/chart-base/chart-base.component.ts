@@ -5,15 +5,13 @@ import {
   inject,
   input,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { NgxEchartsDirective } from 'ngx-echarts';
-import { ThemeService } from '@tracklab/services';
+import { SourceSelectionService, ThemeService } from '@tracklab/services';
 import { ECharts } from 'echarts/core';
-import { SourceSelectionService } from '../../custom-analysis/analysis-base/source-selection/source-selection.service';
 
 @Component({
   selector: 'tl-chart-base',
-  imports: [CommonModule, NgxEchartsDirective],
+  imports: [NgxEchartsDirective],
   templateUrl: './chart-base.component.html',
   styleUrl: './chart-base.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,12 +19,12 @@ import { SourceSelectionService } from '../../custom-analysis/analysis-base/sour
 export class ChartBaseComponent {
   loading = input.required<boolean>();
   options = input.required<any>();
-
   private readonly themeService = inject(ThemeService);
   private readonly sourceSelectionService = inject(SourceSelectionService);
 
-  private chart: ECharts | undefined;
   protected readonly chartTheme = this.themeService.chartTheme();
+
+  chart: ECharts | undefined;
 
   constructor() {
     effect(() => {

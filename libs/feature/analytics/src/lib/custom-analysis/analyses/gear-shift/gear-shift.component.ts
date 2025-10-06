@@ -19,7 +19,7 @@ import {
   AnalysisBaseComponent,
   SourceSelectionComponent,
 } from '../../analysis-base';
-import { ChartBaseComponent } from '../../../charts';
+import { ChartBaseComponent } from '@tracklab/shared/components';
 
 @Component({
   selector: 'tl-gear-shift',

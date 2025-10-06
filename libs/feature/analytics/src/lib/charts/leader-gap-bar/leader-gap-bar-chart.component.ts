@@ -7,6 +7,7 @@ import {
   input,
   linkedSignal,
   signal,
+  viewChild,
 } from '@angular/core';
 import { BackendService } from '@tracklab/services';
 import {
@@ -16,13 +17,12 @@ import {
 } from '@tracklab/models';
 import { first } from 'rxjs';
 import { FormsModule } from '@angular/forms';
-import { ChartBaseComponent } from '../chart-base/chart-base.component';
 import {
   convertToMilliseconds,
   millisecondsToTimingString,
 } from '@tracklab/util';
 import { AnalyticsStore } from '../../store';
-import { BaseChart } from '../chart-base/models/base-chart';
+import { BaseChart, ChartBaseComponent } from '@tracklab/shared/components';
 
 @Component({
   selector: 'tl-leader-gap-bar-chart',
@@ -34,6 +34,7 @@ import { BaseChart } from '../chart-base/models/base-chart';
 })
 export class LeaderGapBarChartComponent extends BaseChart {
   raceSelection = input.required<RaceSelection | undefined>();
+  chart = viewChild.required<ChartBaseComponent>('chartBase');
 
   private readonly backendService = inject(BackendService);
   private readonly store = inject(AnalyticsStore);
@@ -52,7 +53,7 @@ export class LeaderGapBarChartComponent extends BaseChart {
     for (const driver of this.drivers()) {
       const laps = gapData?.[driver]?.gaps ?? [];
 
-      if (laps.length < totalLaps) {
+      if (laps.length < totalLaps - 2) {
         continue;
       }
 
@@ -144,7 +145,7 @@ export class LeaderGapBarChartComponent extends BaseChart {
         data: Array.from(this.gaps().keys()),
       },
       tooltip: {
-        show: true,
+        show: false,
         enterable: true,
         order: 'valueAsc',
         appendTo: 'body',
@@ -175,6 +176,14 @@ export class LeaderGapBarChartComponent extends BaseChart {
           color: color,
         },
       })),
+      label: {
+        show: true,
+        position: 'right',
+        formatter: function (params: any) {
+          const value: number = params.data.value;
+          return '+' + millisecondsToTimingString(value);
+        },
+      },
     };
   }
 }

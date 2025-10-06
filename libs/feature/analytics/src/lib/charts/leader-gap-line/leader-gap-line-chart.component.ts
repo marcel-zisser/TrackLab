@@ -7,6 +7,7 @@ import {
   input,
   linkedSignal,
   signal,
+  viewChild,
 } from '@angular/core';
 import { BackendService } from '@tracklab/services';
 import {
@@ -17,13 +18,12 @@ import {
 } from '@tracklab/models';
 import { first } from 'rxjs';
 import { FormsModule } from '@angular/forms';
-import { ChartBaseComponent } from '../chart-base/chart-base.component';
 import {
   convertToMilliseconds,
   millisecondsToTimingString,
 } from '@tracklab/util';
 import { AnalyticsStore } from '../../store';
-import { BaseChart } from '../chart-base/models/base-chart';
+import { BaseChart, ChartBaseComponent } from '@tracklab/shared/components';
 
 @Component({
   selector: 'tl-leader-gap-line-chart',
@@ -35,6 +35,7 @@ import { BaseChart } from '../chart-base/models/base-chart';
 })
 export class LeaderGapLineChartComponent extends BaseChart {
   raceSelection = input.required<RaceSelection | undefined>();
+  chart = viewChild.required<ChartBaseComponent>('chartBase');
 
   private readonly backendService = inject(BackendService);
   private readonly store = inject(AnalyticsStore);
@@ -131,6 +132,10 @@ export class LeaderGapLineChartComponent extends BaseChart {
         order: 'valueAsc',
         appendTo: 'body',
         className: 'tl-tooltip',
+        formatter: (val: any) => {
+          const series = val;
+          return this.generateTooltip(series);
+        },
       },
       legend: {
         type: 'scroll',
@@ -185,5 +190,27 @@ export class LeaderGapLineChartComponent extends BaseChart {
         },
       })) ?? []
     );
+  }
+
+  /**
+   * Generates the tooltip from the series
+   * @param dataSeries the series to display
+   * @private
+   */
+  private generateTooltip(dataSeries: any[]) {
+    let tooltip = '';
+
+    tooltip += '<div class="font-bold mb-2">Delta to Leader</div>';
+    tooltip += '<div class="flex flex-col">';
+
+    for (const series of dataSeries.sort((a, b) => a.value[1] - b.value[1])) {
+      tooltip += '<div class="flex flex-row justify-between">\n';
+      tooltip += `<div class="font-bold">${series.seriesName}</div>\n`;
+      tooltip += `<div>${millisecondsToTimingString(series.value[1])}</div>\n`;
+      tooltip += `</div>\n`;
+    }
+    tooltip += '</div>';
+
+    return tooltip;
   }
 }

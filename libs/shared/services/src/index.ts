@@ -3,3 +3,4 @@ export * from './lib/theme';
 export * from './lib/local-storage';
 export * from './lib/authentication';
 export * from './lib/user';
+export * from './lib/frontend';

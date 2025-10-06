@@ -8,6 +8,7 @@ import {
   linkedSignal,
   output,
   signal,
+  viewChild,
 } from '@angular/core';
 import { BackendService } from '@tracklab/services';
 import {
@@ -19,13 +20,12 @@ import {
 } from '@tracklab/models';
 import { first } from 'rxjs';
 import { FormsModule } from '@angular/forms';
-import { ChartBaseComponent } from '../chart-base/chart-base.component';
 import {
   convertToMilliseconds,
   millisecondsToTimingString,
 } from '@tracklab/util';
 import { AnalyticsStore } from '../../store';
-import { BaseChart } from '../chart-base/models/base-chart';
+import { BaseChart, ChartBaseComponent } from '@tracklab/shared/components';
 
 @Component({
   selector: 'tl-sector-comparison-chart',
@@ -41,6 +41,8 @@ export class SectorComparisonChartComponent extends BaseChart {
   raceSelection = input.required<RaceSelection | undefined>();
   sector = input.required<Sector | undefined>();
   fastestSectorTime = output<number | undefined>();
+
+  chart = viewChild.required<ChartBaseComponent>('chartBase');
 
   private readonly backendService = inject(BackendService);
   private readonly store = inject(AnalyticsStore);
@@ -101,7 +103,7 @@ export class SectorComparisonChartComponent extends BaseChart {
         sortedSectorTimes[index][1][0] - sortedSectorTimes[0][1][0];
     }
 
-    return new Map(sortedSectorTimes);
+    return new Map(sortedSectorTimes.slice(0, 10));
   });
 
   readonly chartOptions = linkedSignal(() => this.createChartOptions());
@@ -168,7 +170,7 @@ export class SectorComparisonChartComponent extends BaseChart {
         data: Array.from(this.sectorGapData().keys()),
       },
       tooltip: {
-        show: true,
+        show: false,
         enterable: true,
         order: 'valueAsc',
         appendTo: 'body',
@@ -199,6 +201,14 @@ export class SectorComparisonChartComponent extends BaseChart {
           color: color,
         },
       })),
+      label: {
+        show: true,
+        position: 'right',
+        formatter: function (params: any) {
+          const value: number = params.data.value;
+          return '+' + millisecondsToTimingString(value);
+        },
+      },
     };
   }
 
