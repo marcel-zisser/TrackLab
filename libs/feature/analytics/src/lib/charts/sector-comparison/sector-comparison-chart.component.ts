@@ -98,6 +98,10 @@ export class SectorComparisonChartComponent extends BaseChart {
   protected readonly sectorGapData = computed(() => {
     const sortedSectorTimes = this.fastestSectorTimePerDriver();
 
+    if(sortedSectorTimes.length === 0) {
+      return undefined;
+    }
+
     for (let index = sortedSectorTimes.length - 1; index >= 0; index--) {
       sortedSectorTimes[index][1][0] =
         sortedSectorTimes[index][1][0] - sortedSectorTimes[0][1][0];
@@ -167,7 +171,7 @@ export class SectorComparisonChartComponent extends BaseChart {
         type: 'category',
         name: 'Driver',
         inverse: true,
-        data: Array.from(this.sectorGapData().keys()),
+        data: Array.from(this.sectorGapData()?.keys() ?? []),
       },
       tooltip: {
         show: false,
@@ -195,7 +199,7 @@ export class SectorComparisonChartComponent extends BaseChart {
   private createDriverSeries() {
     return {
       type: 'bar',
-      data: Array.from(this.sectorGapData().values()).map(([diff, color]) => ({
+      data: Array.from(this.sectorGapData()?.values() ?? []).map(([diff, color]) => ({
         value: diff,
         itemStyle: {
           color: color,

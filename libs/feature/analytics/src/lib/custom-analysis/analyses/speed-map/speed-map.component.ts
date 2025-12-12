@@ -93,7 +93,7 @@ export class SpeedMapComponent {
    * @protected
    */
   protected loadSpeedMap(selectedRace: RaceSelection) {
-    if (selectedRace.year && selectedRace.event && selectedRace.session) {
+    if (selectedRace.year && selectedRace.event && selectedRace.session && selectedRace.drivers) {
       this.selectedYear = selectedRace.year;
       this.selectedEvent = selectedRace.event;
       this.selectedSession = selectedRace.session;

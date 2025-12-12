@@ -66,6 +66,10 @@ export class LeaderGapBarChartComponent extends BaseChart {
       ]);
     }
 
+    if (gaps.length === 0) {
+      return undefined;
+    }
+
     return new Map<string, [number, string]>(
       gaps.sort((a, b) => a[1][0] - b[1][0]).slice(0, 10),
     );
@@ -142,7 +146,7 @@ export class LeaderGapBarChartComponent extends BaseChart {
         type: 'category',
         name: 'Driver',
         inverse: true,
-        data: Array.from(this.gaps().keys()),
+        data: Array.from(this.gaps()?.keys() ?? []),
       },
       tooltip: {
         show: false,
@@ -170,7 +174,7 @@ export class LeaderGapBarChartComponent extends BaseChart {
   private createSeries() {
     return {
       type: 'bar',
-      data: Array.from(this.gaps().values()).map(([diff, color]) => ({
+      data: Array.from(this.gaps()?.values() ?? []).map(([diff, color]) => ({
         value: diff,
         itemStyle: {
           color: color,
