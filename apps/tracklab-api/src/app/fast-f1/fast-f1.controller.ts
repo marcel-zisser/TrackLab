@@ -3,13 +3,15 @@ import { FastF1Service } from './fast-f1.service';
 import {
   Circuit,
   CircuitInformation,
-  Event,
+  EventData,
   RaceResult,
 } from '@tracklab/models';
 import {
   CarTelemetryResponse,
   ChampionshipContendersResponse,
+  ColorResponse,
   DriversResponse,
+  GapToLeaderResponse,
   LapsResponse,
   PositionDataResponse,
   SpeedTracesResponse,
@@ -23,6 +25,15 @@ import { LoggingCacheInterceptor } from '../interceptors/cache-logging.intercept
 export class FastF1Controller {
   constructor(private readonly fastF1Service: FastF1Service) {}
 
+  @Get('colors')
+  getColors(
+    @Query('year') year: number,
+    @Query('round') round: number,
+    @Query('session') session: string,
+  ): Promise<ColorResponse> {
+    return this.fastF1Service.getColors(year, round, session);
+  }
+
   @Get('session-results')
   getSeasonResults(
     @Query('year') year: number,
@@ -33,7 +44,7 @@ export class FastF1Controller {
   }
 
   @Get('event-schedule')
-  getEventSchedule(@Query('year') year: number): Promise<Event[]> {
+  getEventSchedule(@Query('year') year: number): Promise<EventData[]> {
     return this.fastF1Service.getEventSchedule(year);
   }
 
@@ -54,14 +65,14 @@ export class FastF1Controller {
     return this.fastF1Service.getCircuitInfo(year, round, session);
   }
 
-  @Get('laps')
-  getLaps(
+  @Get('driver-laps')
+  getDriverLaps(
     @Query('year') year: number,
     @Query('round') round: number,
     @Query('session') session: string,
     @Query('driver') driver: string,
   ): Promise<LapsResponse> {
-    return this.fastF1Service.getLaps(year, round, session, driver);
+    return this.fastF1Service.getDriverLaps(year, round, session, driver);
   }
 
   @Get('quick-laps')
@@ -138,5 +149,23 @@ export class FastF1Controller {
     @Query('drivers') drivers: string[],
   ): Promise<TrackDominationResponse> {
     return this.fastF1Service.getTrackDomination(year, round, session, drivers);
+  }
+
+  @Get('leader-gap')
+  getGapToLeader(
+    @Query('year') year: number,
+    @Query('round') round: number,
+    @Query('session') session: string,
+  ): Promise<GapToLeaderResponse> {
+    return this.fastF1Service.getGapToLeader(year, round, session);
+  }
+
+  @Get('laps')
+  getLaps(
+    @Query('year') year: number,
+    @Query('round') round: number,
+    @Query('session') session: string,
+  ): Promise<LapsResponse> {
+    return this.fastF1Service.getLaps(year, round, session);
   }
 }

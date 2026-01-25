@@ -66,7 +66,7 @@ export class CollectionComponent implements AfterViewInit {
         this.dataView().el.nativeElement.children.item(2).offsetHeight;
       const gapHeight = 16;
 
-      const itemsPerPage = Math.floor(
+      const itemsPerPage = Math.ceil(
         (dataViewHeight - headerHeight - paginatorHeight) /
           (itemHeight + gapHeight),
       );

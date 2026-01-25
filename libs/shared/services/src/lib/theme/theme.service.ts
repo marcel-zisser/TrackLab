@@ -9,11 +9,11 @@ export class ThemeService {
   private readonly localStorageService = inject(LocalStorageService);
 
   private _theme = signal<string>(
-    this.localStorageService.getItem('theme') ?? Theme.Light
+    this.localStorageService.getItem('theme') ?? Theme.Light,
   );
 
   private _chartTheme = computed(() =>
-    this._theme() === 'dark' ? 'tracklab-dark' : ''
+    this._theme() === 'dark' ? 'tracklab-dark' : 'default',
   );
 
   get theme() {

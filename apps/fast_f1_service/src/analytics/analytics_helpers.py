@@ -1,9 +1,12 @@
 import fastf1
 import fastf1.plotting
 import numpy as np
+import pandas as pd
 from fastf1.ergast import Ergast
+from google.protobuf.json_format import MessageToDict
 from pandas import NaT
 
+from generated.analytics_pb2 import LapsTransformRequest
 from generated.types_pb2 import Lap, Duration, ChampionshipContender, Driver
 
 
@@ -28,7 +31,7 @@ def map_row_to_lap(row, team_palette):
       minutes=time.components.minutes,
       seconds=time.components.seconds,
       milliseconds=time.components.milliseconds
-    ) if time is not NaT else Duration(),
+    ) if time is not NaT else None,
     driver=row.Driver,
     driverNumber=int(row.DriverNumber),
     team=row.Team,
@@ -38,51 +41,51 @@ def map_row_to_lap(row, team_palette):
       minutes=lap_time.components.minutes,
       seconds=lap_time.components.seconds,
       milliseconds=lap_time.components.milliseconds
-    ) if lap_time is not NaT else Duration(),
+    ) if lap_time is not NaT else None,
     lapNumber=int(row.LapNumber),
-    stint=int(row.Stint) if not np.isnan(row.Stint) else 0,
+    stint=int(row.Stint) if not np.isnan(row.Stint) else None,
     pitOutTime=Duration(
       hours=pit_out_time.components.hours,
       minutes=pit_out_time.components.minutes,
       seconds=pit_out_time.components.seconds,
       milliseconds=pit_out_time.components.milliseconds
-    ) if pit_out_time is not NaT else Duration(),
+    ) if pit_out_time is not NaT else None,
     pitInTime=Duration(
       hours=pit_in_time.components.hours,
       minutes=pit_in_time.components.minutes,
       seconds=pit_in_time.components.seconds,
       milliseconds=pit_in_time.components.milliseconds
-    ) if pit_in_time is not NaT else Duration(),
+    ) if pit_in_time is not NaT else None,
     sector1Time=Duration(
       hours=sector1_time.components.hours,
       minutes=sector1_time.components.minutes,
       seconds=sector1_time.components.seconds,
       milliseconds=sector1_time.components.milliseconds
-    ) if sector1_time is not NaT else Duration(),
+    ) if sector1_time is not NaT else None,
     sector2Time=Duration(
       hours=sector2_time.components.hours,
       minutes=sector2_time.components.minutes,
       seconds=sector2_time.components.seconds,
       milliseconds=sector2_time.components.milliseconds
-    ) if sector2_time is not NaT else Duration(),
+    ) if sector2_time is not NaT else None,
     sector3Time=Duration(
       hours=sector3_time.components.hours,
       minutes=sector3_time.components.minutes,
       seconds=sector3_time.components.seconds,
       milliseconds=sector3_time.components.milliseconds
-    ) if sector3_time is not NaT else Duration(),
-    speedI1=float(row.SpeedI1),
-    speedI2=float(row.SpeedI2),
-    speedFL=float(row.SpeedFL),
-    speedST=float(row.SpeedST),
-    isPersonalBest=bool(row.IsPersonalBest),
+    ) if sector3_time is not NaT else None,
+    speedI1=float(row.SpeedI1) if not np.isnan(row.SpeedI1) else None,
+    speedI2=float(row.SpeedI2) if not np.isnan(row.SpeedI2) else None,
+    speedFL=float(row.SpeedFL) if not np.isnan(row.SpeedFL) else None,
+    speedST=float(row.SpeedST) if not np.isnan(row.SpeedST) else None,
+    isPersonalBest=bool(row.IsPersonalBest) if not np.isnan(row.IsPersonalBest) else False,
     tireCompound=row.Compound,
-    tireLife=int(row.TyreLife) if not np.isnan(row.TyreLife) else 0,
+    tireLife=int(row.TyreLife) if not np.isnan(row.TyreLife) else None,
     freshTire=bool(row.FreshTyre),
-    trackStatus=int(row.TrackStatus) if not row.TrackStatus == '' else 0,
-    position=int(row.Position),
+    trackStatus=int(row.TrackStatus) if not row.TrackStatus == '' else None,
+    position=int(row.Position) if not np.isnan(row.Position) else None,
     deleted=bool(row.Deleted),
-    deletedReason=row.DeletedReason
+    deletedReason=row.DeletedReason if type(row.DeletedReason) is str else None
   )
 
 
@@ -163,3 +166,44 @@ def get_driver_plot_style(driver, session):
   return fastf1.plotting.get_driver_style(identifier=driver,
                                           style=['color', 'linestyle'],
                                           session=session)
+
+
+def load_laps(request: LapsTransformRequest):
+  """
+  Gets the laps out of the request and transforms it into a pandas dataframe
+  :param request: the request with the lap data
+  :return: the lap data as pandas data frame
+  """
+  data = [MessageToDict(lap, preserving_proto_field_name=True) for lap in request.laps]
+  df = pd.DataFrame(data)
+
+  df["time"] = df["time"].apply(
+    lambda d: pd.Timedelta(hours=d.get('hours', 0), minutes=d.get('minutes', 0),
+                           seconds=d.get('seconds', 0),
+                           milliseconds=d.get('milliseconds', 0)) if isinstance(d, dict) or not pd.isna(d) else None)
+  df["lapTime"] = df["lapTime"].apply(
+    lambda d: pd.Timedelta(hours=d.get('hours', 0), minutes=d.get('minutes', 0),
+                           seconds=d.get('seconds', 0),
+                           milliseconds=d.get('milliseconds', 0)) if isinstance(d, dict) or not pd.isna(d) else None)
+  df["pitInTime"] = df["pitInTime"].apply(
+    lambda d: pd.Timedelta(hours=d.get('hours', 0), minutes=d.get('minutes', 0),
+                           seconds=d.get('seconds', 0),
+                           milliseconds=d.get('milliseconds', 0)) if isinstance(d, dict) or not pd.isna(d) else None)
+  df["pitOutTime"] = df["pitOutTime"].apply(
+    lambda d: pd.Timedelta(hours=d.get('hours', 0), minutes=d.get('minutes', 0),
+                           seconds=d.get('seconds', 0),
+                           milliseconds=d.get('milliseconds', 0)) if isinstance(d, dict) or not pd.isna(d) else None)
+  df["sector1Time"] = df["sector1Time"].apply(
+    lambda d: pd.Timedelta(hours=d.get('hours', 0), minutes=d.get('minutes', 0),
+                           seconds=d.get('seconds', 0),
+                           milliseconds=d.get('milliseconds', 0)) if isinstance(d, dict) or not pd.isna(d) else None)
+  df["sector2Time"] = df["sector2Time"].apply(
+    lambda d: pd.Timedelta(hours=d.get('hours', 0), minutes=d.get('minutes', 0),
+                           seconds=d.get('seconds', 0),
+                           milliseconds=d.get('milliseconds', 0)) if isinstance(d, dict) or not pd.isna(d) else None)
+  df["sector3Time"] = df["sector3Time"].apply(
+    lambda d: pd.Timedelta(hours=d.get('hours', 0), minutes=d.get('minutes', 0),
+                           seconds=d.get('seconds', 0),
+                           milliseconds=d.get('milliseconds', 0)) if isinstance(d, dict) or not pd.isna(d) else None)
+
+  return df

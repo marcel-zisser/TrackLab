@@ -1,8 +1,8 @@
-import { Event } from '../analytics';
+import { EventData } from '../analytics';
 
 export interface SourceSelectionConfig {
   year: string;
-  event?: Event;
+  event?: EventData;
   session?: string;
   drivers?: string[];
 }

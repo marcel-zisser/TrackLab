@@ -5,15 +5,18 @@ package at.tracklab;
 import "types.proto";
 
 service Analytics {
-  rpc GetSessionStrategy(SessionRequest) returns (StrategyResponse) {}
-  rpc GetLaps(DriverRequest) returns (LapsResponse) {}
+  rpc GetLaps(SessionRequest) returns (LapsResponse) {};
+  rpc GetSessionStrategy(LapsTransformRequest) returns (StrategyResponse) {}
+  rpc GetGapToLeader(LapsTransformRequest) returns (GapToLeaderResponse) {}
+  rpc GetDriverLaps(DriverRequest) returns (LapsResponse) {}
   rpc GetQuickLaps(EventRequest) returns (LapsResponse) {}
   rpc GetSpeedTraces(SessionRequest) returns (SpeedTracesResponse) {}
   rpc GetCarTelemetry(CarTelemetryRequest) returns (CarTelemetryResponse) {}
-  rpc GetPositionData(EventRequest) returns (PositionDataResponse) {}
+  rpc GetPositionData(LapsTransformRequest) returns (PositionDataResponse) {}
   rpc GetDrivers(SessionRequest) returns (DriversResponse) {}
   rpc GetChampionshipContenders(EventRequest) returns (ChampionshipContendersResponse) {}
   rpc GetTrackDomination(DriverRequest) returns (TrackDominationResponse) {}
+  rpc GetColors(SessionRequest) returns (ColorResponse) {}
 }
 
 message EventRequest {
@@ -21,10 +24,15 @@ message EventRequest {
   int32 round = 2;
 }
 
+message LapsTransformRequest {
+  repeated Lap laps = 1;
+}
+
 message SessionRequest {
   int32 year = 1;
   int32 round = 2;
   string session = 3;
+  optional float threshold = 4;
 }
 
 message DriverRequest {
@@ -67,8 +75,6 @@ message PositionDataResponse {
 
 message DriverPositionData {
   repeated int32 positions = 1;
-  string color = 2;
-  string lineStyle = 3;
 }
 
 message ChampionshipContenderList {
@@ -84,4 +90,19 @@ message TrackDominationResponse {
   repeated PositionTelemetry coordinates = 1;
   repeated string domination = 2;
   repeated Driver drivers = 3;
+}
+
+message GapArray {
+  repeated Duration gaps = 1;
+}
+
+message GapToLeaderResponse {
+  map<string, GapArray> payload = 1;
+}
+
+message ColorResponse {
+  map<string, string> teamColors = 1;
+  map<string, string> driverColors = 2;
+  map<string, string> driverStyles = 3;
+  map<string, string> compoundColors = 4;
 }

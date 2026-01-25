@@ -1,4 +1,4 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { SessionResultsClient } from '../../generated/results';
 import { firstValueFrom } from 'rxjs';
@@ -6,19 +6,26 @@ import {
   Circuit,
   CircuitInformation,
   DriverResult,
-  Event,
+  EventData,
   RaceResult,
 } from '@tracklab/models';
 import { EventScheduleClient } from '../../generated/event-schedule';
 import { CircuitInfoClient } from '../../generated/circuit';
-import { AnalyticsClient } from '../../generated/analytics';
+import { AnalyticsClient, LapsResponse } from '../../generated/analytics';
 
 @Injectable()
 export class FastF1Service implements OnModuleInit {
+  private readonly logger = new Logger(FastF1Service.name);
+
   private sessionResultsService: SessionResultsClient;
   private eventScheduleService: EventScheduleClient;
   private circuitService: CircuitInfoClient;
   private analyticsService: AnalyticsClient;
+
+  private readonly raceCache = new Map<
+    number,
+    Map<number, Map<string, Promise<LapsResponse>>>
+  >();
 
   constructor(@Inject('TRACKLAB_PACKAGE') private client: ClientGrpc) {}
 
@@ -95,7 +102,7 @@ export class FastF1Service implements OnModuleInit {
    * Retrieves the even schedule for a given season
    * @param season the season
    */
-  async getEventSchedule(season: number): Promise<Event[]> {
+  async getEventSchedule(season: number): Promise<EventData[]> {
     const eventSchedule = await firstValueFrom(
       this.eventScheduleService.getEventSchedule({ season: season }),
     );
@@ -144,12 +151,9 @@ export class FastF1Service implements OnModuleInit {
    * @param session the session type
    */
   async getSessionStrategy(year: number, round: number, session: string) {
+    const lapsResponse = await this.getLaps(year, round, session);
     return await firstValueFrom(
-      this.analyticsService.getSessionStrategy({
-        year: year,
-        round: round,
-        session: session,
-      }),
+      this.analyticsService.getSessionStrategy({ laps: lapsResponse.laps }),
     );
   }
 
@@ -160,9 +164,14 @@ export class FastF1Service implements OnModuleInit {
    * @param session the session of the round
    * @param driver the driver to retrieve the lap data from
    */
-  async getLaps(year: number, round: number, session: string, driver: string) {
+  async getDriverLaps(
+    year: number,
+    round: number,
+    session: string,
+    driver: string,
+  ) {
     return await firstValueFrom(
-      this.analyticsService.getLaps({
+      this.analyticsService.getDriverLaps({
         year: year,
         round: round,
         session: session,
@@ -243,11 +252,9 @@ export class FastF1Service implements OnModuleInit {
    * @param round the round of the session within the season
    */
   async getPositionData(year: number, round: number) {
+    const lapsResponse = await this.getLaps(year, round, 'Race');
     return await firstValueFrom(
-      this.analyticsService.getPositionData({
-        year: year,
-        round: round,
-      }),
+      this.analyticsService.getPositionData({ laps: lapsResponse.laps }),
     );
   }
 
@@ -286,5 +293,66 @@ export class FastF1Service implements OnModuleInit {
         drivers: drivers,
       }),
     );
+  }
+
+  async getGapToLeader(year: number, round: number, session: string) {
+    const lapsResponse = await this.getLaps(year, round, session);
+
+    return await firstValueFrom(
+      this.analyticsService.getGapToLeader({ laps: lapsResponse.laps }),
+    );
+  }
+
+  async getColors(year: number, round: number, session: string) {
+    return await firstValueFrom(
+      this.analyticsService.getColors({
+        year: year,
+        round: round,
+        session: session,
+      }),
+    );
+  }
+
+  /**
+   * Loads the laps of a session either from cache or from server
+   * @param year the year of the session
+   * @param round  the round of the session
+   * @param session the name of the session
+   * @returns {Promise<LapsResponse>} the laps of the requested session
+   */
+  async getLaps(
+    year: number,
+    round: number,
+    session: string,
+  ): Promise<LapsResponse> {
+    const laps =
+      this.raceCache.get(year)?.get(round)?.get(session) ?? undefined;
+    if (laps) {
+      this.logger.log('Race Cache hit.');
+      return laps;
+    } else {
+      this.logger.log('Race Cache miss.');
+      const lapsResponse = firstValueFrom(
+        this.analyticsService.getLaps({
+          year: year,
+          round: round,
+          session: session,
+          threshold: null,
+        }),
+      );
+      if (!this.raceCache.has(year)) {
+        this.raceCache.set(year, new Map());
+      }
+
+      const roundMap = this.raceCache.get(year);
+      if (!roundMap.has(round)) {
+        roundMap.set(round, new Map());
+      }
+
+      const sessionMap = roundMap.get(round);
+      sessionMap.set(session, lapsResponse);
+
+      return lapsResponse;
+    }
   }
 }

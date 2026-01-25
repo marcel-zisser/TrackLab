@@ -5,16 +5,10 @@ import { LoggingCacheInterceptor } from '../interceptors/cache-logging.intercept
 @UseInterceptors(LoggingCacheInterceptor)
 @Controller('dashboard')
 export class DashboardController {
-
-  constructor(private currentService: DashboardService){}
+  constructor(private currentService: DashboardService) {}
 
   @Get('standings')
   getCurrentStandings() {
     return this.currentService.getCurrentStandings();
-  }
-
-  @Get('development')
-  getCurrentStandingsDevelopment() {
-    return this.currentService.getCurrentStandingsDevelopment();
   }
 }

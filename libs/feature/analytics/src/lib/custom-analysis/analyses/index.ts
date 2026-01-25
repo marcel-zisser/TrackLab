@@ -1,0 +1,9 @@
+export { StrategyComparisonComponent } from './strategy-comparison/strategy-comparison.component';
+export { TeamPaceComparisonComponent } from './team-pace-comparison/team-pace-comparison.component';
+export { SpeedTracesComponent } from './speed-traces/speed-traces.component';
+export { GearShiftComponent } from './gear-shift/gear-shift.component';
+export { DriverInputAnalysisComponent } from './driver-input/driver-input-analysis.component';
+export { SpeedMapComponent } from './speed-map/speed-map.component';
+export { WdcContendersComponent } from './wdc-contenders/wdc-contenders.component';
+export { TrackDominationComponent } from '././track-domination/track-domination.component';
+export { LaptimeScatterComponent } from './laptime-scatter/laptime-scatter.component';

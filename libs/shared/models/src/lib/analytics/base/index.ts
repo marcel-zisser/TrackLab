@@ -3,7 +3,7 @@ export { Driver } from './driver';
 export { Circuit } from './circuit';
 export { Location } from './location';
 export { DriverInfo } from './driver-info';
-export { Event } from './event';
+export { EventData } from './event-data';
 export { SessionInfo } from './session-info';
 export { Lap } from './lap';
 export { Duration } from './duration';

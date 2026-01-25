@@ -1,8 +1,8 @@
-import { Event } from '../analytics';
+import { EventData } from '../analytics';
 
 export interface RaceSelection {
   year: string;
-  event?: Event;
+  event?: EventData;
   session?: string;
   drivers?: string[];
 }

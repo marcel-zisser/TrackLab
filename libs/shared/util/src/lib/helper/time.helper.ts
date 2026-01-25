@@ -6,10 +6,10 @@ import { Duration } from '@tracklab/models';
  */
 export function convertToMilliseconds(lapTime: Duration): number {
   return (
-    (lapTime.hours * 60 * 60 * 1000 || 0) +
-    (lapTime.minutes * 60 * 1000 || 0) +
-    (lapTime.seconds * 1000 || 0) +
-    (lapTime.milliseconds || 0)
+    (lapTime?.hours * 60 * 60 * 1000 || 0) +
+    (lapTime?.minutes * 60 * 1000 || 0) +
+    (lapTime?.seconds * 1000 || 0) +
+    (lapTime?.milliseconds || 0)
   );
 }
 

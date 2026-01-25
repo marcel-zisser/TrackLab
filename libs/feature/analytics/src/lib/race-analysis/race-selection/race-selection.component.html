@@ -1,0 +1,25 @@
+<div class="flex flex-row items-center gap-4">
+  <div class="flex flex-row items-center gap-2">
+    <i class="pi pi-calendar text-lg"></i>
+    <span class="text-lg">Season</span>
+  </div>
+  <p-select
+    [options]="years"
+    [ngModel]="year()"
+    (ngModelChange)="setYear($event)" [checkmark]="true" [fluid]="true" />
+</div>
+<p-divider></p-divider>
+<div class="flex flex-col overflow-y-auto overflow-x-hidden">
+  @if (!schedule()) {
+    <p-progress-spinner ariaLabel="loading" />
+  } @else {
+    <div class="flex flex-col">
+      @for (item of schedule(); track item.roundNumber) {
+        <tl-race-selection-tile
+          [raceInput]="item"
+          (click)="chooseRace(item)"
+        ></tl-race-selection-tile>
+      }
+    </div>
+  }
+</div>

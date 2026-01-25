@@ -5,37 +5,34 @@ import fastf1.plotting
 import numpy as np
 
 from analytics.analytics_helpers import map_row_to_lap, get_drivers_standings, \
-  calculate_max_points_for_remaining_season, calculate_who_can_win, get_driver_plot_style
+  calculate_max_points_for_remaining_season, calculate_who_can_win, get_driver_plot_style, load_laps
 from generated import analytics_pb2_grpc
 from generated.analytics_pb2 import StrategyResponse, SpeedTracesResponse, \
-  CarTelemetryResponse, DriversResponse, PositionDataResponse, DriverPositionData, SessionRequest, \
-  ChampionshipContendersResponse, TrackDominationResponse, LapsResponse
-from generated.types_pb2 import Strategy, SpeedTrace, CarTelemetry, PositionTelemetry, Driver
+  CarTelemetryResponse, DriversResponse, PositionDataResponse, ChampionshipContendersResponse, \
+  TrackDominationResponse, LapsResponse, LapsTransformRequest, GapToLeaderResponse, ColorResponse, SessionRequest
+from generated.types_pb2 import Strategy, SpeedTrace, CarTelemetry, PositionTelemetry, Driver, Duration
 
 
 class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
 
-  def GetSessionStrategy(self, request: SessionRequest, context):
+  def GetSessionStrategy(self, request: LapsTransformRequest, context):
     response = StrategyResponse()
 
-    session = fastf1.get_session(request.year, request.round, request.session)
-    session.load()
+    laps = load_laps(request)
 
-    laps = session.laps
-
-    stints = laps[["Driver", "Stint", "Compound", "LapNumber"]]
-    stints = stints.groupby(["Driver", "Stint", "Compound"])
+    stints = laps[["driver", "stint", "tireCompound", "lapNumber"]]
+    stints = stints.groupby(["driver", "stint", "tireCompound"])
     stints = stints.count().reset_index()
 
-    stints = stints.rename(columns={"LapNumber": "StintLength"})
+    stints = stints.rename(columns={"lapNumber": "stintLength"})
 
     for index, row in stints.iterrows():
       response.strategy.append(
         Strategy(
-          driver=row['Driver'],
-          stint=int(row['Stint']),
-          stintLength=row['StintLength'],
-          compound=row['Compound']
+          driver=row['driver'],
+          stint=int(row['stint']),
+          stintLength=row['stintLength'],
+          compound=row['tireCompound']
         )
       )
 
@@ -44,9 +41,38 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
   def GetLaps(self, request, context):
     response = LapsResponse()
 
+    session = fastf1.get_session(request.year, request.round, request.session)
+    session.load()
+    laps = session.laps
+
+    if request.threshold:
+      laps = laps.pick_quicklaps(threshold=request.threshold)
+
+    transformed_laps = laps.copy()
+    transformed_laps.loc[:, "LapTime (s)"] = laps["LapTime"].dt.total_seconds()
+
+    # order the team from the fastest (lowest median lap time) tp slower
+    team_order = (
+      transformed_laps[["Team", "LapTime (s)"]]
+      .groupby("Team")
+      .median()["LapTime (s)"]
+      .sort_values()
+      .index
+    )
+    team_palette = {team: fastf1.plotting.get_team_color(team, session=session)
+                    for team in team_order}
+
+    for lap in transformed_laps.itertuples():
+      response.laps.append(map_row_to_lap(lap, team_palette))
+
+    return response
+
+  def GetDriverLaps(self, request, context):
+    response = LapsResponse()
+
     session = fastf1.get_session(request.year, request.round, 'Race')
     session.load()
-    laps = session.laps.pick_drivers([request.drivers[0]]).pick_quicklaps(threshold=1.15)
+    laps = session.laps.pick_drivers([request.drivers[0]]).pick_quicklaps(threshold=1.1)
     transformed_laps = laps.copy()
     transformed_laps.loc[:, "LapTime (s)"] = laps["LapTime"].dt.total_seconds()
 
@@ -155,20 +181,13 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
 
   def GetPositionData(self, request, context):
     response = PositionDataResponse()
+    loaded_laps = load_laps(request)
+    grouped_by_lap_number = loaded_laps.groupby('lapNumber')
 
-    session = fastf1.get_session(request.year, request.round, 'Race')
-    session.load()
-
-    for driverNumber in session.drivers:
-      driver = session.get_driver(driverNumber)
-      laps = session.laps.pick_drivers(driverNumber)
-      positions = [int(lap.Position) for lap in laps.itertuples() if not np.isnan(lap.Position)]
-      positions.insert(0, int(driver.GridPosition))
-      style = fastf1.plotting.get_driver_style(identifier=driver.Abbreviation,
-                                               style=['color', 'linestyle'],
-                                               session=session)
-      response.payload[driver.Abbreviation].CopyFrom(DriverPositionData(positions=positions, color=style['color'],
-                                                                        lineStyle=style['linestyle']))
+    for lap_number, laps in grouped_by_lap_number:
+      for lap in laps.itertuples():
+        if not np.isnan(lap.position):
+          response.payload[lap.driver].positions.append(int(lap.position))
 
     return response
 
@@ -178,7 +197,7 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
     events = fastf1.events.get_event_schedule(request.year, include_testing=False)
 
     for event in events.itertuples():
-      if event.EventDate < datetime.datetime.now():
+      if event.EventDate < datetime.datetime.now() and (not request.round or event.RoundNumber <= request.round):
         driver_standings = get_drivers_standings(request.year, event.RoundNumber)
         points = calculate_max_points_for_remaining_season(request.year, event.RoundNumber)
         can_win = calculate_who_can_win(driver_standings, points)
@@ -243,3 +262,42 @@ class AnalyticsServicer(analytics_pb2_grpc.AnalyticsServicer):
     ))
 
     return response
+
+  def GetGapToLeader(self, request: LapsTransformRequest, context):
+    response = GapToLeaderResponse()
+    loaded_laps = load_laps(request)
+    grouped_by_lap_number = loaded_laps.groupby('lapNumber')
+
+    for lap_number, laps in grouped_by_lap_number:
+      fastest_lap = laps['time'].min()
+      for lap in laps.itertuples():
+        gap = lap.time - fastest_lap
+        response.payload[lap.driver].gaps.append(Duration(
+          hours=gap.components.hours,
+          minutes=gap.components.minutes,
+          seconds=gap.components.seconds,
+          milliseconds=gap.components.milliseconds
+        ))
+
+    return response
+
+  def GetColors(self, request: SessionRequest, context):
+    session = fastf1.get_session(request.year, request.round, request.session)
+
+    driver_colors = fastf1.plotting.get_driver_color_mapping(session)
+
+    driver_style = dict()
+    team_colors = dict()
+    for driver in driver_colors:
+      team_name = fastf1.plotting.get_team_name_by_driver(driver, session)
+      team_colors[team_name] = driver_colors[driver]
+      driver_style[driver] = fastf1.plotting.get_driver_style(driver, ['linestyle'], session)['linestyle']
+
+    compound_colors = fastf1.plotting.get_compound_mapping(session)
+
+    return ColorResponse(
+      teamColors=team_colors,
+      driverColors=driver_colors,
+      driverStyles=driver_style,
+      compoundColors=compound_colors
+    )
