@@ -55,3 +55,4 @@ Thumbs.db
 /apps/fast_f1_service/src/.cache/
 /minio_data/
 /todo.md
+**/__pycache__/

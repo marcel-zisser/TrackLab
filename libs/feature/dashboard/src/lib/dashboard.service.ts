@@ -22,7 +22,7 @@ export class DashboardService {
       () => 'dashboard/standings',
     );
   private developmentResource = this.backendService.doGetResource<RaceResult[]>(
-    () => `fast-f1/session-results?year=${new Date().getFullYear()}`,
+    () => `fast-f1/session-results?year=${new Date().getFullYear() - 1}`,
   );
 
   eventSchedule = this.eventScheduleResource.value.asReadonly();
