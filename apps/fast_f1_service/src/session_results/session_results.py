@@ -15,11 +15,9 @@ def load_season_results(season: int):
   :return: a list of results ordered by date
   """
   season_results = []
-  event_schedule = fastf1.get_event_schedule(season)
+  event_schedule = fastf1.get_event_schedule(season, include_testing=False)
 
-  for index in range(len(event_schedule) - 1):
-    event = event_schedule.get_event_by_round(index + 1)
-
+  for _, event in event_schedule.iterrows():
     if event.EventFormat == 'sprint_qualifying':
       sprint = event.get_sprint()
       if (sprint.date - datetime.today()).value < 0:

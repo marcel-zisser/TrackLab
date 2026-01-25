@@ -17,14 +17,14 @@ export class DashboardService {
   async getCurrentStandings(): Promise<StandingsResponse> {
     const driverStandingsResponse = await firstValueFrom(
       this.httpService.get(
-        'https://api.jolpi.ca/ergast/f1/current/driverStandings/?format=json'
+        'https://api.jolpi.ca/ergast/f1/2025/driverStandings/?format=json'
       )
     );
     const driverStandings = driverStandingsResponse.data.MRData.StandingsTable.StandingsLists[0];
 
     const constructorStandingsResponse = await firstValueFrom(
       this.httpService.get(
-        'https://api.jolpi.ca/ergast/f1/current/constructorStandings/?format=json'
+        'https://api.jolpi.ca/ergast/f1/2025/constructorStandings/?format=json'
       )
     );
     const constructorStandings = constructorStandingsResponse.data.MRData.StandingsTable.StandingsLists[0];
