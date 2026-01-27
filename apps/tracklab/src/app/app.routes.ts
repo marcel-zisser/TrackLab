@@ -1,5 +1,5 @@
 import { Route } from '@angular/router';
-import { ConstructionComponent } from '@tracklab/shared/components';
+import { CopilotComponent} from '@tracklab/copilot';
 import { DashboardComponent } from '@tracklab/dashboard';
 import {
   AnalysisHostComponent,
@@ -67,8 +67,8 @@ export const appRoutes: Route[] = [
   },
   {
     title: 'Pitwall Copilot',
-    path: 'pitwall-copilot',
-    component: ConstructionComponent,
+    path: 'copilot',
+    component: CopilotComponent,
   },
   {
     path: 'user',

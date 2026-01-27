@@ -70,7 +70,7 @@ export class HeaderComponent implements OnInit {
       {
         label: 'Pitwall Copilot',
         icon: 'pi pi-sparkles',
-        routerLink: 'pitwall-copilot',
+        routerLink: 'copilot',
       },
     ];
   }

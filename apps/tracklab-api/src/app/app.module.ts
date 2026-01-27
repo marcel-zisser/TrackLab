@@ -21,7 +21,7 @@ import { CopilotModule } from './copilot/copilot.module';
     UserModule,
     StorageModule,
     CollectionModule,
-    CopilotModule,
+    CopilotModule
   ],
   controllers: [AppController],
 })

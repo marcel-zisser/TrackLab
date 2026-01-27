@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@tracklab/analytics": ["libs/feature/analytics/src/index.ts"],
+      "@tracklab/copilot": ["libs/feature/copilot/src/index.ts"],
       "@tracklab/dashboard": ["libs/feature/dashboard/src/index.ts"],
       "@tracklab/models": ["libs/shared/models/src/index.ts"],
       "@tracklab/services": ["libs/shared/services/src/index.ts"],
