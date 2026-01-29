@@ -94,7 +94,7 @@ export class HeaderComponent implements OnInit {
     this.userMenuService.toggleUserMenu();
   }
 
-  @HostListener('document:click', ['$event'])
+  @HostListener('document:click')
   handleClick() {
     if (!this.clickedInsideMenu) {
       this.userMenuService.showUserMenu(false);

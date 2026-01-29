@@ -24,9 +24,11 @@ import { ActivatedRoute } from '@angular/router';
 import { Button } from 'primeng/button';
 import { PrimeIcons } from 'primeng/api';
 import { MultiSelect } from 'primeng/multiselect';
-import { SourceSelectionService } from '../../../../../../../shared/services/src/lib/frontend/source-selection/source-selection.service';
-import { AuthenticationService } from '@tracklab/services';
+import { SourceSelectionService, AuthenticationService } from '@tracklab/services';
 import { AnalyticsStore } from '../../../store';
+import { CreateCollectionItemDialogComponent } from '@tracklab/shared/components';
+import { firstValueFrom } from 'rxjs';
+import { DialogService } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'tl-source-selection',
@@ -47,6 +49,8 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly authenticationService = inject(AuthenticationService);
   private readonly store = inject(AnalyticsStore);
+  private readonly dialogService = inject(DialogService);
+
   private initialConfig: SourceSelectionConfig | undefined;
   private isInitialized = false;
 
@@ -180,11 +184,26 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
     const drivers = this.getSelectedDrivers();
 
     if (year && this.isSourceSelectionValid()) {
+      const dialogRef = this.dialogService.open(CreateCollectionItemDialogComponent, {
+        header: 'Create Collection Item',
+        closable: true,
+        modal: true,
+        width: '25%',
+      });
+
+      if (!dialogRef) {
+        return;
+      }
+
+      const dialogResult = await firstValueFrom(dialogRef.onClose);
+
       await this.sourceSelectionService.addToCollection(
         year,
         event,
         session,
         drivers,
+        dialogResult.title,
+        dialogResult.description
       );
     }
   }

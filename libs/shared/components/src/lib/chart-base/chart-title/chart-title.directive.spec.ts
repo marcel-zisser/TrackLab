@@ -1,5 +1,4 @@
 import { ChartTitleDirective } from './chart-title.directive';
-
 describe('ChartTitleDirective', () => {
   it('should create an instance', () => {
     const directive = new ChartTitleDirective();

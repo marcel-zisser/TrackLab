@@ -1,5 +1,5 @@
 import { inject, Injectable, Signal, signal } from '@angular/core';
-import { BackendService } from '@tracklab/services';
+import { BackendService } from '../../backend/backend.service';
 import { first, firstValueFrom, map, retry } from 'rxjs';
 import {
   DriversResponse,
@@ -8,10 +8,8 @@ import {
   SourceSelectionConfig,
 } from '@tracklab/models';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { MessageService } from 'primeng/api';
 import { ECharts } from 'echarts/core';
-import { DialogService } from 'primeng/dynamicdialog';
-import { CreateCollectionItemDialogComponent } from '@tracklab/shared/components';
+import { MessageService } from 'primeng/api';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +18,6 @@ export class SourceSelectionService {
   private readonly clipboard = inject(Clipboard);
   private readonly messageService = inject(MessageService);
   private readonly backendService = inject(BackendService);
-  private readonly dialogService = inject(DialogService);
 
   private readonly _chartInstance = signal<ECharts | undefined>(undefined);
 
@@ -119,12 +116,16 @@ export class SourceSelectionService {
    * @param event the event of the source selection
    * @param session the session of the source selection
    * @param drivers the selected drivers
+   * @param title the title of the collection item
+   * @param description the description of the colleciton item
    */
   async addToCollection(
     year: string,
     event: EventData | undefined,
     session: string | undefined,
     drivers: string[],
+    title: string,
+    description: string
   ) {
     const chartInstance = this._chartInstance();
     if (!chartInstance) {
@@ -132,18 +133,6 @@ export class SourceSelectionService {
     }
 
     const formData = new FormData();
-
-    const dialogResult = await firstValueFrom(
-      this.dialogService.open(CreateCollectionItemDialogComponent, {
-        header: 'Create Collection Item',
-        closable: true,
-        modal: true,
-        width: '25%',
-      }).onClose,
-    );
-
-    const title = dialogResult.title;
-    const description = dialogResult.description;
     const url = this.createUrl(year, event, session, drivers);
 
     const thumbnailUrl = this.createChartSnapshot(chartInstance);

@@ -4,7 +4,6 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
   FormGroup,
@@ -21,14 +20,13 @@ import { FloatLabel } from 'primeng/floatlabel';
 @Component({
   selector: 'tl-create-collection-item-dialog',
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     Button,
     Textarea,
     InputText,
     Message,
-    FloatLabel,
-  ],
+    FloatLabel
+],
   templateUrl: './create-collection-item-dialog.component.html',
   styleUrl: './create-collection-item-dialog.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

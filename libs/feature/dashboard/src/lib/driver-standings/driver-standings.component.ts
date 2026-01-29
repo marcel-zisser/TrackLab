@@ -63,7 +63,7 @@ export class DriverStandingsComponent implements OnInit {
     this.clickedInside = true;
   }
 
-  @HostListener('document:click', ['$event'])
+  @HostListener('document:click')
   handleClick() {
     if (!this.clickedInside) {
       this.selectedDriver = undefined;
