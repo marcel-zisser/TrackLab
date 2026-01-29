@@ -87,7 +87,7 @@ export class TeamPaceComparisonComponent {
       this.paceData.set(undefined);
       this.backendService
         .doGet<LapsResponse>(
-          `fast-f1/quick-laps?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}`,
+          `analytics/quick-laps?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}`,
         )
         .pipe(first((response) => !!response))
         .subscribe({

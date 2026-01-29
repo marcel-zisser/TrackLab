@@ -68,7 +68,7 @@ export const AnalyticsStore = signalStore(
         distinctUntilChanged(),
         switchMap((year) => {
           return backendService
-            .doGet<EventData[]>(`fast-f1/event-schedule?year=${year}`)
+            .doGet<EventData[]>(`analytics/event-schedule?year=${year}`)
             .pipe(
               tapResponse({
                 next: (schedule) => patchState(store, { schedule }),
@@ -85,7 +85,7 @@ export const AnalyticsStore = signalStore(
         switchMap((raceSelection) => {
           return backendService
             .doGet<ColorResponse>(
-              `fast-f1/colors?year=${raceSelection.year}&round=${raceSelection.event?.roundNumber}&session=${raceSelection.session}`,
+              `analytics/colors?year=${raceSelection.year}&round=${raceSelection.event?.roundNumber}&session=${raceSelection.session}`,
             )
             .pipe(
               tapResponse({

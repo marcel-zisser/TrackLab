@@ -1,5 +1,4 @@
 import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { ClientGrpc } from '@nestjs/microservices';
 import { SessionResultsClient } from '../../generated/results';
 import { firstValueFrom } from 'rxjs';
 import {
@@ -12,10 +11,11 @@ import {
 import { EventScheduleClient } from '../../generated/event-schedule';
 import { CircuitInfoClient } from '../../generated/circuit';
 import { AnalyticsClient, LapsResponse } from '../../generated/analytics';
+import { GrpcService } from '../grpc/grpc.service';
 
 @Injectable()
-export class FastF1Service implements OnModuleInit {
-  private readonly logger = new Logger(FastF1Service.name);
+export class AnalyticsService implements OnModuleInit {
+  private readonly logger = new Logger(AnalyticsService.name);
 
   private sessionResultsService: SessionResultsClient;
   private eventScheduleService: EventScheduleClient;
@@ -27,17 +27,17 @@ export class FastF1Service implements OnModuleInit {
     Map<number, Map<string, Promise<LapsResponse>>>
   >();
 
-  constructor(@Inject('TRACKLAB_PACKAGE') private client: ClientGrpc) {}
+  constructor(@Inject() private grpcService: GrpcService) {}
 
   onModuleInit() {
     this.sessionResultsService =
-      this.client.getService<SessionResultsClient>('SessionResults');
+      this.grpcService.getService<SessionResultsClient>('SessionResults');
     this.eventScheduleService =
-      this.client.getService<EventScheduleClient>('EventSchedule');
+      this.grpcService.getService<EventScheduleClient>('EventSchedule');
     this.circuitService =
-      this.client.getService<CircuitInfoClient>('CircuitInfo');
+      this.grpcService.getService<CircuitInfoClient>('CircuitInfo');
     this.analyticsService =
-      this.client.getService<AnalyticsClient>('Analytics');
+      this.grpcService.getService<AnalyticsClient>('Analytics');
   }
 
   async getSessionResults(

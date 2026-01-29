@@ -107,7 +107,7 @@ export class LeaderGapBarChartComponent extends BaseChart {
 
       this.backendService
         .doGet<LeaderGapResponse>(
-          `fast-f1/leader-gap?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}&session=Race`,
+          `analytics/leader-gap?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}&session=Race`,
         )
         .pipe(first((response) => !!response))
         .subscribe({

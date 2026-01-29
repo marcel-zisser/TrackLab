@@ -103,10 +103,10 @@ export class SpeedMapComponent {
 
       combineLatest([
         this.backendService.doGet<CarTelemetryResponse>(
-          `fast-f1/car-telemetry?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}&session=${selectedRace.session}&withPosition=true`,
+          `analytics/car-telemetry?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}&session=${selectedRace.session}&withPosition=true`,
         ),
         this.backendService.doGet<CircuitInformation>(
-          `fast-f1/circuit-info?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}&session=${selectedRace.session}`,
+          `analytics/circuit-info?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}&session=${selectedRace.session}`,
         ),
       ])
         .pipe(first((response) => !!response))

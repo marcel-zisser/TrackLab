@@ -1,26 +1,30 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ClientGrpc } from '@nestjs/microservices';
 import { DataPoint, LiveDataClient } from '../../../generated/copilot';
 import { Subject } from 'rxjs';
+import { GrpcService } from '../../grpc/grpc.service';
 
 @Injectable()
 export class LiveDataService {
   private liveDataService: LiveDataClient;
   private stream$ = new Subject<DataPoint>();
 
-  constructor(@Inject('TRACKLAB_PACKAGE') private client: ClientGrpc) {}
+  constructor(@Inject() private grpcService: GrpcService) {}
 
   onModuleInit() {
-    this.liveDataService = this.client.getService<LiveDataClient>('LiveData');
+    this.liveDataService = this.grpcService.getService<LiveDataClient>('LiveData');
+
+    
+  }
+
+  getStream() {
+    this.stream$ = new Subject<DataPoint>();
 
     this.liveDataService.streamData({}).subscribe({
       next: data => this.stream$.next(data),
       error: err => this.stream$.error(err),
       complete: () => this.stream$.complete()
     });
-  }
-
-  getStream() {
+    
     return this.stream$.asObservable();
   }
 }

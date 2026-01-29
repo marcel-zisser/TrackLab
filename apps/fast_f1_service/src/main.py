@@ -2,6 +2,7 @@ import asyncio
 import logging
 import os
 from concurrent import futures
+import signal
 
 import fastf1.plotting
 import grpc
@@ -32,7 +33,16 @@ async def serve():
   await server.start()
   print("FastF1 Grpc server started!")
 
-  await server.wait_for_termination()
+  stop_event = asyncio.Event()
+
+  loop = asyncio.get_running_loop()
+  for sig in (signal.SIGINT, signal.SIGTERM):
+      loop.add_signal_handler(sig, stop_event.set)
+
+  await stop_event.wait()
+
+  print("Shutting down gRPC server...")
+  await server.stop(grace=5)
 
 
 if __name__ == "__main__":

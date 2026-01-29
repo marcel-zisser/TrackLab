@@ -1,8 +1,6 @@
-import { Controller, Get, UseInterceptors } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
-import { LoggingCacheInterceptor } from '../interceptors/cache-logging.interceptor';
 
-@UseInterceptors(LoggingCacheInterceptor)
 @Controller('dashboard')
 export class DashboardController {
   constructor(private currentService: DashboardService) {}

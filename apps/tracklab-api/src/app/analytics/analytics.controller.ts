@@ -1,5 +1,5 @@
 import { Controller, Get, Query, UseInterceptors } from '@nestjs/common';
-import { FastF1Service } from './fast-f1.service';
+import { AnalyticsService } from './analytics.service';
 import {
   Circuit,
   CircuitInformation,
@@ -21,9 +21,9 @@ import {
 import { LoggingCacheInterceptor } from '../interceptors/cache-logging.interceptor';
 
 @UseInterceptors(LoggingCacheInterceptor)
-@Controller('fast-f1')
-export class FastF1Controller {
-  constructor(private readonly fastF1Service: FastF1Service) {}
+@Controller('analytics')
+export class AnalyticsController {
+  constructor(private readonly analyticsService: AnalyticsService) {}
 
   @Get('colors')
   getColors(
@@ -31,7 +31,7 @@ export class FastF1Controller {
     @Query('round') round: number,
     @Query('session') session: string,
   ): Promise<ColorResponse> {
-    return this.fastF1Service.getColors(year, round, session);
+    return this.analyticsService.getColors(year, round, session);
   }
 
   @Get('session-results')
@@ -40,12 +40,12 @@ export class FastF1Controller {
     @Query('round') round: number,
     @Query('session') session: number,
   ): Promise<RaceResult[]> {
-    return this.fastF1Service.getSessionResults(year, round, session);
+    return this.analyticsService.getSessionResults(year, round, session);
   }
 
   @Get('event-schedule')
   getEventSchedule(@Query('year') year: number): Promise<EventData[]> {
-    return this.fastF1Service.getEventSchedule(year);
+    return this.analyticsService.getEventSchedule(year);
   }
 
   @Get('circuit')
@@ -53,7 +53,7 @@ export class FastF1Controller {
     @Query('year') year: number,
     @Query('round') round: number,
   ): Promise<Circuit> {
-    return this.fastF1Service.getCircuit(year, round);
+    return this.analyticsService.getCircuit(year, round);
   }
 
   @Get('circuit-info')
@@ -62,7 +62,7 @@ export class FastF1Controller {
     @Query('round') round: number,
     @Query('session') session: string,
   ): Promise<CircuitInformation> {
-    return this.fastF1Service.getCircuitInfo(year, round, session);
+    return this.analyticsService.getCircuitInfo(year, round, session);
   }
 
   @Get('driver-laps')
@@ -72,7 +72,7 @@ export class FastF1Controller {
     @Query('session') session: string,
     @Query('driver') driver: string,
   ): Promise<LapsResponse> {
-    return this.fastF1Service.getDriverLaps(year, round, session, driver);
+    return this.analyticsService.getDriverLaps(year, round, session, driver);
   }
 
   @Get('quick-laps')
@@ -80,7 +80,7 @@ export class FastF1Controller {
     @Query('year') year: number,
     @Query('round') round: number,
   ): Promise<LapsResponse> {
-    return this.fastF1Service.getQuickLaps(year, round);
+    return this.analyticsService.getQuickLaps(year, round);
   }
 
   @Get('strategy')
@@ -89,7 +89,7 @@ export class FastF1Controller {
     @Query('round') round: number,
     @Query('session') session: string,
   ): Promise<StrategyResponse> {
-    return this.fastF1Service.getSessionStrategy(year, round, session);
+    return this.analyticsService.getSessionStrategy(year, round, session);
   }
 
   @Get('speed-traces')
@@ -98,7 +98,7 @@ export class FastF1Controller {
     @Query('round') round: number,
     @Query('session') session: string,
   ): Promise<SpeedTracesResponse> {
-    return this.fastF1Service.getSpeedTraces(year, round, session);
+    return this.analyticsService.getSpeedTraces(year, round, session);
   }
 
   @Get('drivers')
@@ -107,7 +107,7 @@ export class FastF1Controller {
     @Query('round') round: number,
     @Query('session') session: string,
   ): Promise<DriversResponse> {
-    return this.fastF1Service.getDrivers(year, round, session);
+    return this.analyticsService.getDrivers(year, round, session);
   }
 
   @Get('car-telemetry')
@@ -117,7 +117,7 @@ export class FastF1Controller {
     @Query('session') session: string,
     @Query('withPosition') withPosition: boolean,
   ): Promise<CarTelemetryResponse> {
-    return this.fastF1Service.getCarTelemetry(
+    return this.analyticsService.getCarTelemetry(
       year,
       round,
       session,
@@ -130,7 +130,7 @@ export class FastF1Controller {
     @Query('year') year: number,
     @Query('round') round: number,
   ): Promise<PositionDataResponse> {
-    return this.fastF1Service.getPositionData(year, round);
+    return this.analyticsService.getPositionData(year, round);
   }
 
   @Get('wdc-contenders')
@@ -138,7 +138,7 @@ export class FastF1Controller {
     @Query('year') year: number,
     @Query('round') round: number,
   ): Promise<ChampionshipContendersResponse> {
-    return this.fastF1Service.getWDCContenders(year, round);
+    return this.analyticsService.getWDCContenders(year, round);
   }
 
   @Get('track-domination')
@@ -148,7 +148,7 @@ export class FastF1Controller {
     @Query('session') session: string,
     @Query('drivers') drivers: string[],
   ): Promise<TrackDominationResponse> {
-    return this.fastF1Service.getTrackDomination(year, round, session, drivers);
+    return this.analyticsService.getTrackDomination(year, round, session, drivers);
   }
 
   @Get('leader-gap')
@@ -157,7 +157,7 @@ export class FastF1Controller {
     @Query('round') round: number,
     @Query('session') session: string,
   ): Promise<GapToLeaderResponse> {
-    return this.fastF1Service.getGapToLeader(year, round, session);
+    return this.analyticsService.getGapToLeader(year, round, session);
   }
 
   @Get('laps')
@@ -166,6 +166,6 @@ export class FastF1Controller {
     @Query('round') round: number,
     @Query('session') session: string,
   ): Promise<LapsResponse> {
-    return this.fastF1Service.getLaps(year, round, session);
+    return this.analyticsService.getLaps(year, round, session);
   }
 }

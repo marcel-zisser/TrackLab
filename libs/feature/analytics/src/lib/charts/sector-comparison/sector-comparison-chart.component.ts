@@ -132,7 +132,7 @@ export class SectorComparisonChartComponent extends BaseChart {
 
       this.backendService
         .doGet<LapsResponse>(
-          `fast-f1/laps?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}&session=Race`,
+          `analytics/laps?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}&session=Race`,
         )
         .pipe(first((response) => !!response))
         .subscribe({

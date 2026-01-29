@@ -100,7 +100,7 @@ export class StrategyComparisonChartComponent extends BaseChart {
       this.strategyData.set(undefined);
       this.backendService
         .doGet<StrategyResponse>(
-          `fast-f1/strategy?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}&session=${selectedRace.session}`,
+          `analytics/strategy?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}&session=${selectedRace.session}`,
         )
         .pipe(first((response) => !!response))
         .subscribe({

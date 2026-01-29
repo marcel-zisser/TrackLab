@@ -76,10 +76,10 @@ export class SpeedTracesComponent {
 
       combineLatest([
         this.backendService.doGet<SpeedTracesResponse>(
-          `fast-f1/speed-traces?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}&session=${selectedRace.session}`,
+          `analytics/speed-traces?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}&session=${selectedRace.session}`,
         ),
         this.backendService.doGet<CircuitInformation>(
-          `fast-f1/circuit-info?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}&session=${selectedRace.session}`,
+          `analytics/circuit-info?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}&session=${selectedRace.session}`,
         ),
       ])
         .pipe(first((response) => !!response))

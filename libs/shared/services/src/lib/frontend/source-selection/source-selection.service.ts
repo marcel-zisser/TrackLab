@@ -51,7 +51,7 @@ export class SourceSelectionService {
    */
   loadEvents(year: string) {
     this.backendService
-      .doGet<EventData[]>(`fast-f1/event-schedule?year=${year}`)
+      .doGet<EventData[]>(`analytics/event-schedule?year=${year}`)
       .pipe(
         first((races) => !!races),
         map((races: EventData[]) =>
@@ -84,7 +84,7 @@ export class SourceSelectionService {
   loadDrivers(year: string, event: EventData, session: string | undefined) {
     this.backendService
       .doGet<DriversResponse>(
-        `fast-f1/drivers?year=${year}&round=${event.roundNumber}&session=${session}`,
+        `analytics/drivers?year=${year}&round=${event.roundNumber}&session=${session}`,
       )
       .pipe(first())
       .subscribe((response) => this._drivers.set(response?.drivers ?? []));

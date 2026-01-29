@@ -89,7 +89,7 @@ export class WdcContendersChartComponent extends BaseChart {
   protected loadData(selectedRace: RaceSelection) {
     if (selectedRace.year) {
       this.wdcContendersData.set(undefined);
-      let url = `fast-f1/wdc-contenders?year=${selectedRace.year}`;
+      let url = `analytics/wdc-contenders?year=${selectedRace.year}`;
 
       if (selectedRace.event) {
         url += `&round=${selectedRace.event?.roundNumber}`;

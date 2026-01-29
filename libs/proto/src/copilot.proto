@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package at.tracklab.copilot;
+package at.tracklab;
 
 import "google/protobuf/empty.proto";
 

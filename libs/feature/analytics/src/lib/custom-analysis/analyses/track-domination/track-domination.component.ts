@@ -70,7 +70,7 @@ export class TrackDominationComponent {
 
       this.backendService
         .doGet<TrackDominationResponse>(
-          `fast-f1/track-domination?` +
+          `analytics/track-domination?` +
             `year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}&` +
             `session=${selectedRace.session}&` +
             `drivers=${selectedRace.drivers[0]}&drivers=${selectedRace.drivers[1]}`,

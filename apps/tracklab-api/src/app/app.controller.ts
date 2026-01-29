@@ -1,6 +1,4 @@
-import { Controller, UseInterceptors } from '@nestjs/common';
-import { LoggingCacheInterceptor } from './interceptors/cache-logging.interceptor';
+import { Controller } from '@nestjs/common';
 
-@UseInterceptors(LoggingCacheInterceptor)
 @Controller()
 export class AppController {}

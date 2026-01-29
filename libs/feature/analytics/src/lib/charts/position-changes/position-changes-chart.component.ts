@@ -83,7 +83,7 @@ export class PositionChangesChartComponent extends BaseChart {
 
       this.backendService
         .doGet<DriverPositionResponse>(
-          `fast-f1/position-data?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}`,
+          `analytics/position-data?year=${selectedRace.year}&round=${selectedRace.event?.roundNumber}`,
         )
         .pipe(first((response) => !!response))
         .subscribe({
