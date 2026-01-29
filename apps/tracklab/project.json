@@ -80,14 +80,6 @@
     "lint": {
       "executor": "@nx/eslint:lint"
     },
-    "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
-      "options": {
-        "jestConfig": "apps/tracklab/jest.config.ts",
-        "tsConfig": "apps/tracklab/tsconfig.spec.json"
-      }
-    },
     "serve-static": {
       "executor": "@nx/web:file-server",
       "options": {
@@ -95,6 +87,13 @@
         "port": 4200,
         "staticFilePath": "dist/apps/tracklab/browser",
         "spa": true
+      }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../../coverage/apps/tracklab"
       }
     }
   }

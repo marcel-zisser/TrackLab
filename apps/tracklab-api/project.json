@@ -9,9 +9,7 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "prisma migrate reset",
-        "args": [
-          "--force --schema=apps/tracklab-api/prisma/schema.prisma"
-        ]
+        "args": ["--force --schema=apps/tracklab-api/prisma/schema.prisma"]
       }
     },
     "init-db": {
@@ -19,25 +17,18 @@
       "options": {
         "command": "npx ts-node init-db/init-db"
       },
-      "dependsOn": [
-        "migrate-db"
-      ]
+      "dependsOn": ["migrate-db"]
     },
     "generate-prisma": {
       "executor": "nx:run-commands",
       "options": {
         "command": "prisma generate",
-        "args": [
-          "--schema=apps/tracklab-api/prisma/schema.prisma"
-        ]
+        "args": ["--schema=apps/tracklab-api/prisma/schema.prisma"]
       }
     },
     "build": {
       "executor": "nx:run-commands",
-      "dependsOn": [
-        "generate-proto",
-        "init-db"
-      ],
+      "dependsOn": ["generate-proto", "init-db"],
       "options": {
         "assets": [
           {
@@ -47,24 +38,18 @@
           }
         ],
         "command": "webpack-cli build",
-        "args": [
-          "node-env=production"
-        ]
+        "args": ["node-env=production"]
       },
       "configurations": {
         "development": {
-          "args": [
-            "node-env=development"
-          ]
+          "args": ["node-env=development"]
         }
       }
     },
     "serve": {
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
-      "dependsOn": [
-        "build"
-      ],
+      "dependsOn": ["build"],
       "options": {
         "buildTarget": "tracklab-api:build",
         "runBuildTargetDependencies": false
@@ -78,16 +63,18 @@
         }
       }
     },
-    "test": {
-      "options": {
-        "passWithNoTests": true
-      }
-    },
     "generate-proto": {
       "executor": "nx:run-commands",
       "options": {
         "command": "node tools/generate-ts-proto.js",
         "parallel": false
+      }
+    },
+    "test": {
+      "executor": "@nx/vitest:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../../coverage/apps/tracklab-api"
       }
     }
   }
