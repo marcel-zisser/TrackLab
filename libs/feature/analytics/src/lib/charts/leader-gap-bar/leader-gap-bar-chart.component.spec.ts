@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from "vitest";
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LeaderGapBarChartComponent } from './leader-gap-bar-chart.component';
 describe('PositionChangesChartComponent', () => {

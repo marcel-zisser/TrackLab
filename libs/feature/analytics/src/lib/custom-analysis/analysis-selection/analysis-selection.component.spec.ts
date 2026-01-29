@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from "vitest";
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AnalysisSelectionComponent } from './analysis-selection.component';
 describe('AnalysisSelectionComponent', () => {

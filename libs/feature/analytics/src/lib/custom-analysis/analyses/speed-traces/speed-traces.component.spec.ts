@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from "vitest";
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SpeedTracesComponent } from './speed-traces.component';
 describe('SpeedTracesComponent', () => {

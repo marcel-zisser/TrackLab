@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from "vitest";
 import { Test, TestingModule } from '@nestjs/testing';
 import { CopilotController } from './copilot.controller';
 describe('CopilotController', () => {

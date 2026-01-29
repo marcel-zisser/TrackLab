@@ -110,6 +110,9 @@ importers:
       chalk:
         specifier: ^5.6.2
         version: 5.6.2
+      codemod:
+        specifier: ^1.3.13
+        version: 1.3.13
       cookie-parser:
         specifier: ^1.4.7
         version: 1.4.7
@@ -1725,6 +1728,38 @@ packages:
 
   '@bufbuild/protobuf@2.6.1':
     resolution: {integrity: sha512-DaG6XlyKpz08bmHY5SGX2gfIllaqtDJ/KwVoxsmP22COOLYwDBe7yD3DZGwXem/Xq7QOc9cuR7R3MpAv5CFfDw==}
+
+  '@codemod.com/cli-darwin-arm64@1.3.13':
+    resolution: {integrity: sha512-i2eNk7so9uiypJAUQFuAml/XChCOrKIIAIuUDPynaEK4CAoWNriY5Ffsv75XH6S6RBWZ8SSdu4t/y5pvjybIJQ==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@codemod.com/cli-darwin-x64@1.3.13':
+    resolution: {integrity: sha512-6SLpZ/lSs6tahYXYu5U1+s3NItHD2jN2hoUvgeeuVrejgHsG33vgVezyH37X85QvhKRM6tTYuvTNfmNMjmwV1g==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@codemod.com/cli-linux-arm64-gnu@1.3.13':
+    resolution: {integrity: sha512-g9DoowzVChh4M+mmwaaKZrY766+z/krN2fiew7VQ9NghtpMkLuW6xab4NRl+qDRsMYmuV4jDRrk3jtexOdpmrw==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@codemod.com/cli-linux-x64-gnu@1.3.13':
+    resolution: {integrity: sha512-tSbYG/89mE7lvAZGym4FuVH/vSqhp2+PzVj4VX9t2ye3hJgFsNz5alam1WXWBw8/vPVUD9QHCj0Xmmq2I6KxxQ==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@codemod.com/cli-win32-x64-msvc@1.3.13':
+    resolution: {integrity: sha512-Bn9w9lxXPOBGMGXDSGDIbO7u5e6GOmn9o3YoGcyZL4PfYmJY7pRHiiuNN4RLBh+zpcdEsklkTn4xZE+RWA5cqA==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [win32]
 
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -5698,6 +5733,11 @@ packages:
   code-block-writer@12.0.0:
     resolution: {integrity: sha512-q4dMFMlXtKR3XNBHyMHt/3pwYNA69EDk00lloMOaaUMKPUXBw6lpXtbu3MMVG6/uOihGnRDOlkyqsONEUj60+w==}
 
+  codemod@1.3.13:
+    resolution: {integrity: sha512-2nD9DeTrLYSErBgRm4VwBbtvkLzkwssh0P4QaL3CmAMDidKwVwrH1m0zxDdQgpruA4gyTnusqQrLt1a4WEieuw==}
+    engines: {node: '>= 16.0.0'}
+    hasBin: true
+
   collect-v8-coverage@1.0.2:
     resolution: {integrity: sha512-lHl4d5/ONEbLlJvaJNtsF/Lz+WvB07u2ycqTYbdrq7UypDXailES4valYb2eWiJFxZlVmpGekfqoxQhzyFdT4Q==}
 
@@ -6143,10 +6183,6 @@ packages:
     resolution: {integrity: sha512-pGjwhsmsp4kL2RTz08wcOlGN83otlqHeD/Z5T8GXZB+/YcpQ/dgo+lbU8ZsGxV0HIvqqxo9l7mqYwyYMD9bKDg==}
     engines: {node: '>=0.10'}
     hasBin: true
-
-  detect-libc@2.0.3:
-    resolution: {integrity: sha512-bwy0MGW55bG41VqxxypOsdSdGqLwXPI/focwgTYCFMbdUiBAxLg9CFzG08sz2aqzknwiX7Hkl0bQENjg8iLByw==}
-    engines: {node: '>=8'}
 
   detect-libc@2.0.4:
     resolution: {integrity: sha512-3UDv+G9CsCKO1WKMGw9fwq/SWJYbI0c5Y7LU1AXYoDdbhE2AHQ6N6Nb34sG8Fj7T5APy8qXDCKuuIHd1BR0tVA==}
@@ -13266,6 +13302,21 @@ snapshots:
 
   '@bufbuild/protobuf@2.6.1': {}
 
+  '@codemod.com/cli-darwin-arm64@1.3.13':
+    optional: true
+
+  '@codemod.com/cli-darwin-x64@1.3.13':
+    optional: true
+
+  '@codemod.com/cli-linux-arm64-gnu@1.3.13':
+    optional: true
+
+  '@codemod.com/cli-linux-x64-gnu@1.3.13':
+    optional: true
+
+  '@codemod.com/cli-win32-x64-msvc@1.3.13':
+    optional: true
+
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
@@ -17932,6 +17983,16 @@ snapshots:
 
   code-block-writer@12.0.0: {}
 
+  codemod@1.3.13:
+    dependencies:
+      detect-libc: 2.0.4
+    optionalDependencies:
+      '@codemod.com/cli-darwin-arm64': 1.3.13
+      '@codemod.com/cli-darwin-x64': 1.3.13
+      '@codemod.com/cli-linux-arm64-gnu': 1.3.13
+      '@codemod.com/cli-linux-x64-gnu': 1.3.13
+      '@codemod.com/cli-win32-x64-msvc': 1.3.13
+
   collect-v8-coverage@1.0.2: {}
 
   color-convert@2.0.1:
@@ -18360,8 +18421,6 @@ snapshots:
   destroy@1.2.0: {}
 
   detect-libc@1.0.3: {}
-
-  detect-libc@2.0.3: {}
 
   detect-libc@2.0.4: {}
 
@@ -20586,7 +20645,7 @@ snapshots:
 
   lightningcss@1.30.1:
     dependencies:
-      detect-libc: 2.0.3
+      detect-libc: 2.0.4
     optionalDependencies:
       lightningcss-darwin-arm64: 1.30.1
       lightningcss-darwin-x64: 1.30.1

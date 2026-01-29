@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { FlagPipe } from './flag.pipe';
 describe('FlagPipe', () => {
   it('create an instance', () => {
