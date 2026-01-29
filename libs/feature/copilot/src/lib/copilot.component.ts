@@ -1,18 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'tl-copilot',
   templateUrl: './copilot.component.html',
   styleUrl: './copilot.component.css',
 })
-export class CopilotComponent implements OnInit{
+export class CopilotComponent {
 
-ngOnInit() {
-  this.getLiveData().subscribe(data => {
-    console.log(data)
-  });
-}
+  constructor() {
+    this.getLiveData().pipe(takeUntilDestroyed()).subscribe(data => {
+      console.log(data)
+    });
+  }
 
 
   getLiveData(): Observable<any> {

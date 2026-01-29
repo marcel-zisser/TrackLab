@@ -13,18 +13,14 @@ export class LiveDataService {
   onModuleInit() {
     this.liveDataService = this.grpcService.getService<LiveDataClient>('LiveData');
 
-    
-  }
-
-  getStream() {
-    this.stream$ = new Subject<DataPoint>();
-
-    this.liveDataService.streamData({}).subscribe({
+     this.liveDataService.streamData({}).subscribe({
       next: data => this.stream$.next(data),
       error: err => this.stream$.error(err),
       complete: () => this.stream$.complete()
     });
-    
+  }
+
+  getStream() {    
     return this.stream$.asObservable();
   }
 }
