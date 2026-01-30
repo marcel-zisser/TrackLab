@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "types": [],
-    "moduleResolution": "bundler"
+    "moduleResolution": "nodenext"
   },
   "files": ["src/main.ts"],
   "include": ["src/**/*.d.ts"],

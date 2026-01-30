@@ -1,6 +1,6 @@
 import { inject, Injectable, Signal, signal } from '@angular/core';
 import { BackendService } from '../../backend/backend.service';
-import { first, firstValueFrom, map, retry } from 'rxjs';
+import { first, map, retry } from 'rxjs';
 import {
   DriversResponse,
   EventData,

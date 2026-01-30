@@ -8,7 +8,7 @@ import {
 import { Menubar } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import { RouterLink } from '@angular/router';
-import { Button, ButtonIcon } from 'primeng/button';
+import { Button } from 'primeng/button';
 import { ToggleSwitch } from 'primeng/toggleswitch';
 import { NgClass } from '@angular/common';
 import {
@@ -31,7 +31,6 @@ import { UserMenuService } from './user-menu/user-menu.service';
     Menubar,
     RouterLink,
     ToggleSwitch,
-    ButtonIcon,
     NgClass,
     FormsModule,
     Avatar,
