@@ -24,7 +24,6 @@
       "@tracklab/user": ["libs/feature/user/src/index.ts"],
       "@tracklab/util": ["libs/shared/util/src/index.ts"]
     },
-    "ignoreDeprecations": "6.0"
   },
   "exclude": ["node_modules", "tmp"],
   "include": ["init-db/init-db.ts"]

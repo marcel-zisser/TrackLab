@@ -7,7 +7,7 @@
     "types": ["jest", "node"],
     "isolatedModules": true
   },
-  "files": ["src/test-setup.ts"],
+  "files": [],
   "include": [
     "jest.config.ts",
     "src/**/*.test.ts",
