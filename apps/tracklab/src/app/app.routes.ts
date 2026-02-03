@@ -1,12 +1,12 @@
 import { Route } from '@angular/router';
-import { CopilotComponent} from '@tracklab/copilot';
+import { CopilotComponent, CopilotModeSelectionComponent, QualifyingCopilotComponent, RaceCopilotComponent} from '@tracklab/copilot';
 import { DashboardComponent } from '@tracklab/dashboard';
 import {
   AnalysisHostComponent,
   AnalysisSelectionComponent,
   AnalyticsComponent,
-  ModeSelectionComponent,
   RaceAnalysisComponent,
+  AnalysisModeSelectionComponent
 } from '@tracklab/analytics';
 import {
   CollectionComponent,
@@ -46,7 +46,7 @@ export const appRoutes: Route[] = [
       {
         title: 'Analytics',
         path: '',
-        component: ModeSelectionComponent,
+        component: AnalysisModeSelectionComponent,
       },
       {
         title: 'Analytics',
@@ -69,6 +69,23 @@ export const appRoutes: Route[] = [
     title: 'Pitwall Copilot',
     path: 'copilot',
     component: CopilotComponent,
+    children: [
+      {
+        title: 'Pitwall Copilot',
+        path: '',
+        component: CopilotModeSelectionComponent,
+      },
+      {
+        title: 'Qualifying | Pitwall Copilot',
+        path: 'qualifying',
+        component: QualifyingCopilotComponent,
+      },
+      {
+        title: 'Race | Pitwall Copilot',
+        path: 'race',
+        component: RaceCopilotComponent,
+      },
+    ]
   },
   {
     path: 'user',

@@ -5,8 +5,8 @@
            hover:cursor-pointer hover:scale-101 transition-transform duration-150"
     [routerLink]="'race'"
   >
-    <div class="text-white font-[Audiowide] text-4xl">Race Analysis</div>
-    <div class="text-white text-xl">Get a general overview of a specific race.</div>
+    <ng-content select="[left]"></ng-content>
+      
   </button>
   <button
     class="flex flex-col gap-8 w-full justify-center items-center p-8
@@ -14,10 +14,6 @@
            hover:cursor-pointer hover:scale-101 transition-transform duration-150"
     [routerLink]="'custom'"
   >
-    <div class="text-white font-[Audiowide] text-4xl">Custom Analysis</div>
-    <div class="text-white text-xl text-center">
-      Create your own custom charts.
-      Available analyses include the Race Analysis charts, as well as other telemetry-data based charts.
-    </div>
+    <ng-content select="[right]"></ng-content>
   </button>
 </div>

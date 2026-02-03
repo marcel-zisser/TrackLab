@@ -8,4 +8,5 @@ export * from './lib/authentication';
 export * from './lib/dialogs';
 export * from './lib/pipes';
 export * from './lib/chart-base';
+export * from './lib//mode-selection';
 export { InfoPageComponent } from './lib/info-page/info-page.component';

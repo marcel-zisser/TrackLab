@@ -108,4 +108,23 @@ export class BackendService {
       withCredentials: true,
     });
   }
+
+  /**
+   * Creates an EventSource to the backend API to a specific endpoint
+   * @param url the endpoint to be targeted
+   * @returns {EventSource} EventSource with the result of the request
+   */
+  getEventSource<T>(url: string): Observable<T> {
+    return new Observable<T>(observer => {
+      const source = new EventSource(this.apiUrl + url);
+
+      source.onmessage = event => {
+        observer.next(JSON.parse(event.data));
+      };
+
+      source.onerror = err => observer.error(err);
+
+      return () => source.close();
+    });
+  }
 }
