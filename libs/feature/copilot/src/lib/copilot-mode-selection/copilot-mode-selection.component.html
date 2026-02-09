@@ -1,11 +1,19 @@
 <tl-mode-selection>
-    <div left>
+  <div
+    left
+    class="h-full w-full flex flex-col gap-4 justify-center"
+    [routerLink]="'qualifying'"
+  >
     <div class="text-white font-[Audiowide] text-4xl">Qualifying Copilot</div>
     <div class="text-white text-xl">
       Predict qualifying performance based on practice data.
     </div>
   </div>
-  <div right>
+  <div
+    right
+    class="h-full w-full flex flex-col gap-4 justify-center"
+    [routerLink]="'race'"
+  >
     <div class="text-white font-[Audiowide] text-4xl">Race Copilot</div>
     <div class="text-white text-xl text-center">
       Real-time strategy support for the race.

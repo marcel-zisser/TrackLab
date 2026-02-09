@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { FooterComponent, HeaderComponent } from '@tracklab/shared/components';
+import { FooterComponent, HeaderComponent } from '@tracklab/components';
 import { Theme, ThemeService } from '@tracklab/services';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { ConfirmDialog } from 'primeng/confirmdialog';

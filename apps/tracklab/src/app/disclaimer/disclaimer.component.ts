@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { InfoPageComponent } from '@tracklab/shared/components';
+import { InfoPageComponent } from '@tracklab/components';
 
 @Component({
   selector: 'tl-disclaimer',

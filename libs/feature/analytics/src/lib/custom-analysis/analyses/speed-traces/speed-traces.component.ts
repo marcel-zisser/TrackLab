@@ -9,7 +9,7 @@ import { BackendService } from '@tracklab/services';
 import {
   CircuitInformation,
   EventData,
-  RaceSelection,
+  EventSelection,
   SpeedTrace,
   SpeedTracesResponse,
 } from '@tracklab/models';
@@ -19,7 +19,7 @@ import {
   AnalysisBaseComponent,
   SourceSelectionComponent,
 } from '../../analysis-base';
-import { ChartBaseComponent } from '@tracklab/shared/components';
+import { ChartBaseComponent } from '@tracklab/components';
 
 @Component({
   selector: 'tl-speed-traces',
@@ -60,7 +60,7 @@ export class SpeedTracesComponent {
    * Loads the speed trace data
    * @protected
    */
-  protected loadSpeedTraces(selectedRace: RaceSelection) {
+  protected loadSpeedTraces(selectedRace: EventSelection) {
     if (
       selectedRace.year &&
       selectedRace.event &&

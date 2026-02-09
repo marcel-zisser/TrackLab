@@ -4,7 +4,7 @@ import {
   SourceSelectionComponent,
 } from '../../analysis-base';
 import { WdcContendersChartComponent } from '../../../charts';
-import { RaceSelection } from '@tracklab/models';
+import { EventSelection } from '@tracklab/models';
 
 @Component({
   selector: 'tl-wdc-contenders',
@@ -18,11 +18,11 @@ import { RaceSelection } from '@tracklab/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WdcContendersComponent {
-  protected readonly raceSelection = signal<RaceSelection | undefined>(
+  protected readonly eventSelection = signal<EventSelection | undefined>(
     undefined,
   );
 
-  loadWdcContendersData(selection: RaceSelection) {
-    this.raceSelection.set(selection);
+  loadWdcContendersData(selection: EventSelection) {
+    this.eventSelection.set(selection);
   }
 }

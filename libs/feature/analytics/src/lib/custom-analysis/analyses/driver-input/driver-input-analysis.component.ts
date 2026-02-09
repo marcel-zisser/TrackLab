@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { BackendService } from '@tracklab/services';
-import { CarTelemetry, CarTelemetryResponse, CircuitInformation, EventData, RaceSelection } from '@tracklab/models';
+import { CarTelemetry, CarTelemetryResponse, CircuitInformation, EventData, EventSelection } from '@tracklab/models';
 import { combineLatest, first } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { AnalysisBaseComponent, SourceSelectionComponent } from '../../analysis-base';
-import { ChartBaseComponent } from '@tracklab/shared/components';
+import { ChartBaseComponent } from '@tracklab/components';
 
 @Component({
   selector: 'tl-driver-input',
@@ -48,7 +48,7 @@ export class DriverInputAnalysisComponent {
    * Loads the driver input data from the backend
    * @protected
    */
-  protected loadDriverInput(selectedRace: RaceSelection) {
+  protected loadDriverInput(selectedRace: EventSelection) {
     if (selectedRace.year && selectedRace.event && selectedRace.session) {
       this.selectedYear = selectedRace.year;
       this.selectedEvent = selectedRace.event;

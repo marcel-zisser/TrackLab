@@ -16,5 +16,17 @@ export const AppTheme = definePreset(Aura, {
       900: '{red.900}',
       950: '{red.950}'
     },
+    colorScheme: {
+            light: {
+                primary: {
+                    color: '{primary.600}'
+                }
+            },
+            dark: {
+                primary: {
+                    color: '{primary.500}'
+                }
+            }
+        }
   }
 });

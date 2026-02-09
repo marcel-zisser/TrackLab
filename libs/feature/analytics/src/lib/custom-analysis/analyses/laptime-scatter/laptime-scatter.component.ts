@@ -10,7 +10,7 @@ import {
   EventData,
   Lap,
   LapsResponse,
-  RaceSelection,
+  EventSelection,
   TireColors,
   TireCompound,
 } from '@tracklab/models';
@@ -24,7 +24,7 @@ import {
   AnalysisBaseComponent,
   SourceSelectionComponent,
 } from '../../analysis-base';
-import { ChartBaseComponent } from '@tracklab/shared/components';
+import { ChartBaseComponent } from '@tracklab/components';
 
 type ProcessedLapTime = [number, number, string];
 
@@ -71,7 +71,7 @@ export class LaptimeScatterComponent {
    * Loads the laptime data for a given driver
    * @protected
    */
-  protected loadLapTimes(selectedRace: RaceSelection) {
+  protected loadLapTimes(selectedRace: EventSelection) {
     if (
       selectedRace.year &&
       selectedRace.event &&

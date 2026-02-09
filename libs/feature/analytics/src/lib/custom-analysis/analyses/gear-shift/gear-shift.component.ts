@@ -11,7 +11,7 @@ import {
   CarTelemetryResponse,
   CircuitInformation,
   EventData,
-  RaceSelection,
+  EventSelection,
 } from '@tracklab/models';
 import { combineLatest, first } from 'rxjs';
 import { FormsModule } from '@angular/forms';
@@ -19,7 +19,7 @@ import {
   AnalysisBaseComponent,
   SourceSelectionComponent,
 } from '../../analysis-base';
-import { ChartBaseComponent } from '@tracklab/shared/components';
+import { ChartBaseComponent } from '@tracklab/components';
 
 @Component({
   selector: 'tl-gear-shift',
@@ -62,7 +62,7 @@ export class GearShiftComponent {
    * Loads the gear shift data from the backend
    * @protected
    */
-  protected loadGearShifts(selectedRace: RaceSelection) {
+  protected loadGearShifts(selectedRace: EventSelection) {
     if (
       selectedRace.year &&
       selectedRace.event &&

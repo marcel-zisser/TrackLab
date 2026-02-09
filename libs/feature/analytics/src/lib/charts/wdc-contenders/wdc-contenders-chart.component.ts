@@ -11,12 +11,12 @@ import {
 } from '@angular/core';
 import { BackendService } from '@tracklab/services';
 import {
-  RaceSelection,
+  EventSelection,
   WdcContendersPayload,
   WdcContendersResponse,
 } from '@tracklab/models';
 import { first } from 'rxjs';
-import { BaseChart, ChartBaseComponent } from '@tracklab/shared/components';
+import { BaseChart, ChartBaseComponent } from '@tracklab/components';
 
 @Component({
   selector: 'tl-wdc-contenders-chart',
@@ -27,7 +27,7 @@ import { BaseChart, ChartBaseComponent } from '@tracklab/shared/components';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WdcContendersChartComponent extends BaseChart {
-  raceSelection = input.required<RaceSelection | undefined>();
+  eventSelection = input.required<EventSelection | undefined>();
   chart = viewChild.required<ChartBaseComponent>('chartBase');
 
   private readonly backendService = inject(BackendService);
@@ -74,7 +74,7 @@ export class WdcContendersChartComponent extends BaseChart {
   constructor() {
     super();
     effect(() => {
-      const selectedRace = this.raceSelection();
+      const selectedRace = this.eventSelection();
 
       if (selectedRace) {
         this.loadData(selectedRace);
@@ -86,7 +86,7 @@ export class WdcContendersChartComponent extends BaseChart {
    * Loads the data for the WDC contenders
    * @protected
    */
-  protected loadData(selectedRace: RaceSelection) {
+  protected loadData(selectedRace: EventSelection) {
     if (selectedRace.year) {
       this.wdcContendersData.set(undefined);
       let url = `analytics/wdc-contenders?year=${selectedRace.year}`;
@@ -138,7 +138,7 @@ export class WdcContendersChartComponent extends BaseChart {
   private createChartOptions() {
     return {
       title: {
-        text: `World Driver Champion Contenders ${this.raceSelection()?.year}`,
+        text: `World Driver Champion Contenders ${this.eventSelection()?.year}`,
         left: 'center',
       },
       grid: {

@@ -13,7 +13,14 @@
     "#f49f42"
   ],
   "backgroundColor": "transparent",
-  "textStyle": {},
+  "textStyle": {
+    "color": "#eeeeee",
+    "fontSize": 14,
+    "textBorderColor": "#eee"
+  },
+  "label": {
+    "color": "#eeeeee"
+  },
   "title": {
     "textStyle": {
       "color": "#eeeeee"
@@ -136,9 +143,6 @@
       "borderColor": "#444",
       "borderWidth": 0.5
     },
-    "label": {
-      "color": "#000"
-    },
     "emphasis": {
       "itemStyle": {
         "areaColor": "rgba(255,215,0,0.8)",
@@ -155,9 +159,6 @@
       "areaColor": "#eee",
       "borderColor": "#444",
       "borderWidth": 0.5
-    },
-    "label": {
-      "color": "#000"
     },
     "emphasis": {
       "itemStyle": {

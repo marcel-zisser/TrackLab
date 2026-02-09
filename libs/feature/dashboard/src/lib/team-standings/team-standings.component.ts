@@ -1,7 +1,7 @@
 import { Component, input, OnInit } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { Column } from '@tracklab/models';
-import { SkeletonTableComponent } from '@tracklab/shared/components';
+import { SkeletonTableComponent } from '@tracklab/components';
 
 @Component({
   selector: 'tl-team-standings',

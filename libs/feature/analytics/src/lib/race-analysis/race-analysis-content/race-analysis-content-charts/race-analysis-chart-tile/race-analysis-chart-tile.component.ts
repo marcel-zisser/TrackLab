@@ -10,7 +10,7 @@ import {
 import { PrimeIcons } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
-import { BaseChart, ChartDialogComponent } from '@tracklab/shared/components';
+import { BaseChart, ChartDialogComponent } from '@tracklab/components';
 
 @Component({
   selector: 'tl-race-analysis-chart-tile',

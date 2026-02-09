@@ -2,7 +2,7 @@ import { Component, computed, HostListener, input, OnInit, signal, viewChild } f
 import { TableModule, TableRowSelectEvent } from 'primeng/table';
 import { Column, DriverInfo, DriverStandingsEntry } from '@tracklab/models';
 import { Popover } from 'primeng/popover';
-import { DriverCardComponent, SkeletonTableComponent } from '@tracklab/shared/components';
+import { DriverCardComponent, SkeletonTableComponent } from '@tracklab/components';
 
 @Component({
   selector: 'tl-driver-standings',

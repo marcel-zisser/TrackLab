@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { ModeSelectionComponent } from "@tracklab/shared/components";
+import { RouterModule } from '@angular/router';
+import { ModeSelectionComponent } from "@tracklab/components";
 
 @Component({
   selector: 'tl-analysis-mode-selection',
-  imports: [ModeSelectionComponent],
+  imports: [ModeSelectionComponent, RouterModule],
   templateUrl: './analysis-mode-selection.component.html',
   styleUrl: './analysis-mode-selection.component.css',
 })

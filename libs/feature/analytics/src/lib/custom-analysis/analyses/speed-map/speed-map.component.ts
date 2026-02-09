@@ -12,7 +12,7 @@ import {
   ChartDimensions,
   CircuitInformation,
   EventData,
-  RaceSelection,
+  EventSelection,
 } from '@tracklab/models';
 import { combineLatest, first } from 'rxjs';
 import { FormsModule } from '@angular/forms';
@@ -21,7 +21,7 @@ import {
   AnalysisBaseComponent,
   SourceSelectionComponent,
 } from '../../analysis-base';
-import { ChartBaseComponent } from '@tracklab/shared/components';
+import { ChartBaseComponent } from '@tracklab/components';
 
 @Component({
   selector: 'tl-speed-map',
@@ -92,7 +92,7 @@ export class SpeedMapComponent {
    * Loads the data for the speed map
    * @protected
    */
-  protected loadSpeedMap(selectedRace: RaceSelection) {
+  protected loadSpeedMap(selectedRace: EventSelection) {
     if (selectedRace.year && selectedRace.event && selectedRace.session && selectedRace.drivers) {
       this.selectedYear = selectedRace.year;
       this.selectedEvent = selectedRace.event;

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RaceSelectionComponent } from './race-selection/race-selection.component';
+import { EventSelectionComponent } from './race-selection/race-selection.component';
 import { RaceAnalysisContentComponent } from './race-analysis-content/race-analysis-content.component';
 
 @Component({
@@ -8,6 +8,6 @@ import { RaceAnalysisContentComponent } from './race-analysis-content/race-analy
   templateUrl: './race-analysis.component.html',
   styleUrl: './race-analysis.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, RaceSelectionComponent, RaceAnalysisContentComponent],
+  imports: [FormsModule, EventSelectionComponent, RaceAnalysisContentComponent],
 })
 export class RaceAnalysisComponent {}

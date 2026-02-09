@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { AnalyticsStore } from './store';
+import { TracklabStore } from '@tracklab/store';
 
 @Component({
   selector: 'tl-analytics',
   imports: [RouterOutlet],
-  providers: [AnalyticsStore],
+  providers: [TracklabStore],
   templateUrl: './analytics.component.html',
   styleUrl: './analytics.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

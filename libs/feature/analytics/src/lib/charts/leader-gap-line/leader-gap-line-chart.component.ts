@@ -14,7 +14,7 @@ import {
   EventData,
   LeaderGapPayload,
   LeaderGapResponse,
-  RaceSelection,
+  EventSelection,
 } from '@tracklab/models';
 import { first } from 'rxjs';
 import { FormsModule } from '@angular/forms';
@@ -22,8 +22,8 @@ import {
   convertToMilliseconds,
   millisecondsToTimingString,
 } from '@tracklab/util';
-import { AnalyticsStore } from '../../store';
-import { BaseChart, ChartBaseComponent } from '@tracklab/shared/components';
+import { TracklabStore } from '@tracklab/store';
+import { BaseChart, ChartBaseComponent } from '@tracklab/components';
 
 @Component({
   selector: 'tl-leader-gap-line-chart',
@@ -34,11 +34,11 @@ import { BaseChart, ChartBaseComponent } from '@tracklab/shared/components';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LeaderGapLineChartComponent extends BaseChart {
-  raceSelection = input.required<RaceSelection | undefined>();
+  eventSelection = input.required<EventSelection | undefined>();
   chart = viewChild.required<ChartBaseComponent>('chartBase');
 
   private readonly backendService = inject(BackendService);
-  private readonly store = inject(AnalyticsStore);
+  private readonly store = inject(TracklabStore);
 
   protected selectedYear: string | undefined;
   protected selectedEvent: EventData | undefined;
@@ -64,9 +64,9 @@ export class LeaderGapLineChartComponent extends BaseChart {
   constructor() {
     super();
     effect(() => {
-      const raceSelection = this.raceSelection();
-      if (raceSelection) {
-        this.loadData(raceSelection);
+      const eventSelection = this.eventSelection();
+      if (eventSelection) {
+        this.loadData(eventSelection);
       }
     });
   }
@@ -75,7 +75,7 @@ export class LeaderGapLineChartComponent extends BaseChart {
    * Effect to load the position data for a given race
    * @protected
    */
-  protected loadData(selectedRace: RaceSelection) {
+  protected loadData(selectedRace: EventSelection) {
     if (selectedRace.year && selectedRace.event) {
       this.selectedYear = selectedRace.year;
       this.selectedEvent = selectedRace.event;

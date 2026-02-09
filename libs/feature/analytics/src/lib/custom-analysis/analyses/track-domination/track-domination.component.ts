@@ -10,7 +10,7 @@ import {
   Driver,
   EventData,
   PositionTelemetry,
-  RaceSelection,
+  EventSelection,
   TrackDominationResponse,
 } from '@tracklab/models';
 import { first } from 'rxjs';
@@ -19,7 +19,7 @@ import {
   AnalysisBaseComponent,
   SourceSelectionComponent,
 } from '../../analysis-base';
-import { ChartBaseComponent } from '@tracklab/shared/components';
+import { ChartBaseComponent } from '@tracklab/components';
 
 @Component({
   selector: 'tl-track-domination',
@@ -53,7 +53,7 @@ export class TrackDominationComponent {
    * Loads the track domination data from the backend
    * @protected
    */
-  protected loadTrackDomination(selectedRace: RaceSelection) {
+  protected loadTrackDomination(selectedRace: EventSelection) {
     if (
       selectedRace.year &&
       selectedRace.event &&

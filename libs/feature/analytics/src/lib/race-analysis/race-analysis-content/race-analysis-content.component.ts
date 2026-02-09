@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, Signal } from '@angular/core';
-import { AnalyticsStore } from '../../store';
+import { TracklabStore } from '@tracklab/store';
 import { EventData } from '@tracklab/models';
 import { Divider } from 'primeng/divider';
 import {
@@ -21,7 +21,7 @@ import {
   ],
 })
 export class RaceAnalysisContentComponent {
-  private readonly store = inject(AnalyticsStore);
+  private readonly store = inject(TracklabStore);
 
   protected selectedRace: Signal<EventData | undefined> = this.store.race;
   protected selectedSession: Signal<string | undefined> = this.store.session;

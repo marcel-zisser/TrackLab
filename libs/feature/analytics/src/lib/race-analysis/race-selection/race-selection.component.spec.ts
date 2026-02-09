@@ -1,14 +1,14 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RaceSelectionComponent } from './race-selection.component';
-describe('RaceSelectionComponent', () => {
-  let component: RaceSelectionComponent;
-  let fixture: ComponentFixture<RaceSelectionComponent>;
+import { EventSelectionComponent } from './race-selection.component';
+describe('EventSelectionComponent', () => {
+  let component: EventSelectionComponent;
+  let fixture: ComponentFixture<EventSelectionComponent>;
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RaceSelectionComponent],
+      imports: [EventSelectionComponent],
     }).compileComponents();
-    fixture = TestBed.createComponent(RaceSelectionComponent);
+    fixture = TestBed.createComponent(EventSelectionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

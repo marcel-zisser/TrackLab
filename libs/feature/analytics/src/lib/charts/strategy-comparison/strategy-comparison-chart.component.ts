@@ -12,14 +12,14 @@ import {
 import { BackendService } from '@tracklab/services';
 import {
   EventData,
-  RaceSelection,
+  EventSelection,
   Strategy,
   StrategyResponse,
 } from '@tracklab/models';
 import { first } from 'rxjs';
-import { AnalyticsStore } from '../../store';
+import { TracklabStore } from '@tracklab/store';
 import { EChartsCoreOption } from 'echarts';
-import { BaseChart, ChartBaseComponent } from '@tracklab/shared/components';
+import { BaseChart, ChartBaseComponent } from '@tracklab/components';
 
 @Component({
   selector: 'tl-strategy-comparison-chart',
@@ -32,11 +32,11 @@ import { BaseChart, ChartBaseComponent } from '@tracklab/shared/components';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StrategyComparisonChartComponent extends BaseChart {
-  raceSelection = input.required<RaceSelection | undefined>();
+  eventSelection = input.required<EventSelection | undefined>();
   chart = viewChild.required<ChartBaseComponent>('chartBase');
 
   private readonly backendService = inject(BackendService);
-  private readonly store = inject(AnalyticsStore);
+  private readonly store = inject(TracklabStore);
 
   protected selectedYear: string | undefined;
   protected selectedEvent: EventData | undefined;
@@ -80,9 +80,9 @@ export class StrategyComparisonChartComponent extends BaseChart {
   constructor() {
     super();
     effect(() => {
-      const raceSelection = this.raceSelection();
-      if (raceSelection) {
-        this.loadData(raceSelection);
+      const eventSelection = this.eventSelection();
+      if (eventSelection) {
+        this.loadData(eventSelection);
       }
     });
   }
@@ -91,7 +91,7 @@ export class StrategyComparisonChartComponent extends BaseChart {
    * Effect to load the strategy data, once all inputs have been selected
    * @protected
    */
-  protected loadData(selectedRace: RaceSelection) {
+  protected loadData(selectedRace: EventSelection) {
     this.selectedYear = selectedRace.year;
     this.selectedEvent = selectedRace.event;
     this.selectedSession = selectedRace.session;

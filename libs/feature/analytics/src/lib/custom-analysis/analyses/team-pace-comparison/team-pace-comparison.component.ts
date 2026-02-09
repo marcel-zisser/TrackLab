@@ -6,7 +6,7 @@ import {
   signal,
 } from '@angular/core';
 import { BackendService } from '@tracklab/services';
-import { EventData, Lap, LapsResponse, RaceSelection } from '@tracklab/models';
+import { EventData, Lap, LapsResponse, EventSelection } from '@tracklab/models';
 import { first } from 'rxjs';
 import * as echarts from 'echarts/core';
 import 'echarts/extension/dataTool';
@@ -18,7 +18,7 @@ import {
   AnalysisBaseComponent,
   SourceSelectionComponent,
 } from '../../analysis-base';
-import { ChartBaseComponent } from '@tracklab/shared/components';
+import { ChartBaseComponent } from '@tracklab/components';
 
 const prepareBoxplotData = (echarts as any).dataTool.prepareBoxplotData;
 
@@ -79,7 +79,7 @@ export class TeamPaceComparisonComponent {
    * Effect to load the team pace data
    * @protected
    */
-  protected loadPaceData(selectedRace: RaceSelection) {
+  protected loadPaceData(selectedRace: EventSelection) {
     if (selectedRace.year && selectedRace.event) {
       this.selectedYear = selectedRace.year;
       this.selectedEvent = selectedRace.event;

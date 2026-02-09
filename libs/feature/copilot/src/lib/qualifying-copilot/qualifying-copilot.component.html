@@ -1,1 +1,60 @@
-<p>qualifying-copilot works!</p>
+<div class="flex flex-col gap-4">
+  <div
+    class="flex flex-row items-center w-full gap-8 p-4 bg-white dark:bg-surface-900 rounded shadow"
+  >
+    <div>
+      <span>Year: </span>
+      <p-select [options]="years" [ngModel]="year().toString()" (onChange)="selectYear($event)"></p-select>
+    </div>
+
+    <div>
+      <span>Event: </span>
+      <p-select
+        [options]="events()"
+        (onChange)="selectEvent($event)"
+      ></p-select>
+    </div>
+  </div>
+  <div
+    class="flex flex-col h-full p-4 bg-white dark:bg-surface-900 rounded shadow"
+  >
+    <p-table [columns]="columns" [value]="rowData()">
+      <ng-template #header let-columns>
+        <tr>
+          @for (col of columns; track col) {
+            <th>
+              {{ col.header }}
+            </th>
+          }
+        </tr>
+      </ng-template>
+      <ng-template #body let-rowData let-columns="columns">
+        <tr>
+          @for (col of columns; track col) {
+            @if (
+              col.field === 'laptime' ||
+              col.field === 's1Time' ||
+              col.field === 's2Time' ||
+              col.field === 's3Time'
+            ) {
+              <td>
+                <div
+                  class="p-1 rounded-lg"
+                  [ngClass]="{
+                    fastest: rowData[col.field] === fastest().get(col.field),
+                  }"
+                >
+                  {{ rowData[col.field] }}
+                </div>
+              </td>
+            } @else {
+              <td>
+                {{ rowData[col.field] }}
+              </td>
+            }
+          }
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

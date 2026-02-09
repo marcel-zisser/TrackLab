@@ -20,10 +20,11 @@
       "@tracklab/dashboard": ["libs/feature/dashboard/src/index.ts"],
       "@tracklab/models": ["libs/shared/models/src/index.ts"],
       "@tracklab/services": ["libs/shared/services/src/index.ts"],
-      "@tracklab/shared/components": ["libs/shared/components/src/index.ts"],
+      "@tracklab/components": ["libs/shared/components/src/index.ts"],
       "@tracklab/user": ["libs/feature/user/src/index.ts"],
-      "@tracklab/util": ["libs/shared/util/src/index.ts"]
-    },
+      "@tracklab/util": ["libs/shared/util/src/index.ts"],
+      "@tracklab/store": ["libs/shared/store/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"],
   "include": ["init-db/init-db.ts"]

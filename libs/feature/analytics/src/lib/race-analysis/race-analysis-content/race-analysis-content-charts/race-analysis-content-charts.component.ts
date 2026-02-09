@@ -4,7 +4,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { AnalyticsStore } from '../../../store';
+import { TracklabStore } from '../../../../../../../shared/store/src/lib';
 import {
   LeaderGapBarChartComponent,
   LeaderGapLineChartComponent,
@@ -18,7 +18,7 @@ import { millisecondsToTimingString } from '@tracklab/util';
 import { FormsModule } from '@angular/forms';
 import { Sector, SelectionOption } from '@tracklab/models';
 import { RaceAnalysisChartTileComponent } from './race-analysis-chart-tile/race-analysis-chart-tile.component';
-import { ChartTitleDirective } from '@tracklab/shared/components';
+import { ChartTitleDirective } from '@tracklab/components';
 
 @Component({
   selector: 'tl-race-analysis-content-charts',
@@ -39,9 +39,9 @@ import { ChartTitleDirective } from '@tracklab/shared/components';
   ],
 })
 export class RaceAnalysisContentChartsComponent {
-  private readonly store = inject(AnalyticsStore);
+  private readonly store = inject(TracklabStore);
 
-  protected readonly raceSelection = this.store.raceSelection;
+  protected readonly eventSelection = this.store.eventSelection;
   protected readonly millisecondsToTimingString = millisecondsToTimingString;
 
   protected readonly sectors: SelectionOption<string, Sector>[] = [

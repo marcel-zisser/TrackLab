@@ -7,9 +7,9 @@ import {
 } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Button } from 'primeng/button';
-import { FlagPipe, WeekendFormatPipe } from '@tracklab/shared/components';
+import { FlagPipe, WeekendFormatPipe } from '@tracklab/components';
 import { EventData } from '@tracklab/models';
-import { AnalyticsStore } from '../../../store';
+import { TracklabStore } from '../../../../../../../shared/store/src/lib';
 
 @Component({
   selector: 'tl-race-analysis-content-header',
@@ -27,7 +27,7 @@ import { AnalyticsStore } from '../../../store';
 export class RaceAnalysisContentHeaderComponent {
   race = input.required<EventData>();
 
-  private readonly store = inject(AnalyticsStore);
+  private readonly store = inject(TracklabStore);
 
   protected selectedSession: Signal<string | undefined> = this.store.session;
 

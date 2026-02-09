@@ -1,4 +1,4 @@
-@if (raceSelection()) {
+@if (eventSelection()) {
   <div class="grid grid-cols-2 gap-2">
 
     <tl-race-analysis-chart-tile [title]="'Delta to Winner'">
@@ -7,7 +7,7 @@
         chart
         class="h-full"
         [tlChartTitle]="false"
-        [raceSelection]="raceSelection()"
+        [eventSelection]="eventSelection()"
       ></tl-leader-gap-bar-chart>
     </tl-race-analysis-chart-tile>
 
@@ -31,7 +31,7 @@
           #chart
           class="h-full"
           [tlChartTitle]="false"
-          [raceSelection]="raceSelection()"
+          [eventSelection]="eventSelection()"
           [sector]="sector()"
           (fastestSectorTime)="fastestSectorTime.set($event)"
         ></tl-sector-comparison-chart>
@@ -45,7 +45,7 @@
         chart
         class="h-full"
         [tlChartTitle]="false"
-        [raceSelection]="raceSelection()">
+        [eventSelection]="eventSelection()">
       </tl-position-changes-chart>
     </tl-race-analysis-chart-tile>
 
@@ -54,7 +54,7 @@
                                     #chart
                                     class="h-full"
                                     [tlChartTitle]="false"
-                                    [raceSelection]="raceSelection()">
+                                    [eventSelection]="eventSelection()">
       </tl-strategy-comparison-chart>
     </tl-race-analysis-chart-tile>
 
@@ -64,7 +64,7 @@
         chart
         class="h-full"
         [tlChartTitle]="false"
-        [raceSelection]="raceSelection()"
+        [eventSelection]="eventSelection()"
       ></tl-wdc-contenders-chart>
     </tl-race-analysis-chart-tile>
 
@@ -74,7 +74,7 @@
         chart
         class="h-full"
         [tlChartTitle]="false"
-        [raceSelection]="raceSelection()">
+        [eventSelection]="eventSelection()">
       </tl-leader-gap-line-chart>
     </tl-race-analysis-chart-tile>
   </div>

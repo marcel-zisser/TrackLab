@@ -13,7 +13,7 @@ import { HttpParams } from '@angular/common/http';
 import { Circuit } from '@tracklab/models';
 import { BackendService } from '@tracklab/services';
 import { first } from 'rxjs';
-import { CountdownComponent } from '@tracklab/shared/components';
+import { CountdownComponent } from '@tracklab/components';
 
 @Component({
   selector: 'tl-season-progress',

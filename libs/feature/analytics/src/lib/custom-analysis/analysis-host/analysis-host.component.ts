@@ -6,7 +6,7 @@ import {
   Type,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ConstructionComponent } from '@tracklab/shared/components';
+import { ConstructionComponent } from '@tracklab/components';
 import { NgComponentOutlet } from '@angular/common';
 import { PositionChangesComponent } from '../analyses/position-changes/position-changes.component';
 import {

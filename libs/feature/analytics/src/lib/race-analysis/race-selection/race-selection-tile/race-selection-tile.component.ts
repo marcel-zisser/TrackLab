@@ -8,9 +8,9 @@ import {
 } from '@angular/core';
 import { EventData } from '@tracklab/models';
 import { PrimeIcons } from 'primeng/api';
-import { FlagPipe } from '@tracklab/shared/components';
+import { FlagPipe } from '@tracklab/components';
 import { NgClass, NgOptimizedImage } from '@angular/common';
-import { AnalyticsStore } from '../../../store';
+import { TracklabStore } from '@tracklab/store';
 
 @Component({
   selector: 'tl-race-selection-tile',
@@ -19,10 +19,10 @@ import { AnalyticsStore } from '../../../store';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FlagPipe, NgOptimizedImage, NgClass],
 })
-export class RaceSelectionTileComponent {
+export class EventSelectionTileComponent {
   raceInput = input.required<EventData>();
 
-  private store = inject(AnalyticsStore);
+  private store = inject(TracklabStore);
 
   protected readonly PrimeIcons = PrimeIcons;
 

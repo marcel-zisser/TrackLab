@@ -5,7 +5,7 @@ import {
   withMethods,
   withState,
 } from '@ngrx/signals';
-import { ColorResponse, EventData, RaceSelection } from '@tracklab/models';
+import { ColorResponse, EventData, EventSelection } from '@tracklab/models';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { distinctUntilChanged, filter, pipe, switchMap } from 'rxjs';
 import { inject } from '@angular/core';
@@ -28,16 +28,16 @@ const initialState: AnalyticsState = {
   colors: undefined,
 };
 
-export const AnalyticsStore = signalStore(
+export const TracklabStore = signalStore(
   withState<AnalyticsState>(initialState),
   withComputed(({ year, race, session }) => ({
-    raceSelection: (): RaceSelection | undefined => {
+    eventSelection: (): EventSelection | undefined => {
       if (year() && race() && session()) {
         return {
           year: `${year()}`,
           event: race(),
           session: session(),
-        } satisfies RaceSelection;
+        } satisfies EventSelection;
       } else {
         return undefined;
       }
@@ -49,14 +49,14 @@ export const AnalyticsStore = signalStore(
       patchState(store, () => ({ race: undefined }));
       patchState(store, () => ({ session: undefined }));
     },
-    updateRace(event: EventData): void {
+    updateEvent(event: EventData): void {
       patchState(store, () => ({ race: event }));
       patchState(store, () => ({ session: undefined }));
     },
     updateSession(session: string): void {
       patchState(store, () => ({ session: session }));
     },
-    updateRaceSelection(selection: RaceSelection): void {
+    updateEventSelection(selection: EventSelection): void {
       patchState(store, () => ({
         year: Number(selection.year),
         race: selection.event,
@@ -78,14 +78,14 @@ export const AnalyticsStore = signalStore(
         }),
       ),
     ),
-    loadColors: rxMethod<RaceSelection | undefined>(
+    loadColors: rxMethod<EventSelection | undefined>(
       pipe(
-        filter((raceSelection) => !!raceSelection),
+        filter((eventSelection) => !!eventSelection),
         distinctUntilChanged(),
-        switchMap((raceSelection) => {
+        switchMap((eventSelection) => {
           return backendService
             .doGet<ColorResponse>(
-              `analytics/colors?year=${raceSelection.year}&round=${raceSelection.event?.roundNumber}&session=${raceSelection.session}`,
+              `analytics/colors?year=${eventSelection.year}&round=${eventSelection.event?.roundNumber}&session=${eventSelection.session}`,
             )
             .pipe(
               tapResponse({

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { RaceSelection } from '@tracklab/models';
+import { EventSelection } from '@tracklab/models';
 import { FormsModule } from '@angular/forms';
 import { AnalysisBaseComponent, SourceSelectionComponent } from '../../analysis-base';
 import { PositionChangesChartComponent } from '../../../charts';
@@ -18,7 +18,7 @@ import { PositionChangesChartComponent } from '../../../charts';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PositionChangesComponent {
-  protected readonly raceSelection = signal<RaceSelection | undefined>(
+  protected readonly eventSelection = signal<EventSelection | undefined>(
     undefined,
   );
 
@@ -26,7 +26,7 @@ export class PositionChangesComponent {
    * Effect to load the position data for a given race
    * @protected
    */
-  protected loadPositionData(selectedRace: RaceSelection) {
-    this.raceSelection.set(selectedRace);
+  protected loadPositionData(selectedRace: EventSelection) {
+    this.eventSelection.set(selectedRace);
   }
 }

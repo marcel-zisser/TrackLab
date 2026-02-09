@@ -15,7 +15,7 @@ import {
   Duration,
   Lap,
   LapsResponse,
-  RaceSelection,
+  EventSelection,
   Sector,
 } from '@tracklab/models';
 import { first } from 'rxjs';
@@ -24,8 +24,8 @@ import {
   convertToMilliseconds,
   millisecondsToTimingString,
 } from '@tracklab/util';
-import { AnalyticsStore } from '../../store';
-import { BaseChart, ChartBaseComponent } from '@tracklab/shared/components';
+import { TracklabStore } from '@tracklab/store';
+import { BaseChart, ChartBaseComponent } from '@tracklab/components';
 
 @Component({
   selector: 'tl-sector-comparison-chart',
@@ -38,14 +38,14 @@ import { BaseChart, ChartBaseComponent } from '@tracklab/shared/components';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectorComparisonChartComponent extends BaseChart {
-  raceSelection = input.required<RaceSelection | undefined>();
+  eventSelection = input.required<EventSelection | undefined>();
   sector = input.required<Sector | undefined>();
   fastestSectorTime = output<number | undefined>();
 
   chart = viewChild.required<ChartBaseComponent>('chartBase');
 
   private readonly backendService = inject(BackendService);
-  private readonly store = inject(AnalyticsStore);
+  private readonly store = inject(TracklabStore);
 
   protected readonly laps = signal<Lap[] | undefined>(undefined);
 
@@ -115,9 +115,9 @@ export class SectorComparisonChartComponent extends BaseChart {
   constructor() {
     super();
     effect(() => {
-      const raceSelection = this.raceSelection();
-      if (raceSelection) {
-        this.loadData(raceSelection);
+      const eventSelection = this.eventSelection();
+      if (eventSelection) {
+        this.loadData(eventSelection);
       }
     });
   }
@@ -126,7 +126,7 @@ export class SectorComparisonChartComponent extends BaseChart {
    * Effect to load the position data for a given race
    * @protected
    */
-  protected loadData(selectedRace: RaceSelection) {
+  protected loadData(selectedRace: EventSelection) {
     if (selectedRace.year && selectedRace.event) {
       this.laps.set(undefined);
 

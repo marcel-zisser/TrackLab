@@ -1,7 +1,7 @@
 <tl-analysis-base class="base">
   <div chart class="chart-container">
-    @if (raceSelection()) {
-      <tl-position-changes-chart [raceSelection]="raceSelection()">
+    @if (eventSelection()) {
+      <tl-position-changes-chart [eventSelection]="eventSelection()">
       </tl-position-changes-chart>
     } @else {
       <div class="flex-1 flex flex-col justify-center items-center h-full w-full">
@@ -15,7 +15,7 @@
     <tl-source-selection
       [withSessionSelection]="false"
       [withDriverSelection]="false"
-      (raceSelection)="loadPositionData($event)"
+      (eventSelection)="loadPositionData($event)"
     ></tl-source-selection>
   </div>
 

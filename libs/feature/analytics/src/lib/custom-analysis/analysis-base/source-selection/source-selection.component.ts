@@ -15,7 +15,7 @@ import { FloatLabel } from 'primeng/floatlabel';
 import { Select } from 'primeng/select';
 import {
   EventData,
-  RaceSelection,
+  EventSelection,
   SelectionOption,
   SourceSelectionConfig,
 } from '@tracklab/models';
@@ -25,8 +25,8 @@ import { Button } from 'primeng/button';
 import { PrimeIcons } from 'primeng/api';
 import { MultiSelect } from 'primeng/multiselect';
 import { SourceSelectionService, AuthenticationService } from '@tracklab/services';
-import { AnalyticsStore } from '../../../store';
-import { CreateCollectionItemDialogComponent } from '@tracklab/shared/components';
+import { TracklabStore } from '../../../../../../../shared/store/src/lib';
+import { CreateCollectionItemDialogComponent } from '@tracklab/components';
 import { firstValueFrom } from 'rxjs';
 import { DialogService } from 'primeng/dynamicdialog';
 
@@ -43,12 +43,12 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
   withDriverSelection = input<boolean>(true);
   driverSelectionType = input<'single' | 'double' | 'multiple'>('single');
 
-  raceSelection = output<RaceSelection>();
+  eventSelection = output<EventSelection>();
 
   private readonly sourceSelectionService = inject(SourceSelectionService);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly authenticationService = inject(AuthenticationService);
-  private readonly store = inject(AnalyticsStore);
+  private readonly store = inject(TracklabStore);
   private readonly dialogService = inject(DialogService);
 
   private initialConfig: SourceSelectionConfig | undefined;
@@ -112,7 +112,7 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
   constructor() {
     effect(() => this.createEventScheduleEffect());
     effect(() => this.loadDriversEffect());
-    effect(() => this.emitRaceSelectionEffect());
+    effect(() => this.emitEventSelectionEffect());
   }
 
   ngOnInit() {
@@ -254,15 +254,15 @@ export class SourceSelectionComponent implements OnInit, AfterViewInit {
    * Effect to emit the selected values once everything has been selected
    * @private
    */
-  private emitRaceSelectionEffect() {
+  private emitEventSelectionEffect() {
     const year = this.year();
     const event = this.event();
     const session = this.session();
     const drivers: string[] = this.getSelectedDrivers();
 
     if (year && this.isSourceSelectionValid()) {
-      this.raceSelection.emit({ year, event, session, drivers });
-      this.store.updateRaceSelection({ year, event, session, drivers });
+      this.eventSelection.emit({ year, event, session, drivers });
+      this.store.updateEventSelection({ year, event, session, drivers });
     }
   }
 

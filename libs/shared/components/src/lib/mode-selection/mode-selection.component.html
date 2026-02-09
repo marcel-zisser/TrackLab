@@ -1,9 +1,8 @@
-<div class="h-full w-full flex flex-col md:flex-row gap-8 p-6">
+<div class="h-full w-full flex flex-col md:flex-row gap-8">
   <button
     class="flex flex-col gap-8 w-full justify-center items-center p-8
            bg-primary rounded-lg
            hover:cursor-pointer hover:scale-101 transition-transform duration-150"
-    [routerLink]="'race'"
   >
     <ng-content select="[left]"></ng-content>
       
@@ -12,7 +11,6 @@
     class="flex flex-col gap-8 w-full justify-center items-center p-8
            bg-primary rounded-lg
            hover:cursor-pointer hover:scale-101 transition-transform duration-150"
-    [routerLink]="'custom'"
   >
     <ng-content select="[right]"></ng-content>
   </button>

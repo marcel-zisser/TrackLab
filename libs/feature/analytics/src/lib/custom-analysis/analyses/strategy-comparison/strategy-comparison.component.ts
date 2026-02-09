@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { RaceSelection } from '@tracklab/models';
+import { EventSelection } from '@tracklab/models';
 import {
   AnalysisBaseComponent,
   SourceSelectionComponent,
@@ -18,7 +18,7 @@ import { StrategyComparisonChartComponent } from '../../../charts';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StrategyComparisonComponent {
-  protected readonly raceSelection = signal<RaceSelection | undefined>(
+  protected readonly eventSelection = signal<EventSelection | undefined>(
     undefined,
   );
 
@@ -26,7 +26,7 @@ export class StrategyComparisonComponent {
    * Effect to load the strategy data, once all inputs have been selected
    * @protected
    */
-  protected loadStrategyData(selectedRace: RaceSelection) {
-    this.raceSelection.set(selectedRace);
+  protected loadStrategyData(selectedRace: EventSelection) {
+    this.eventSelection.set(selectedRace);
   }
 }
