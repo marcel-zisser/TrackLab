@@ -58,6 +58,7 @@ Thumbs.db
 /minio_data/
 /todo.md
 **/__pycache__/
+.cache
 
 vite.config.*.timestamp*
 vitest.config.*.timestamp*
