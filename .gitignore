@@ -59,6 +59,7 @@ Thumbs.db
 /todo.md
 **/__pycache__/
 .cache
+reports
 
 vite.config.*.timestamp*
 vitest.config.*.timestamp*
