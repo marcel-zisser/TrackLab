@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "start": "nx run-many --target=serve --projects=tracklab,tracklab-api,fast_f1_service"
+    "start": "nx run-many --target=serve --projects=tracklab,tracklab-api,tracklab-backend"
   },
   "private": true,
   "dependencies": {

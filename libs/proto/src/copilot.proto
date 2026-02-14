@@ -3,10 +3,15 @@ syntax = "proto3";
 package at.tracklab;
 
 import "google/protobuf/empty.proto";
+import "types.proto";
 
 service LiveData {
   rpc StreamData (google.protobuf.Empty) returns (stream DataPoint) {};
   rpc SetStreamSpeed (SetStreamSpeedRequest) returns (google.protobuf.Empty) {};
+}
+
+service Copilot {
+  rpc PredictQualifyingSegment (QualifyingRequest) returns (QualifyingResult) {};
 }
 
 message SetStreamSpeedRequest {
@@ -16,4 +21,14 @@ message SetStreamSpeedRequest {
 message DataPoint {
   double value = 1;
   int64 timestamp = 2;
+}
+
+message QualifyingRequest {
+  int32 year = 1;
+  int32 round = 2;
+  string segment = 3;
+}
+
+message QualifyingResult {
+  repeated Lap prediction = 1;
 }

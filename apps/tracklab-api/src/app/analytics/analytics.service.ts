@@ -14,7 +14,7 @@ import { AnalyticsClient, LapsResponse } from '../../generated/analytics';
 import { GrpcService } from '../grpc/grpc.service';
 
 @Injectable()
-export class AnalyticsService implements OnModuleInit {
+export class AnalyticsService {
   private readonly logger = new Logger(AnalyticsService.name);
 
   private sessionResultsService: SessionResultsClient;
@@ -27,9 +27,7 @@ export class AnalyticsService implements OnModuleInit {
     Map<number, Map<string, Promise<LapsResponse>>>
   >();
 
-  constructor(@Inject() private grpcService: GrpcService) {}
-
-  onModuleInit() {
+  constructor(@Inject() private grpcService: GrpcService) {
     this.sessionResultsService =
       this.grpcService.getService<SessionResultsClient>('SessionResults');
     this.eventScheduleService =
@@ -337,7 +335,7 @@ export class AnalyticsService implements OnModuleInit {
           year: year,
           round: round,
           session: session,
-          threshold: null,
+          threshold: undefined,
         }),
       );
       if (!this.raceCache.has(year)) {

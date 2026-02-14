@@ -23,6 +23,6 @@ import {
 export class RaceAnalysisContentComponent {
   private readonly store = inject(TracklabStore);
 
-  protected selectedRace: Signal<EventData | undefined> = this.store.race;
+  protected selectedRace: Signal<EventData | undefined> = this.store.event;
   protected selectedSession: Signal<string | undefined> = this.store.session;
 }

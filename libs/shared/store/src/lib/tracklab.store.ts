@@ -14,7 +14,7 @@ import { tapResponse } from '@ngrx/operators';
 
 type AnalyticsState = {
   year: number;
-  race: EventData | undefined;
+  event: EventData | undefined;
   session: string | undefined;
   schedule: EventData[] | undefined;
   colors: ColorResponse | undefined;
@@ -22,7 +22,7 @@ type AnalyticsState = {
 
 const initialState: AnalyticsState = {
   year: new Date().getFullYear(),
-  race: undefined,
+  event: undefined,
   session: undefined,
   schedule: undefined,
   colors: undefined,
@@ -30,7 +30,7 @@ const initialState: AnalyticsState = {
 
 export const TracklabStore = signalStore(
   withState<AnalyticsState>(initialState),
-  withComputed(({ year, race, session }) => ({
+  withComputed(({ year, event: race, session }) => ({
     eventSelection: (): EventSelection | undefined => {
       if (year() && race() && session()) {
         return {
@@ -46,11 +46,11 @@ export const TracklabStore = signalStore(
   withMethods((store, backendService = inject(BackendService)) => ({
     updateYear(year: number): void {
       patchState(store, () => ({ year: year }));
-      patchState(store, () => ({ race: undefined }));
+      patchState(store, () => ({ event: undefined }));
       patchState(store, () => ({ session: undefined }));
     },
-    updateEvent(event: EventData): void {
-      patchState(store, () => ({ race: event }));
+    updateEvent(event: EventData | undefined): void {
+      patchState(store, () => ({ event: event }));
       patchState(store, () => ({ session: undefined }));
     },
     updateSession(session: string): void {

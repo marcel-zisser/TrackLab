@@ -98,7 +98,7 @@ npx nx serve tracklab-api
 ```
 
 ```sh
-npx nx serve fast_f1_service
+npx nx serve tracklab-backend
 ```
 
 ### Development Database

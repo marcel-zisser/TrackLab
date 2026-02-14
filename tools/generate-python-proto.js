@@ -3,7 +3,7 @@ const glob = require('glob');
 const fs = require('fs');
 
 const protoFiles = glob.sync('libs/proto/src/**/*.proto');
-const outDir = 'apps/fast_f1_service/src/generated';
+const outDir = 'apps/tracklab-backend/src/__generated__';
 const protoPath = 'libs/proto/src';
 
 // Ensure the directory exists

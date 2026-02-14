@@ -44,15 +44,17 @@ Thumbs.db
 .angular
 
 # Ignore everything inside any 'generated' folder
+**/__generated__/
+# Ignore everything inside any 'generated' folder
 **/generated/
 
 # But do not ignore __init__.py files in those folders
-!**/generated/__init__.py
+!**/__generated__/__init__.py
 
 .env
 .cursor/rules/nx-rules.mdc
 .github/instructions/nx.instructions.md
-/apps/fast_f1_service/src/.cache/
+/apps/tracklab-backend/src/.cache/
 /minio_data/
 /todo.md
 **/__pycache__/

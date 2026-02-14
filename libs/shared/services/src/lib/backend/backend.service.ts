@@ -5,7 +5,8 @@ import {
   httpResource,
   HttpResourceRef,
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, of } from 'rxjs';
+import { MessageService } from 'primeng/api';
 
 export const API_URL_TOKEN = new InjectionToken<string>('apiUrl');
 
@@ -16,6 +17,7 @@ export class BackendService {
   apiUrl = inject(API_URL_TOKEN);
 
   private readonly httpClient = inject(HttpClient);
+  private readonly messageService = inject(MessageService);
 
   /**
    * Executes a GET request to the backend API to a specific endpoint
@@ -29,7 +31,14 @@ export class BackendService {
   ): Observable<T | undefined> {
     return this.httpClient.get<T>(this.apiUrl + url, {
       params: params,
-    });
+    }).pipe(catchError(() => {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Something went wrong. Please try again.',
+      });
+      return of(undefined)}
+    ));
   }
 
   /**

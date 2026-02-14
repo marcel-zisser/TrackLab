@@ -1,0 +1,7 @@
+{
+    "python.testing.pytestArgs": [
+        "apps/tracklab-backend/tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
+}

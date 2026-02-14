@@ -26,7 +26,7 @@ export class EventSelectionTileComponent {
 
   protected readonly PrimeIcons = PrimeIcons;
 
-  protected selectedRace: Signal<EventData | undefined> = this.store.race;
+  protected selectedRace: Signal<EventData | undefined> = this.store.event;
   protected isFutureRace = computed(
     () => new Date(this.raceInput().date) > new Date(),
   );

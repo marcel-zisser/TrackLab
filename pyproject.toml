@@ -1,12 +1,12 @@
 [project]
 name = "nx-workspace"
 version = "1.0.0"
-dependencies = [ "fast_f1_service" ]
+dependencies = [ "tracklab" ]
 
 [tool.uv.workspace]
-members = [ "apps/fast_f1_service" ]
+members = [ "apps/tracklab-backend" ]
 
-[tool.uv.sources.fast_f1_service]
+[tool.uv.sources.tracklab]
 workspace = true
 
 [dependency-groups]
