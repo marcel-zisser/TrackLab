@@ -33,57 +33,16 @@
     </div>
   </div>
 
-  <div
-    class="flex flex-col min-h-0 flex-1 p-4 bg-white dark:bg-surface-900 rounded shadow"
-  >
-    @if (selection()) {
-      <p-table
-        class="min-h-0"
-        [columns]="columns"
-        [value]="rowData()"
-        [sortField]="'laptime'"
-        [scrollable]="true"
-        [loading]="!rowData().length"
-        scrollHeight="flex"
-      >
-        <ng-template #header let-columns>
-          <tr>
-            @for (col of columns; track col) {
-              <th>
-                {{ col.header }}
-              </th>
-            }
-          </tr>
-        </ng-template>
-        <ng-template #body let-rowData let-columns="columns">
-          <tr>
-            @for (col of columns; track col) {
-              @if (
-                col.field === 'gap' ||
-                col.field === 'laptime' ||
-                col.field === 's1Time' ||
-                col.field === 's2Time' ||
-                col.field === 's3Time'
-              ) {
-                <td>
-                  <div
-                    class="p-1 rounded-lg"
-                    [ngClass]="{
-                      fastest: rowData[col.field] === fastest().get(col.field),
-                    }"
-                  >
-                    {{ rowData[col.field] | laptime }}
-                  </div>
-                </td>
-              } @else {
-                <td>
-                  {{ rowData[col.field] }}
-                </td>
-              }
-            }
-          </tr>
-        </ng-template>
-      </p-table>
-    }
+  <div class="flex flex-row gap-4 min-h-0">
+    <div class="flex flex-col min-h-0 flex-2 p-4 bg-white dark:bg-surface-900 rounded shadow">
+      @if (selection()) {
+        <tl-qualifying-table class="min-h-0" [rowData]="rowData()"></tl-qualifying-table>
+      }
+    </div>
+
+    <div class="flex flex-col flex-1 p-4 bg-white dark:bg-surface-900 rounded shadow">
+    
+    </div>
   </div>
+
 </div>

@@ -1,7 +1,8 @@
+import logging
 import fastf1
 
 from tracklab.analytics.analytics_helpers import map_row_to_lap
-from __generated__.copilot_pb2 import QualifyingRequest, QualifyingResult
+from __generated__.copilot_pb2 import QualifyingRequest, QualifyingResult, TrackEvolutionResponse
 from __generated__ import copilot_pb2_grpc
 
 
@@ -39,4 +40,15 @@ def get_segment_data(request: QualifyingRequest):
 class CopilotServicer(copilot_pb2_grpc.CopilotServicer):
     def PredictQualifyingSegment(self, request, context):
         return QualifyingResult( prediction=get_segment_data(request) )
+    
+    def GetTrackEvolution(self, request, context):
+        event = fastf1.get_event(year=request.year, gp=request.round)
 
+        for i in range(1, 4):
+            try: 
+                practice = event.get_practice(i)
+                practice.load(telemetry=False, laps=True, weather=False, messages=False)
+            except:
+                logging.info(f"Practice {i} not found for {request.round} in {request.year}")
+
+        return TrackEvolutionResponse(trackEvolution=[])

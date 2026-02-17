@@ -60,6 +60,7 @@ Thumbs.db
 **/__pycache__/
 .cache
 reports
+.coverage
 
 vite.config.*.timestamp*
 vitest.config.*.timestamp*

@@ -12,6 +12,7 @@ service LiveData {
 
 service Copilot {
   rpc PredictQualifyingSegment (QualifyingRequest) returns (QualifyingResult) {};
+  rpc GetTrackEvolution(QualifyingRequest) returns (TrackEvolutionResponse) {};
 }
 
 message SetStreamSpeedRequest {
@@ -31,4 +32,8 @@ message QualifyingRequest {
 
 message QualifyingResult {
   repeated Lap prediction = 1;
+}
+
+message TrackEvolutionResponse {
+  repeated Duration trackEvolution = 1;
 }
