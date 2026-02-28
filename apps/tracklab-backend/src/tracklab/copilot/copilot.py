@@ -1,9 +1,11 @@
 import logging
 import fastf1
+import pandas as pd
 
 from tracklab.analytics.analytics_helpers import map_row_to_lap
 from __generated__.copilot_pb2 import QualifyingRequest, QualifyingResult, TrackEvolutionResponse
 from __generated__ import copilot_pb2_grpc
+from tracklab.copilot.qualifying.qualifying_predictor import QualifyingPredictor
 
 
 def get_segment_data(request: QualifyingRequest):
@@ -37,8 +39,78 @@ def get_segment_data(request: QualifyingRequest):
             
     return segment_list
 
+
+def get_data_for_prediction(year, round):
+
+    event = fastf1.get_event(year, round)
+    all_session_data = []
+    weather_summary = {}
+
+    # Loop through all practice sessions
+    for sessionName in ['fp1', 'fp2', 'fp3']:
+        try: 
+            session = event.get_session(sessionName)
+        except: 
+            continue
+
+        session.load(telemetry=False, laps=True, weather=True, messages=False)
+        laps = session.laps
+        laps['LapTime'] = pd.to_timedelta(laps['LapTime'])
+
+        laps = laps.groupby('Driver')['LapTime'].min().reset_index()
+        laps['session'] = sessionName
+        weather = session.weather_data
+        
+        weather_summary[f'air_temp_{sessionName}'] = weather['AirTemp'].mean()
+        weather_summary[f'track_temp_{sessionName}'] = weather['TrackTemp'].mean()
+        weather_summary[f'humidity_{sessionName}'] = weather['Humidity'].mean()
+        weather_summary[f'wind_speed_{sessionName}'] = weather['WindSpeed'].mean()
+        weather_summary[f'rainfall_{sessionName}'] = weather['Rainfall'].mean()
+
+        all_session_data.append(laps)
+
+    # Extract data from qualifying segments
+    qualifying = event.get_session('q')
+    qualifying.load(telemetry=False, laps=True, weather=True, messages=False)
+
+    weather = session.weather_data
+    
+    weather_summary[f'air_temp_q'] = weather['AirTemp'].mean()
+    weather_summary[f'track_temp_q'] = weather['TrackTemp'].mean()
+    weather_summary[f'humidity_q'] = weather['Humidity'].mean()
+    weather_summary[f'wind_speed_q'] = weather['WindSpeed'].mean()
+    weather_summary[f'rainfall_q'] = weather['Rainfall'].mean()
+
+    # Combine all sessions
+    final_df = pd.concat(all_session_data, ignore_index=True)
+    final_df = final_df.pivot(index='Driver', columns='session', values='LapTime')
+    final_df['driver'] = final_df.index
+    final_df['track'] = event.Location
+
+    for col_name, value in weather_summary.items():
+        final_df[col_name] = value
+
+    
+    final_df['driver'] = final_df['driver'].astype('category')
+    final_df['track'] = final_df['track'].astype('category')
+
+    final_df['fp1'] = final_df['fp1'].dt.total_seconds()
+    final_df['fp2'] = final_df['fp2'].dt.total_seconds()
+    final_df['fp3'] = final_df['fp3'].dt.total_seconds()
+
+    mean_fp1 = final_df['fp1'].mean()
+    final_df.fillna(value={'fp1': mean_fp1},  inplace=True)
+    final_df['fp2'] = final_df['fp2'].fillna(final_df['fp1'])
+    final_df['fp3'] = final_df['fp3'].fillna(final_df['fp2'])
+
+    return final_df
+
 class CopilotServicer(copilot_pb2_grpc.CopilotServicer):
     def PredictQualifyingSegment(self, request, context):
+        predictor = QualifyingPredictor()
+        data = get_data_for_prediction(request.year, request.round)
+        prediction = predictor.predict_q1(data)
+
         return QualifyingResult( prediction=get_segment_data(request) )
     
     def GetTrackEvolution(self, request, context):
@@ -52,3 +124,7 @@ class CopilotServicer(copilot_pb2_grpc.CopilotServicer):
                 logging.info(f"Practice {i} not found for {request.round} in {request.year}")
 
         return TrackEvolutionResponse(trackEvolution=[])
+
+
+test = CopilotServicer()
+test.PredictQualifyingSegment(QualifyingRequest(year=2025, round=1, segment='Q1'), None)

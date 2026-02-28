@@ -27,6 +27,7 @@ dependencies = [
   "grpcio-tools>=1.71.0",
   "protoletariat>=3.3.10",
   "python-dotenv>=1.1.0",
+  "lightgbm"
 ]
 
 
