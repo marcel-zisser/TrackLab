@@ -11,7 +11,7 @@ service LiveData {
 }
 
 service Copilot {
-  rpc PredictQualifyingSegment (QualifyingRequest) returns (QualifyingResult) {};
+  rpc PredictQualifyingSegment (QualifyingRequest) returns (QualifyingPrediction) {};
   rpc GetTrackEvolution(QualifyingRequest) returns (TrackEvolutionResponse) {};
 }
 
@@ -30,8 +30,8 @@ message QualifyingRequest {
   string segment = 3;
 }
 
-message QualifyingResult {
-  repeated Lap prediction = 1;
+message QualifyingPrediction {
+  map<string, float> predictions = 1;
 }
 
 message TrackEvolutionResponse {

@@ -3,7 +3,7 @@ import fastf1
 import pandas as pd
 
 from tracklab.analytics.analytics_helpers import map_row_to_lap
-from __generated__.copilot_pb2 import QualifyingRequest, QualifyingResult, TrackEvolutionResponse
+from __generated__.copilot_pb2 import QualifyingRequest, QualifyingPrediction, TrackEvolutionResponse
 from __generated__ import copilot_pb2_grpc
 from tracklab.copilot.qualifying.qualifying_predictor import QualifyingPredictor
 
@@ -109,9 +109,9 @@ class CopilotServicer(copilot_pb2_grpc.CopilotServicer):
     def PredictQualifyingSegment(self, request, context):
         predictor = QualifyingPredictor()
         data = get_data_for_prediction(request.year, request.round)
-        prediction = predictor.predict_q1(data)
+        predictions = predictor.predict_q1(data)
 
-        return QualifyingResult( prediction=get_segment_data(request) )
+        return QualifyingPrediction(predictions=predictions)
     
     def GetTrackEvolution(self, request, context):
         event = fastf1.get_event(year=request.year, gp=request.round)
@@ -124,7 +124,4 @@ class CopilotServicer(copilot_pb2_grpc.CopilotServicer):
                 logging.info(f"Practice {i} not found for {request.round} in {request.year}")
 
         return TrackEvolutionResponse(trackEvolution=[])
-
-
-test = CopilotServicer()
-test.PredictQualifyingSegment(QualifyingRequest(year=2025, round=1, segment='Q1'), None)
+    

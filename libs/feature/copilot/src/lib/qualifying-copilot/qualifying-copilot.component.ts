@@ -66,30 +66,29 @@ export class QualifyingCopilotComponent implements OnInit {
   );
 
   protected readonly rowData = computed<QualifyingRowData[]>(() => {
-    const sortedLaps = this.qualifyingResource
-      .value()
-      ?.prediction.sort(
-        (a, b) => this.durationToNumber(a.lapTime) - this.durationToNumber(b.lapTime),
-      );
-    const fastestLap = sortedLaps?.[0];
+    const predictions = this.qualifyingResource.value()?.predictions;
+    const drivers = Object.keys(predictions ?? {})
 
-    return (
-      sortedLaps?.map((lap, index) => {
-        return {
-          position: index + 1,
-          driver: lap.driver,
-          team: lap.team,
-          gap:
-            this.durationToNumber(lap.lapTime) -
-            this.durationToNumber(fastestLap?.lapTime),
-          laptime: this.durationToNumber(lap.lapTime),
-          s1Time: this.durationToNumber(lap.sector1Time),
-          s2Time: this.durationToNumber(lap.sector2Time),
-          s3Time: this.durationToNumber(lap.sector3Time),
-          tyre: lap.tireCompound,
-        } satisfies QualifyingRowData;
-      }) ?? []
+    const laps: QualifyingRowData[] = [];
+    drivers?.forEach((driver) => 
+      laps.push(
+        {
+          position: 0,
+          driver: driver,
+          team: '',
+          gap: 0,
+          laptime: predictions?.[driver] * 1000,
+          s1Time: 0,
+          s2Time: 0,
+          s3Time: 0,
+          tyre: 'SOFT'
+        } satisfies QualifyingRowData
+      )
     );
+
+
+   
+    return laps;
   });
 
   constructor() {

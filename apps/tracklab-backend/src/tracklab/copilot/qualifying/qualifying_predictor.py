@@ -7,9 +7,9 @@ class QualifyingPredictor:
         # Load the model
 
         print(Path.cwd())
-        self.q1_model = lgb.Booster(model_file="apps/tracklab-backend/src/tracklab/copilot/models/q1_predictor.txt")
-        self.q2_model = lgb.Booster(model_file="apps/tracklab-backend/src/tracklab/copilot/models/q1_predictor.txt")
-        self.q3_model = lgb.Booster(model_file="apps/tracklab-backend/src/tracklab/copilot/models/q1_predictor.txt")
+        self.q1_model = lgb.Booster(model_file="tracklab/copilot/models/q1_predictor.txt")
+        self.q2_model = lgb.Booster(model_file="tracklab/copilot/models/q1_predictor.txt")
+        self.q3_model = lgb.Booster(model_file="tracklab/copilot/models/q1_predictor.txt")
     def predict_q1(self, data):
         """
         data dataframe with preprocessed data including everthing until FP3

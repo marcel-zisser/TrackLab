@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CopilotClient, QualifyingResult } from '../../generated/copilot';
+import { CopilotClient, QualifyingPrediction } from '../../generated/copilot';
 import { GrpcService } from '../grpc/grpc.service';
 import { Observable } from 'rxjs';
 
@@ -18,7 +18,7 @@ export class CopilotService {
      * @param round the round of the session
      * @param segmnent the qualifying segment
      */
-  getQualifyingPredictions(year: number, round: number, segmnent: string): Observable<QualifyingResult> {
+  getQualifyingPredictions(year: number, round: number, segmnent: string): Observable<QualifyingPrediction> {
     return this.copilotService.predictQualifyingSegment({ year: year, round: round, segment: segmnent});
   }
 }
