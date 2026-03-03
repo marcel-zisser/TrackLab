@@ -9,10 +9,10 @@ export interface QualifyingRowData {
   team: string;
   gap: number;
   laptime: number;
-  s1Time: number;
-  s2Time: number;
-  s3Time: number;
-  tyre: string;
+  s1Time?: number;
+  s2Time?: number;
+  s3Time?: number;
+  tyre?: string;
 }
 
 export type QualifyingTableColumns = keyof QualifyingRowData;
@@ -36,9 +36,9 @@ export class QualifyingTableComponent implements OnInit {
       'laptime',
       this.rowData().sort((a, b) => a.laptime - b.laptime)[0].laptime,
     );
-    fastest.set('s1Time', this.rowData().sort((a, b) => a.s1Time - b.s1Time)[0].s1Time);
-    fastest.set('s2Time', this.rowData().sort((a, b) => a.s2Time - b.s2Time)[0].s2Time);
-    fastest.set('s3Time', this.rowData().sort((a, b) => a.s3Time - b.s3Time)[0].s3Time);
+    // fastest.set('s1Time', this.rowData().sort((a, b) => a.s1Time - b.s1Time)[0].s1Time);
+    // fastest.set('s2Time', this.rowData().sort((a, b) => a.s2Time - b.s2Time)[0].s2Time);
+    // fastest.set('s3Time', this.rowData().sort((a, b) => a.s3Time - b.s3Time)[0].s3Time);
 
     return fastest;
   });
@@ -51,10 +51,10 @@ export class QualifyingTableComponent implements OnInit {
       { field: 'team', header: 'Team' },
       { field: 'gap', header: 'Gap' },
       { field: 'laptime', header: 'Laptime' },
-      { field: 's1Time', header: 'Sector 1' },
-      { field: 's2Time', header: 'Sector 2' },
-      { field: 's3Time', header: 'Sector 3' },
-      { field: 'tyre', header: 'Tyre' },
+      // { field: 's1Time', header: 'Sector 1' },
+      // { field: 's2Time', header: 'Sector 2' },
+      // { field: 's3Time', header: 'Sector 3' },
+      // { field: 'tyre', header: 'Tyre' },
     ];
   }
   

@@ -75,17 +75,22 @@ export class QualifyingCopilotComponent implements OnInit {
         {
           position: 0,
           driver: driver,
-          team: '',
+          team: 'TBD',
           gap: 0,
           laptime: predictions?.[driver] * 1000,
-          s1Time: 0,
-          s2Time: 0,
-          s3Time: 0,
-          tyre: 'SOFT'
+          // s1Time: 0,
+          // s2Time: 0,
+          // s3Time: 0,
+          // tyre: 'SOFT'
         } satisfies QualifyingRowData
       )
     );
 
+    laps.sort((a, b) => a.laptime - b.laptime);
+    laps.forEach((lap, index) => {
+      lap.position = index + 1;
+      lap.gap = lap.laptime - laps[0].laptime;
+    });
 
    
     return laps;
