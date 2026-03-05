@@ -52,6 +52,10 @@ export class AnalyticsService {
       }),
     );
 
+    if (!sessionResults.sessionResults) {
+      return [];
+    }
+
     for (const sessionResult of sessionResults.sessionResults) {
       const mappedResults: DriverResult[] = [];
 

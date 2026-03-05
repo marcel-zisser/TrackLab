@@ -81,10 +81,10 @@ def get_data_for_prediction(year, round, segment):
     final_df['fp2'] = final_df['fp2'].dt.total_seconds()
     final_df['fp3'] = final_df['fp3'].dt.total_seconds()
 
-    if 'q1' in final_df.columns:
+    if 'q2' in final_df.columns:
         final_df['q1'] = final_df['q1'].dt.total_seconds()
 
-    if 'q2' in final_df.columns:
+    if 'q3' in final_df.columns:
         final_df['q2'] = final_df['q2'].dt.total_seconds()
 
     mean_fp1 = final_df['fp1'].mean()

@@ -15,14 +15,14 @@ export class DashboardService {
   private readonly backendService = inject(BackendService);
 
   private eventScheduleResource = this.backendService.doGetResource<EventData[]>(() => 
-    `analytics/event-schedule?year=${new Date().getFullYear() - 1}`
+    `analytics/event-schedule?year=${new Date().getFullYear()}`
   );
   private standingsResource =
     this.backendService.doGetResource<StandingsResponse>(
       () => 'dashboard/standings',
     );
   private developmentResource = this.backendService.doGetResource<RaceResult[]>(
-    () => `analytics/session-results?year=${new Date().getFullYear() - 1}`,
+    () => `analytics/session-results?year=${new Date().getFullYear()}`,
   );
 
   eventSchedule = this.eventScheduleResource.value.asReadonly();
@@ -57,9 +57,11 @@ export class DashboardService {
       });
     });
 
-    return Array.from(standingsMap.values()).sort(
+    const standingsArray = Array.from(standingsMap.values()).sort(
       (standingA, standingB) => standingB.points - standingA.points,
     );
+
+    return standingsArray.length ? standingsArray : undefined;
   });
 
   /**

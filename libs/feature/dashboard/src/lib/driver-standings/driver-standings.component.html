@@ -1,7 +1,9 @@
-@if (data()) {
+@let rows = driverRows();
+
+@if (rows) {
   <p-table
     #table
-    [value]="driverRows()"
+    [value]="rows"
     [columns]="driverColumns"
     [scrollable]="true"
     [size]="'small'"

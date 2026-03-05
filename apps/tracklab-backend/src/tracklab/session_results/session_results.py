@@ -90,7 +90,7 @@ class SessionResultsServicer(results_pb2_grpc.SessionResultsServicer):
     self.current_results = load_season_results(current_year)
 
   def GetSessionResults(self, request, context):
-    response = SessionResultResponse()
+    response = SessionResultResponse(sessionResults=[])
     current_year = datetime.today().year
 
     session_results = self.current_results if request.season == current_year else load_season_results(request.season)

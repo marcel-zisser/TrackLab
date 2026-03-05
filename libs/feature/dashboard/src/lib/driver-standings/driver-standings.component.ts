@@ -1,4 +1,12 @@
-import { Component, computed, HostListener, input, OnInit, signal, viewChild } from '@angular/core';
+import {
+  Component,
+  computed,
+  HostListener,
+  input,
+  OnInit,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { TableModule, TableRowSelectEvent } from 'primeng/table';
 import { Column, DriverInfo, DriverStandingsEntry } from '@tracklab/models';
 import { Popover } from 'primeng/popover';
@@ -6,27 +14,22 @@ import { DriverCardComponent, SkeletonTableComponent } from '@tracklab/component
 
 @Component({
   selector: 'tl-driver-standings',
-  imports: [
-    TableModule,
-    Popover,
-    DriverCardComponent,
-    SkeletonTableComponent,
-  ],
+  imports: [TableModule, Popover, DriverCardComponent, SkeletonTableComponent],
   templateUrl: './driver-standings.component.html',
   styleUrl: './driver-standings.component.css',
 })
 export class DriverStandingsComponent implements OnInit {
-  data = input.required<DriverStandingsEntry[]>();
+  data = input.required<DriverStandingsEntry[] | undefined>();
   protected popover = viewChild<Popover>('op');
 
-  protected driverRows = computed( () =>
-    this.data().map((entry, idx) => ({
+  protected driverRows = computed(() =>
+    this.data()?.map((entry, idx) => ({
       position: idx + 1,
       driver: entry.driver.code,
       team: entry.teams[entry.teams.length - 1].name,
       wins: entry.wins,
       points: entry.points,
-    }))
+    })),
   );
   protected popoverData = signal<DriverInfo | null>(null);
 
@@ -45,7 +48,12 @@ export class DriverStandingsComponent implements OnInit {
   }
 
   displayPopover(event: TableRowSelectEvent) {
-    const entry = this.data()[event.data.position - 1];
+    const entry = this.data()?.[event.data.position - 1];
+
+    if (!entry) {
+      return;
+    }
+
     this.popoverData.set({
       driver: entry.driver,
       team: entry.teams[entry.teams.length - 1],

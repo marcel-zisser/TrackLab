@@ -62,7 +62,7 @@ export class SeasonProgressComponent {
           .set('year', new Date().getFullYear())
           .set('round', this.nextEvent()?.roundNumber ?? '');
         this.backendService
-          .doGet<Circuit>('fast-f1/circuit', params)
+          .doGet<Circuit>('analytics/circuit', params)
           .pipe(first())
           .subscribe((circuit) => {
             this.circuit.set(circuit);
