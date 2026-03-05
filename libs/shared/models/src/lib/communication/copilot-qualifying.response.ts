@@ -1,3 +1,5 @@
+import { QualifyingPrediction } from "../copilot";
+
 export interface CopilotQualifyingResponse {
-    predictions: any;
+    predictions: QualifyingPrediction[];
 }

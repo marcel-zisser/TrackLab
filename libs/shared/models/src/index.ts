@@ -3,3 +3,4 @@ export * from './lib/communication';
 export * from './lib/data-table';
 export * from './lib/authentication';
 export * from './lib/ui';
+export * from './lib/copilot';

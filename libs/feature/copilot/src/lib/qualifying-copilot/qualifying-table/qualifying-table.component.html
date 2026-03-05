@@ -31,7 +31,7 @@
                     class="p-1 rounded-lg"
                     [class.fastest]="rowData[col.field] === fastest().get(col.field)"
                   >
-                    {{ rowData[col.field] | laptime }}
+                    {{ rowData[col.field] | laptime : col.field === 'gap' }}
                   </div>
                 </td>
               } @else {

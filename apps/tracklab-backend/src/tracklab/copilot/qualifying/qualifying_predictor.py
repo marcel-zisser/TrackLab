@@ -1,3 +1,4 @@
+from __generated__.copilot_pb2 import Prediction
 import fastf1
 import lightgbm as lgb
 import pandas as pd
@@ -95,10 +96,10 @@ def get_data_for_prediction(year, round, segment):
 
 
 def map_predictions(data, predicted_seconds):
-    predictions = {}
+    predictions = []
     
     for idx in range(len(predicted_seconds)):
-        predictions[data.index[idx]] = predicted_seconds[idx]
+        predictions.append(Prediction(driver=data.index[idx], team=data.iloc[idx]['team'], time=predicted_seconds[idx]))
 
     return predictions
 

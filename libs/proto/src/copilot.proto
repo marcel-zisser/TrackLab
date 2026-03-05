@@ -30,8 +30,14 @@ message QualifyingRequest {
   string segment = 3;
 }
 
+message Prediction {
+  string driver = 1;
+  string team = 2;
+  float time = 3;
+}
+
 message QualifyingPrediction {
-  map<string, float> predictions = 1;
+  repeated Prediction predictions = 1;
 }
 
 message TrackEvolutionResponse {
