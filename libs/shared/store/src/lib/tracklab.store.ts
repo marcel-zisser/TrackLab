@@ -16,6 +16,7 @@ type AnalyticsState = {
   year: number;
   event: EventData | undefined;
   session: string | undefined;
+  segment: string | undefined;
   schedule: EventData[] | undefined;
   colors: ColorResponse | undefined;
 };
@@ -24,6 +25,7 @@ const initialState: AnalyticsState = {
   year: new Date().getFullYear(),
   event: undefined,
   session: undefined,
+  segment: undefined,
   schedule: undefined,
   colors: undefined,
 };
@@ -48,13 +50,19 @@ export const TracklabStore = signalStore(
       patchState(store, () => ({ year: year }));
       patchState(store, () => ({ event: undefined }));
       patchState(store, () => ({ session: undefined }));
+      patchState(store, () => ({ segment: undefined }));
     },
-    updateEvent(event: EventData | undefined): void {
+    updateEvent(event: EventData): void {
       patchState(store, () => ({ event: event }));
       patchState(store, () => ({ session: undefined }));
+      patchState(store, () => ({ segment: undefined }));
     },
     updateSession(session: string): void {
       patchState(store, () => ({ session: session }));
+      patchState(store, () => ({ segment: undefined }));
+    },
+    updateSegment(segment: string): void {
+      patchState(store, () => ({ segment: segment }));
     },
     updateEventSelection(selection: EventSelection): void {
       patchState(store, () => ({

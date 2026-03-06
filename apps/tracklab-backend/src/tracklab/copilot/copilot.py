@@ -3,7 +3,7 @@ import fastf1
 import pandas as pd
 
 from tracklab.analytics.analytics_helpers import map_row_to_lap
-from __generated__.copilot_pb2 import QualifyingRequest, QualifyingPrediction, TrackEvolutionResponse
+from __generated__.copilot_pb2 import QualifyingRequest, QualifyingPrediction, SessionTime, TrackEvolutionResponse
 from __generated__ import copilot_pb2_grpc
 from tracklab.copilot.qualifying.qualifying_predictor import QualifyingPredictor
 
@@ -52,14 +52,19 @@ class CopilotServicer(copilot_pb2_grpc.CopilotServicer):
 
     
     def GetTrackEvolution(self, request, context):
+        response = TrackEvolutionResponse(evolution=[])
         event = fastf1.get_event(year=request.year, gp=request.round)
 
         for i in range(1, 4):
             try: 
-                practice = event.get_practice(i)
-                practice.load(telemetry=False, laps=True, weather=False, messages=False)
+                session = event.get_practice(i)
+                session.load(telemetry=False, laps=True, weather=False, messages=False)
             except:
                 logging.info(f"Practice {i} not found for {request.round} in {request.year}")
 
-        return TrackEvolutionResponse(trackEvolution=[])
+            laps = session.laps
+            mean_lap_times = laps.pick_quicklaps()['LapTime'].mean();
+            response.evolution.append(SessionTime(session=session.session_info['Name'], time=mean_lap_times.total_seconds()))
+
+        return response
     

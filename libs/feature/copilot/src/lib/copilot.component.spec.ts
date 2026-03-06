@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CopilotComponent } from './copilot/copilot.component';
+import { CopilotComponent } from './copilot.component';
 describe('CopilotComponent', () => {
   let component: CopilotComponent;
   let fixture: ComponentFixture<CopilotComponent>;

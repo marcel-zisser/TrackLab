@@ -4,7 +4,6 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { TracklabStore } from '../../../../../../../shared/store/src/lib';
 import {
   LeaderGapBarChartComponent,
   LeaderGapLineChartComponent,
@@ -19,6 +18,7 @@ import { FormsModule } from '@angular/forms';
 import { Sector, SelectionOption } from '@tracklab/models';
 import { RaceAnalysisChartTileComponent } from './race-analysis-chart-tile/race-analysis-chart-tile.component';
 import { ChartTitleDirective } from '@tracklab/components';
+import { TracklabStore } from '@tracklab/store';
 
 @Component({
   selector: 'tl-race-analysis-content-charts',

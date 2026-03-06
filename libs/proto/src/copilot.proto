@@ -40,6 +40,11 @@ message QualifyingPrediction {
   repeated Prediction predictions = 1;
 }
 
+message SessionTime {
+  string session = 1;
+  float time = 2;
+}
+
 message TrackEvolutionResponse {
-  repeated Duration trackEvolution = 1;
+  repeated SessionTime evolution = 1;
 }

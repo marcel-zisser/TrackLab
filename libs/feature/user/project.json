@@ -2,7 +2,7 @@
   "name": "user",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/feature/user/src",
-  "prefix": "lib",
+  "prefix": "tl",
   "projectType": "library",
   "tags": [],
   "targets": {

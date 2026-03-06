@@ -9,7 +9,7 @@ import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Button } from 'primeng/button';
 import { FlagPipe, WeekendFormatPipe } from '@tracklab/components';
 import { EventData } from '@tracklab/models';
-import { TracklabStore } from '../../../../../../../shared/store/src/lib';
+import { TracklabStore } from '@tracklab/store';
 
 @Component({
   selector: 'tl-race-analysis-content-header',

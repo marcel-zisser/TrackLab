@@ -25,10 +25,10 @@ import { Button } from 'primeng/button';
 import { PrimeIcons } from 'primeng/api';
 import { MultiSelect } from 'primeng/multiselect';
 import { SourceSelectionService, AuthenticationService } from '@tracklab/services';
-import { TracklabStore } from '../../../../../../../shared/store/src/lib';
 import { CreateCollectionItemDialogComponent } from '@tracklab/components';
 import { firstValueFrom } from 'rxjs';
 import { DialogService } from 'primeng/dynamicdialog';
+import { TracklabStore } from '@tracklab/store';
 
 @Component({
   selector: 'tl-source-selection',
